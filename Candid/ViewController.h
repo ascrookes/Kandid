@@ -14,20 +14,15 @@
 #import "ScrollBar.h"
 
 
-@interface ViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, AVAudioRecorderDelegate, UITableViewDelegate, UITableViewDataSource, ScrollBarDelegate>
+@interface ViewController : UIViewController <AVAudioRecorderDelegate, ScrollBarDelegate>
 
 @property (nonatomic,strong) AVAudioRecorder* recorder;
 @property (nonatomic,strong) NSTimer* timer;
 
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UIButton *record;
-@property (weak, nonatomic) IBOutlet UILabel *volumeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *recordingLabel;
 
 @property (strong, nonatomic) NSMutableArray* pictureData;
-
-@property (weak, nonatomic) IBOutlet UISlider *slider;
-@property (weak, nonatomic) IBOutlet UILabel *volumeLevelLabel;
 
 @property (nonatomic) int volumeMax;
 @property (weak, nonatomic) IBOutlet UILabel *picturesTaken;
@@ -37,18 +32,13 @@
 @property (nonatomic) double averageUpdatePeak;
 @property (nonatomic,strong) NSTimer* updateTimer;
 @property (nonatomic, strong) NSTimer* timedPicture;
-@property (weak, nonatomic) IBOutlet UIView *scrollView;
-
-@property (strong, nonatomic) UITableView *table;
 
 @property (nonatomic, strong) ScrollBar* scrollBar;
 
-@property (nonatomic) UIInterfaceOrientation currentOrientation;
 
 - (void)levelTimerCallback:(NSTimer *)timer;
 - (void)sliderChanged;
 - (void)setupRecorder;
-- (void)levelTimerCallback:(NSTimer *)timer;
 - (void)captureNow;
 - (IBAction)toggleRecording:(id)sender;
 - (void)monitorVolume;

@@ -31,7 +31,6 @@ const int maxCushion = 15;
 @property (nonatomic, strong) AVCaptureDevice* camDevice;
 @property (nonatomic, strong) AVCaptureSession* session;
 @property (nonatomic, strong) CIContext* context;
-@property (nonatomic, strong) CIDetector* faceDetector;
 @property (nonatomic, strong) NSDate* lastTakenTime;
 @property (nonatomic) int numPictures;
 
@@ -43,8 +42,6 @@ const int maxCushion = 15;
 @synthesize recorder = _recorder;
 @synthesize image = _image;
 @synthesize record = _record;
-@synthesize volumeLabel = _volumeLabel;
-@synthesize recordingLabel = _recordingLabel;
 @synthesize timer = _timer;
 
 @synthesize imageCapture = _imageCapture;
@@ -55,11 +52,8 @@ const int maxCushion = 15;
 @synthesize camDevice = _camDevice;
 @synthesize session = _session;
 @synthesize context = _context;
-@synthesize faceDetector = _faceDetector; 
 
 @synthesize pictureData = _pictureData;
-@synthesize slider = _slider;
-@synthesize volumeLevelLabel = _volumeLevelLabel;
 
 @synthesize volumeMax = _volumeMax;
 @synthesize picturesTaken = _picturesTaken;
@@ -71,11 +65,8 @@ const int maxCushion = 15;
 @synthesize averageUpdatePeak = _averageUpdatePeak;
 @synthesize updateTimer = _updateTimer;
 @synthesize timedPicture = _timedPicture;
-@synthesize scrollView = _scrollView;
-@synthesize table = _table;
 @synthesize scrollBar = _scrollBar;
 
-@synthesize currentOrientation = _currentOrientation;
 
 //*********************************************************
 //*********************************************************
@@ -86,46 +77,28 @@ const int maxCushion = 15;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    self.currentOrientation = self.interfaceOrientation;
-    
+
     if(!self.recorder.recording) {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
         [self.recorder record];
     }    
     self.lastTakenTime = [NSDate date];
-    _slider.maximumValue = 0.0;
-    _slider.minimumValue = -50.0;
-    _slider.continuous = YES;
-    [_slider setValue:-5.0];
     self.volumeMax = -5.0;
-    [_slider addTarget:self action:@selector(sliderChanged) forControlEvents:UIControlEventValueChanged];
     self.averageUpdatePeak = self.volumeMax - maxCushion;
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
-    
-    _volumeLevelLabel.text = @"Level: -5";
-    
-    _recordingLabel.text = @"RECORDING";
-    
+
     self.camDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     self.camInput  = [AVCaptureDeviceInput deviceInputWithDevice:self.camDevice error:nil];
     
     [self.session addInput:self.camInput];
-    //[self.session addOutput:self.vidOutput];
     [self.session addOutput:self.imageCapture];
-    
-    //dispatch_queue_t videoQueue = dispatch_queue_create("Video Delegate Queue", nil);
-    //[self.vidOutput setSampleBufferDelegate:self queue:videoQueue];
-    //dispatch_release(videoQueue);
-    
     
     [self.session startRunning];
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
 
     self.scrollBar = [[ScrollBar alloc] initWithSuperView:self.view];
     self.scrollBar.delegate = self;
-    
 }
 
      
@@ -134,13 +107,7 @@ const int maxCushion = 15;
 {
     [self setImage:nil];
     [self setRecord:nil];
-    [self setVolumeLabel:nil];
-    [self setRecordingLabel:nil];
-    [self setSlider:nil];
-    [self setVolumeLevelLabel:nil];
     [self setPicturesTaken:nil];
-    [self setTable:nil];
-    [self setScrollView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -157,10 +124,6 @@ const int maxCushion = 15;
     //Accept all orientations cause the mics are on the bottom
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
     [self.scrollBar rotateToOrientation:interfaceOrientation];
-
-    NSLog(@"ORI: %i", interfaceOrientation);
-    self.currentOrientation = interfaceOrientation;
-
     return YES;
 }
 
@@ -219,7 +182,6 @@ const int maxCushion = 15;
         self.image.image = image;
         self.numPictures++;
         self.picturesTaken.text = [NSString stringWithFormat:@"%i",self.numPictures];
-        [self.table reloadData];
     }];
 }
 
@@ -235,7 +197,6 @@ const int maxCushion = 15;
 {
 	[_recorder updateMeters];
     float peak = [self.recorder peakPowerForChannel:0];
-    _volumeLabel.text = [NSString stringWithFormat:@"Average input: %f Peak input: %f", [_recorder averagePowerForChannel:0], peak];
     self.totalPeak += peak;
     self.timeIntervals++;
     if([_recorder peakPowerForChannel:0] >= self.volumeMax && [self.lastTakenTime timeIntervalSinceNow] < secondsBetweenImages && ![self.timedPicture isValid] && self.session.running && self.recorder.recording) {
@@ -287,23 +248,9 @@ const int maxCushion = 15;
 
 - (void)adjustMetersWithNum:(double)diff
 {
-    [self changeSliderValue:diff];
     self.totalPeak += diff * self.timeIntervals;
     self.volumeMax += diff;
     self.averageUpdatePeak += diff;
-}
-
-- (void)setMetersToSliderValue
-{
-    int value = (int)self.slider.value;
-    self.volumeLevelLabel.text = [NSString stringWithFormat:@"Level: %i", value];
-    self.volumeMax = value;
-    self.totalPeak = 0;
-    self.timeIntervals = 0;
-    self.averageUpdatePeak = self.volumeMax - maxCushion;
-    //restart the timer with fresh values based on the new location
-    [self.updateTimer invalidate];
-    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
 }
 
 
@@ -312,22 +259,6 @@ const int maxCushion = 15;
 #pragma mark - Miscellaneous
 //*********************************************************
 //*********************************************************
-
-- (void)sliderChanged
-{
-    [self setMetersToSliderValue];
-    if(_session.running && _recorder.recording) {
-        [self toggleRecording:nil];
-    }
-}
-
-
-- (void)changeSliderValue:(double)diff
-{
-    int newValue = self.slider.value += diff;
-    [self.slider setValue:newValue animated:YES];
-    self.volumeLevelLabel.text = [NSString stringWithFormat:@"Level: %i", (int)self.slider.value];
-}
 
 
 - (IBAction)toggleRecording:(id)sender 
@@ -341,8 +272,6 @@ const int maxCushion = 15;
 
 - (void)stopEverything
 {
-    //NSLog(@"STOPPING!!!!!!");
-    _recordingLabel.text = @"HALTED";
     [self.timer invalidate];
     [self.updateTimer invalidate];
     [self.session stopRunning];
@@ -350,9 +279,6 @@ const int maxCushion = 15;
 
 - (void)startEverything
 {
-    //NSLog(@"STARTING!!!!!!!");
-    //self.lastTakenTime = [NSDate date];
-    _recordingLabel.text = @"RECORDING";
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
@@ -392,16 +318,6 @@ const int maxCushion = 15;
         _lastTakenTime = [NSDate date];
     }
     return _lastTakenTime;
-}
-
-- (CIDetector*)faceDetector
-{
-    if(!_faceDetector) {
-        NSDictionary* detectionOptions = [NSDictionary dictionaryWithObject:CIDetectorAccuracyHigh forKey:CIDetectorAccuracy];
-        _faceDetector = [CIDetector detectorOfType:CIDetectorTypeFace context:nil options:detectionOptions];
-    }
-    
-    return _faceDetector;
 }
 
 -(CIContext*)context

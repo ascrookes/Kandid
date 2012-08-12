@@ -1,0 +1,91 @@
+// !$*UTF8*$!
+{
+	8E5EB9CB15964C3D00C4E185 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 8E96BC0215D4BF98006AA929 /* Candid */;
+		activeTarget = 8E5EB9D315964C3E00C4E185 /* Candid */;
+		codeSenseManager = 8E96BC3115D4BF9B006AA929 /* Code sense */;
+		executables = (
+			8E96BC0215D4BF98006AA929 /* Candid */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					356,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 366264216;
+			PBXWorkspaceStateSaveDate = 366264216;
+		};
+		sourceControlManager = 8E96BC3015D4BF9B006AA929 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	8E5EB9D315964C3E00C4E185 /* Candid */ = {
+		activeExec = 0;
+		executables = (
+			8E96BC0215D4BF98006AA929 /* Candid */,
+		);
+	};
+	8E5EB9F415964C3E00C4E185 /* CandidTests */ = {
+		activeExec = 0;
+	};
+	8E96BC0215D4BF98006AA929 /* Candid */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = Candid;
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	8E96BC3015D4BF9B006AA929 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	8E96BC3115D4BF9B006AA929 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}
