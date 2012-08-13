@@ -201,7 +201,7 @@ const int tooLoudTimedShot = 30;
     float peak = [self.recorder peakPowerForChannel:0];
     self.totalPeak += peak;
     self.timeIntervals++;
-    if([_recorder peakPowerForChannel:0] >= self.volumeMax && [self.lastTakenTime timeIntervalSinceNow] < secondsBetweenImages && ![self.timedPicture isValid] && self.session.running && self.recorder.recording) {
+    if(peak >= self.volumeMax && [self.lastTakenTime timeIntervalSinceNow] < secondsBetweenImages && ![self.timedPicture isValid] && self.session.running && self.recorder.recording) {
         [self captureNow];
     }
 }
@@ -212,9 +212,18 @@ const int tooLoudTimedShot = 30;
     bool update = NO;
     double avgPeak = self.totalPeak/self.timeIntervals;
     if(avgPeak > -5) {
-        self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:tooLoudTimedShot target:self selector:@selector(captureNow) userInfo:nil repeats:YES];
-    } else {
+        self.volumeMax = 0;
+        if(![self.timedPicture isValid]) {
+            self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:tooLoudTimedShot target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
+
+        }
+        [self.updateTimer invalidate];
+        self.updateTimer = nil;
+    } else if(![self.updateTimer isValid]) {
         [self.timedPicture invalidate];
+        if(![self.updateTimer isValid]) {
+            self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
+        }
     }
     
     
@@ -235,6 +244,17 @@ const int tooLoudTimedShot = 30;
     }
 }
 
+- (void)captureIfTimerIsValid
+{
+    double avgPeak = self.totalPeak/self.timeIntervals;
+    if(avgPeak > -5) {
+        [self captureNow];
+        self.volumeMax = 0;
+    } else {
+        [self.timedPicture invalidate];
+    }
+}
+
 
 
 //*********************************************************
@@ -246,7 +266,9 @@ const int tooLoudTimedShot = 30;
 - (void)adjustMetersWithNum:(double)diff
 {
     self.totalPeak += diff * self.timeIntervals;
-    self.volumeMax += diff;
+    if([self.updateTimer isValid]) {
+        self.volumeMax += diff;
+    }
     self.averageUpdatePeak += diff;
 }
 

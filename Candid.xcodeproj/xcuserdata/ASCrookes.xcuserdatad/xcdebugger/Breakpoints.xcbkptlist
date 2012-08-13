@@ -177,11 +177,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "260"
-         endingLineNumber = "260"
+         startingLineNumber = "287"
+         endingLineNumber = "287"
          landmarkName = "@implementation ViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -190,11 +190,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "261"
-         endingLineNumber = "261"
+         startingLineNumber = "288"
+         endingLineNumber = "288"
          landmarkName = "-toggleRecording:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -203,11 +203,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "262"
-         endingLineNumber = "262"
+         startingLineNumber = "289"
+         endingLineNumber = "289"
          landmarkName = "-toggleRecording:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -216,11 +216,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "263"
-         endingLineNumber = "263"
+         startingLineNumber = "290"
+         endingLineNumber = "290"
          landmarkName = "-toggleRecording:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -229,11 +229,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "264"
-         endingLineNumber = "264"
+         startingLineNumber = "291"
+         endingLineNumber = "291"
          landmarkName = "-toggleRecording:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -242,11 +242,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "265"
-         endingLineNumber = "265"
+         startingLineNumber = "292"
+         endingLineNumber = "292"
          landmarkName = "-toggleRecording:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -255,11 +255,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "267"
-         endingLineNumber = "267"
+         startingLineNumber = "294"
+         endingLineNumber = "294"
          landmarkName = "-toggleRecording:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -268,11 +268,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "269"
-         endingLineNumber = "269"
+         startingLineNumber = "296"
+         endingLineNumber = "296"
          landmarkName = "@implementation ViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -281,11 +281,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "271"
-         endingLineNumber = "271"
+         startingLineNumber = "298"
+         endingLineNumber = "298"
          landmarkName = "-stopEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -294,11 +294,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "272"
-         endingLineNumber = "272"
+         startingLineNumber = "299"
+         endingLineNumber = "299"
          landmarkName = "-stopEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -307,11 +307,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "270"
-         endingLineNumber = "270"
+         startingLineNumber = "297"
+         endingLineNumber = "297"
          landmarkName = "-stopEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -320,11 +320,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "273"
-         endingLineNumber = "273"
+         startingLineNumber = "300"
+         endingLineNumber = "300"
          landmarkName = "-stopEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -333,11 +333,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "274"
-         endingLineNumber = "274"
+         startingLineNumber = "301"
+         endingLineNumber = "301"
          landmarkName = "-stopEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -346,11 +346,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "276"
-         endingLineNumber = "276"
+         startingLineNumber = "303"
+         endingLineNumber = "303"
          landmarkName = "-stopEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -359,11 +359,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "277"
-         endingLineNumber = "277"
+         startingLineNumber = "304"
+         endingLineNumber = "304"
          landmarkName = "-stopEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -372,11 +372,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "278"
-         endingLineNumber = "278"
+         startingLineNumber = "305"
+         endingLineNumber = "305"
          landmarkName = "@implementation ViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -385,11 +385,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "279"
-         endingLineNumber = "279"
+         startingLineNumber = "306"
+         endingLineNumber = "306"
          landmarkName = "-startEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -398,11 +398,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "280"
-         endingLineNumber = "280"
+         startingLineNumber = "307"
+         endingLineNumber = "307"
          landmarkName = "-startEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -411,11 +411,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "281"
-         endingLineNumber = "281"
+         startingLineNumber = "308"
+         endingLineNumber = "308"
          landmarkName = "-startEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -424,11 +424,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "282"
-         endingLineNumber = "282"
+         startingLineNumber = "309"
+         endingLineNumber = "309"
          landmarkName = "-startEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -437,11 +437,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "283"
-         endingLineNumber = "283"
+         startingLineNumber = "310"
+         endingLineNumber = "310"
          landmarkName = "-startEverything"
          landmarkType = "5">
       </FileBreakpoint>
@@ -450,11 +450,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "366522427.335678"
+         timestampString = "366528313.644993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "284"
-         endingLineNumber = "284"
+         startingLineNumber = "311"
+         endingLineNumber = "311"
          landmarkName = "-startEverything"
          landmarkType = "5">
       </FileBreakpoint>
