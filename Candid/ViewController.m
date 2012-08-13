@@ -59,6 +59,7 @@ const int tooLoudTimedShot = 30;
 @synthesize updateTimer = _updateTimer;
 @synthesize timedPicture = _timedPicture;
 @synthesize cameraButton = _cameraButton;
+@synthesize imageBorder = _imageBorder;
 
 
 //*********************************************************
@@ -97,6 +98,7 @@ const int tooLoudTimedShot = 30;
     [self setImage:nil];
     [self setPicturesTaken:nil];
     [self setCameraButton:nil];
+    [self setImageBorder:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -110,7 +112,14 @@ const int tooLoudTimedShot = 30;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if(UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        self.image.hidden = YES;
+        self.imageBorder.hidden = YES;
+    } else {
+        self.image.hidden = NO;
+        self.imageBorder.hidden = NO;
+    }
+    return YES;//(interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 
@@ -156,8 +165,10 @@ const int tooLoudTimedShot = 30;
             break; 
         }
     }
-    
-    [self.imageCapture captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error){
+    if(videoConnection) {
+        [videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]];
+    }
+    [self.imageCapture captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
         
         if(!CMSampleBufferIsValid(imageSampleBuffer) || !CMSampleBufferDataIsReady(imageSampleBuffer)) {
             // the buffer is not ready to capture the image and would crash
@@ -168,6 +179,7 @@ const int tooLoudTimedShot = 30;
         }
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
         UIImage* image = [UIImage imageWithData:imageData];
+        //image = [[UIImage alloc] initWithCGImage:image.CGImage scale:1.0f orientation:[[UIDevice currentDevice] orientation]];
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
         self.image.image = image;
         self.numPictures++;
@@ -190,7 +202,6 @@ const int tooLoudTimedShot = 30;
     self.totalPeak += peak;
     self.timeIntervals++;
     if([_recorder peakPowerForChannel:0] >= self.volumeMax && [self.lastTakenTime timeIntervalSinceNow] < secondsBetweenImages && ![self.timedPicture isValid] && self.session.running && self.recorder.recording) {
-        //NSLog(@"TAKING A PICTURE NOW");
         [self captureNow];
     }
 }
@@ -219,12 +230,8 @@ const int tooLoudTimedShot = 30;
     self.totalPeak = 0;
     self.timeIntervals = 0;
     
-    //NSLog(@"PEAK DIFF: %f",peakDiff);
     if(update) {
-        //NSLog(@"Should update");
         [self adjustMetersWithNum:diffNum];
-        //NSLog(@"MAX: %i",self.volumeMax);
-        //NSLog(@"COMPARE: %f", self.averageUpdatePeak);
     }
 }
 

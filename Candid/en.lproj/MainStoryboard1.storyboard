@@ -43,7 +43,7 @@
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="X8e-3A-Udb">
                                 <rect key="frame" x="142" y="92" width="60" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -55,6 +55,7 @@
                     <connections>
                         <outlet property="cameraButton" destination="4hn-Ld-WIx" id="GH6-FU-7oc"/>
                         <outlet property="image" destination="BAP-Ui-ccG" id="Sza-An-aqI"/>
+                        <outlet property="imageBorder" destination="uRu-1r-XFE" id="GfU-Tf-qRr"/>
                         <outlet property="picturesTaken" destination="X8e-3A-Udb" id="CKq-xc-dtA"/>
                     </connections>
                 </viewController>
@@ -65,6 +66,18 @@
     <resources>
         <image name="begin.png" width="280" height="165"/>
     </resources>
+    <classes>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="toggleRecording:"/>
+                <relationship kind="outlet" name="cameraButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="imageBorder" candidateClass="UIView"/>
+                <relationship kind="outlet" name="picturesTaken" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

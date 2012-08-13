@@ -28,6 +28,7 @@
 @property (nonatomic,strong) NSTimer* updateTimer;
 @property (nonatomic, strong) NSTimer* timedPicture;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
+@property (weak, nonatomic) IBOutlet UIView *imageBorder;
 
 - (void)levelTimerCallback:(NSTimer *)timer;
 - (void)setupRecorder;
