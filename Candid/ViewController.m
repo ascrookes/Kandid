@@ -26,13 +26,9 @@ const int tooLoudTimedShot = 30;
 //*********************************************************
 
 @property (nonatomic, strong) AVCaptureStillImageOutput* imageCapture;
-@property (nonatomic, strong) AVCaptureInput* vidCapture;
-@property (nonatomic, strong) AVCaptureVideoDataOutput* vidOutput;
-@property (nonatomic, strong) AVCaptureConnection* connection;
 @property (nonatomic, strong) AVCaptureDeviceInput* camInput;
 @property (nonatomic, strong) AVCaptureDevice* camDevice;
 @property (nonatomic, strong) AVCaptureSession* session;
-@property (nonatomic, strong) CIContext* context;
 @property (nonatomic, strong) NSDate* lastTakenTime;
 @property (nonatomic) int numPictures;
 
@@ -43,17 +39,12 @@ const int tooLoudTimedShot = 30;
 
 @synthesize recorder = _recorder;
 @synthesize image = _image;
-@synthesize record = _record;
 @synthesize timer = _timer;
 
 @synthesize imageCapture = _imageCapture;
-@synthesize vidCapture = _vidCapture;
-@synthesize vidOutput = _vidOutput;
-@synthesize connection = _connection;
 @synthesize camInput = _camInput;
 @synthesize camDevice = _camDevice;
 @synthesize session = _session;
-@synthesize context = _context;
 
 @synthesize pictureData = _pictureData;
 
@@ -67,7 +58,6 @@ const int tooLoudTimedShot = 30;
 @synthesize averageUpdatePeak = _averageUpdatePeak;
 @synthesize updateTimer = _updateTimer;
 @synthesize timedPicture = _timedPicture;
-@synthesize scrollBar = _scrollBar;
 @synthesize cameraButton = _cameraButton;
 
 
@@ -98,11 +88,6 @@ const int tooLoudTimedShot = 30;
     
     [self.session startRunning];
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
-
-    /*
-    self.scrollBar = [[ScrollBar alloc] initWithSuperView:self.view];
-    self.scrollBar.delegate = self;
-     */
 }
 
      
@@ -110,7 +95,6 @@ const int tooLoudTimedShot = 30;
 - (void)viewDidUnload
 {
     [self setImage:nil];
-    [self setRecord:nil];
     [self setPicturesTaken:nil];
     [self setCameraButton:nil];
     [super viewDidUnload];
@@ -126,10 +110,7 @@ const int tooLoudTimedShot = 30;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    //Accept all orientations cause the mics are on the bottom
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    [self.scrollBar rotateToOrientation:interfaceOrientation];
-    return YES;
 }
 
 
@@ -186,9 +167,6 @@ const int tooLoudTimedShot = 30;
             return;
         }
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
-        //[_pictureData addObject:imageData];
-        [self.scrollBar addImage:imageData];
-        //NSLog(@"%i",[self.pictureData count]);
         UIImage* image = [UIImage imageWithData:imageData];
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
         self.image.image = image;
@@ -316,15 +294,6 @@ const int tooLoudTimedShot = 30;
     return _lastTakenTime;
 }
 
--(CIContext*)context
-{
-    if(!_context) {
-        _context = [CIContext contextWithOptions:nil];
-    }
-    
-    return _context;
-}
-
 - (AVCaptureSession*)session
 {
     if(!_session) {
@@ -362,15 +331,6 @@ const int tooLoudTimedShot = 30;
     }
     
     return _camDevice;
-}
-
-- (AVCaptureConnection*)connection 
-{
-    if(!_connection) {
-        _connection = [[AVCaptureConnection alloc] init];
-    }
-    
-    return _connection;
 }
 
 - (AVAudioRecorder*)recorder
@@ -434,10 +394,7 @@ const int tooLoudTimedShot = 30;
 
 - (void)setAverageUpdatePeak:(double)averageUpdatePeak
 {
-    if(averageUpdatePeak > 0)
-        _averageUpdatePeak = 0;
-    else
-        _averageUpdatePeak = averageUpdatePeak;
+    _averageUpdatePeak = (averageUpdatePeak > 0) ? 0 : averageUpdatePeak;
 }
 
 - (NSTimer*)timedPicture

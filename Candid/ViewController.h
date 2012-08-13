@@ -18,27 +18,18 @@
 
 @property (nonatomic,strong) AVAudioRecorder* recorder;
 @property (nonatomic,strong) NSTimer* timer;
-
 @property (weak, nonatomic) IBOutlet UIImageView *image;
-@property (weak, nonatomic) IBOutlet UIButton *record;
-
 @property (strong, nonatomic) NSMutableArray* pictureData;
-
 @property (nonatomic) int volumeMax;
 @property (weak, nonatomic) IBOutlet UILabel *picturesTaken;
-
 @property (nonatomic) double totalPeak;
 @property (nonatomic) double timeIntervals;
 @property (nonatomic) double averageUpdatePeak;
 @property (nonatomic,strong) NSTimer* updateTimer;
 @property (nonatomic, strong) NSTimer* timedPicture;
-
-@property (nonatomic, strong) ScrollBar* scrollBar;
-
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 
 - (void)levelTimerCallback:(NSTimer *)timer;
-- (void)sliderChanged;
 - (void)setupRecorder;
 - (void)captureNow;
 - (IBAction)toggleRecording:(id)sender;
