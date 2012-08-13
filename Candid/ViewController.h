@@ -14,7 +14,7 @@
 #import "ScrollBar.h"
 
 
-@interface ViewController : UIViewController <AVAudioRecorderDelegate, ScrollBarDelegate>
+@interface ViewController : UIViewController <AVAudioRecorderDelegate>
 
 @property (nonatomic,strong) AVAudioRecorder* recorder;
 @property (nonatomic,strong) NSTimer* timer;
@@ -35,6 +35,7 @@
 
 @property (nonatomic, strong) ScrollBar* scrollBar;
 
+@property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 
 - (void)levelTimerCallback:(NSTimer *)timer;
 - (void)sliderChanged;

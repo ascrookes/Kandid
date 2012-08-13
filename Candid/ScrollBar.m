@@ -134,7 +134,7 @@ const int STOPPED = 2;
 - (id)initWithSuperView:(UIView*)superView
 {
     self.backgroundColor = [UIColor blackColor];
-    int bottom = superView.frame.size.height - 92;
+    //int bottom = superView.frame.size.height - 92;
 
     NSArray* xibs = [[NSBundle mainBundle] loadNibNamed:@"ScrollBar" owner:self options:nil];
     self = [xibs objectAtIndex:0];
@@ -145,13 +145,12 @@ const int STOPPED = 2;
     self.table.dataSource = self;
     self.table.backgroundColor = [UIColor blackColor];
     self.table.pagingEnabled = NO;
-    
+    /*
     UIImage* pause = [UIImage imageNamed:@"pause@2x.png"];
     UIImage* play = [UIImage imageNamed:@"play@2x.png"];
     UIImage* stop = [UIImage imageNamed:@"stop@2x.png"];
     
     CGRect imgFrame = CGRectMake(10, 36, 20, 20);
-    UIImageView* pauseView = [[UIImageView alloc] initWithImage:pause];
     UIImageView* playView = [[UIImageView alloc] initWithImage:play];
     UIImageView* stopView = [[UIImageView alloc] initWithImage:stop];
     stopView.frame = imgFrame;
@@ -172,7 +171,7 @@ const int STOPPED = 2;
     [self.rightTab addGestureRecognizer:rightTap];
     self.frame = CGRectMake(0, bottom, 320, 92);
 
-    
+    */
     [self addSubview:self.leftTab];
     [self addSubview:self.rightTab];
     

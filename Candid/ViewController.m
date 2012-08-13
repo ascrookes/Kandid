@@ -14,6 +14,8 @@ const int adjustNum = 5;
 const int updateTime = 10;
 // The cushion above the max to monitor where the max should be
 const int maxCushion = 15;
+// if the max average is greater than -5 set it too take images on a timer
+const int tooLoudTimedShot = 30;
 
 @interface ViewController ()
 
@@ -66,6 +68,7 @@ const int maxCushion = 15;
 @synthesize updateTimer = _updateTimer;
 @synthesize timedPicture = _timedPicture;
 @synthesize scrollBar = _scrollBar;
+@synthesize cameraButton = _cameraButton;
 
 
 //*********************************************************
@@ -81,7 +84,6 @@ const int maxCushion = 15;
     if(!self.recorder.recording) {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
-        [self.recorder record];
     }    
     self.lastTakenTime = [NSDate date];
     self.volumeMax = -5.0;
@@ -97,8 +99,10 @@ const int maxCushion = 15;
     [self.session startRunning];
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
 
+    /*
     self.scrollBar = [[ScrollBar alloc] initWithSuperView:self.view];
     self.scrollBar.delegate = self;
+     */
 }
 
      
@@ -108,6 +112,7 @@ const int maxCushion = 15;
     [self setImage:nil];
     [self setRecord:nil];
     [self setPicturesTaken:nil];
+    [self setCameraButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -173,6 +178,13 @@ const int maxCushion = 15;
     
     [self.imageCapture captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error){
         
+        if(!CMSampleBufferIsValid(imageSampleBuffer) || !CMSampleBufferDataIsReady(imageSampleBuffer)) {
+            // the buffer is not ready to capture the image and would crash
+            NSLog(@"SAVED THAT SHIT LIKE A BOSS");
+            // Reset the time so it doesnt wait to take another picture
+            self.lastTakenTime = [NSDate distantPast];
+            return;
+        }
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
         //[_pictureData addObject:imageData];
         [self.scrollBar addImage:imageData];
@@ -211,7 +223,7 @@ const int maxCushion = 15;
     bool update = NO;
     double avgPeak = self.totalPeak/self.timeIntervals;
     if(avgPeak > -5) {
-        self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:20 target:self selector:@selector(captureNow) userInfo:nil repeats:YES];
+        self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:tooLoudTimedShot target:self selector:@selector(captureNow) userInfo:nil repeats:YES];
     } else {
         [self.timedPicture invalidate];
     }
@@ -274,36 +286,20 @@ const int maxCushion = 15;
 {
     [self.timer invalidate];
     [self.updateTimer invalidate];
+    [self.recorder stop];
     [self.session stopRunning];
+    [self.cameraButton setImage:[UIImage imageNamed:@"begin.png"] forState:UIControlStateNormal];
 }
 
 - (void)startEverything
 {
+    // the camera needs time to warm up so this stops black pictures from being taken
+    self.lastTakenTime = [NSDate date];
+    [self.recorder record];
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
-}
-
-//*********************************************************
-//*********************************************************
-#pragma mark - Scroll Bar Delegate/Datasource
-//*********************************************************
-//*********************************************************
-
-- (void)didSelectImage:(NSData *)imageData
-{
-    NSLog(@"GOLF");
-    self.image.image = [UIImage imageWithData:imageData];
-}
-
-- (void)stop
-{
-    [self stopEverything];
-}
-
-- (void)start
-{
-    [self startEverything];
+    [self.cameraButton setImage:[UIImage imageNamed:@"recording.png"] forState:UIControlStateNormal];
 }
 
 //*********************************************************
