@@ -12,22 +12,10 @@
                 <viewController id="2" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" id="uRu-1r-XFE">
-                                <rect key="frame" x="18" y="190" width="285" height="254"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="BAP-Ui-ccG">
-                                        <rect key="frame" x="5" y="5" width="275" height="244"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                        <gestureRecognizers/>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4hn-Ld-WIx">
-                                <rect key="frame" x="20" y="20" width="280" height="165"/>
+                                <rect key="frame" x="20" y="147" width="280" height="165"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="begin.png">
@@ -41,10 +29,10 @@
                                     <action selector="toggleRecording:" destination="2" eventType="touchUpInside" id="OYg-1l-cnu"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="X8e-3A-Udb">
-                                <rect key="frame" x="142" y="92" width="60" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="D7u-Jq-lMs">
+                                <rect key="frame" x="148" y="220" width="49" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -54,9 +42,7 @@
                     </view>
                     <connections>
                         <outlet property="cameraButton" destination="4hn-Ld-WIx" id="GH6-FU-7oc"/>
-                        <outlet property="image" destination="BAP-Ui-ccG" id="Sza-An-aqI"/>
-                        <outlet property="imageBorder" destination="uRu-1r-XFE" id="GfU-Tf-qRr"/>
-                        <outlet property="picturesTaken" destination="X8e-3A-Udb" id="CKq-xc-dtA"/>
+                        <outlet property="picturesTaken" destination="D7u-Jq-lMs" id="dSi-3r-eMb"/>
                     </connections>
                 </viewController>
             </objects>
@@ -72,8 +58,6 @@
             <relationships>
                 <relationship kind="action" name="toggleRecording:"/>
                 <relationship kind="outlet" name="cameraButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="imageBorder" candidateClass="UIView"/>
                 <relationship kind="outlet" name="picturesTaken" candidateClass="UILabel"/>
             </relationships>
         </class>

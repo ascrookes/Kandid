@@ -13,7 +13,7 @@ const int peakDifference = 5;
 const int adjustNum = 5;
 const int updateTime = 10;
 // The cushion above the max to monitor where the max should be
-const int maxCushion = 15;
+const int maxCushion = 20;
 // if the max average is greater than -5 set it too take images on a timer
 const int tooLoudTimedShot = 30;
 
@@ -38,7 +38,6 @@ const int tooLoudTimedShot = 30;
 @implementation ViewController
 
 @synthesize recorder = _recorder;
-@synthesize image = _image;
 @synthesize timer = _timer;
 
 @synthesize imageCapture = _imageCapture;
@@ -59,7 +58,6 @@ const int tooLoudTimedShot = 30;
 @synthesize updateTimer = _updateTimer;
 @synthesize timedPicture = _timedPicture;
 @synthesize cameraButton = _cameraButton;
-@synthesize imageBorder = _imageBorder;
 
 
 //*********************************************************
@@ -95,10 +93,8 @@ const int tooLoudTimedShot = 30;
 
 - (void)viewDidUnload
 {
-    [self setImage:nil];
     [self setPicturesTaken:nil];
     [self setCameraButton:nil];
-    [self setImageBorder:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -112,14 +108,7 @@ const int tooLoudTimedShot = 30;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    if(UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
-        self.image.hidden = YES;
-        self.imageBorder.hidden = YES;
-    } else {
-        self.image.hidden = NO;
-        self.imageBorder.hidden = NO;
-    }
-    return YES;//(interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 
@@ -172,16 +161,12 @@ const int tooLoudTimedShot = 30;
         
         if(!CMSampleBufferIsValid(imageSampleBuffer) || !CMSampleBufferDataIsReady(imageSampleBuffer)) {
             // the buffer is not ready to capture the image and would crash
-            NSLog(@"SAVED THAT SHIT LIKE A BOSS");
             // Reset the time so it doesnt wait to take another picture
             self.lastTakenTime = [NSDate distantPast];
             return;
         }
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
-        UIImage* image = [UIImage imageWithData:imageData];
-        //image = [[UIImage alloc] initWithCGImage:image.CGImage scale:1.0f orientation:[[UIDevice currentDevice] orientation]];
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
-        self.image.image = image;
+        UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
         self.numPictures++;
         self.picturesTaken.text = [NSString stringWithFormat:@"%i",self.numPictures];
     }];

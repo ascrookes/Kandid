@@ -15,6 +15,8 @@
 		8E2AEC7F15D840E30078156B /* begin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2AEC7B15D840E30078156B /* begin@2x.png */; };
 		8E2AEC8015D840E30078156B /* recording.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2AEC7C15D840E30078156B /* recording.png */; };
 		8E2AEC8115D840E30078156B /* recording@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2AEC7D15D840E30078156B /* recording@2x.png */; };
+		8E5DB1C315DA0688000AA099 /* Polaroid@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E5DB1C115DA0688000AA099 /* Polaroid@2x.png */; };
+		8E5DB1C415DA0688000AA099 /* Polaroid.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E5DB1C215DA0688000AA099 /* Polaroid.png */; };
 		8E5EB9D915964C3E00C4E185 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E5EB9D815964C3E00C4E185 /* UIKit.framework */; };
 		8E5EB9DB15964C3E00C4E185 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E5EB9DA15964C3E00C4E185 /* Foundation.framework */; };
 		8E5EB9DD15964C3E00C4E185 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E5EB9DC15964C3E00C4E185 /* CoreGraphics.framework */; };
@@ -58,6 +60,8 @@
 		8E2AEC7B15D840E30078156B /* begin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "begin@2x.png"; path = "CandidSketchs/begin@2x.png"; sourceTree = "<group>"; };
 		8E2AEC7C15D840E30078156B /* recording.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = recording.png; path = CandidSketchs/recording.png; sourceTree = "<group>"; };
 		8E2AEC7D15D840E30078156B /* recording@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "recording@2x.png"; path = "CandidSketchs/recording@2x.png"; sourceTree = "<group>"; };
+		8E5DB1C115DA0688000AA099 /* Polaroid@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Polaroid@2x.png"; sourceTree = "<group>"; };
+		8E5DB1C215DA0688000AA099 /* Polaroid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Polaroid.png; sourceTree = "<group>"; };
 		8E5EB9D415964C3E00C4E185 /* Candid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Candid.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E5EB9D815964C3E00C4E185 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8E5EB9DA15964C3E00C4E185 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -124,6 +128,8 @@
 				8E2AEC7B15D840E30078156B /* begin@2x.png */,
 				8E2AEC7C15D840E30078156B /* recording.png */,
 				8E2AEC7D15D840E30078156B /* recording@2x.png */,
+				8E5DB1C115DA0688000AA099 /* Polaroid@2x.png */,
+				8E5DB1C215DA0688000AA099 /* Polaroid.png */,
 				8E5EB9DE15964C3E00C4E185 /* Candid */,
 				8E5EB9FC15964C3E00C4E185 /* CandidTests */,
 				8E5EB9D715964C3E00C4E185 /* Frameworks */,
@@ -284,6 +290,8 @@
 				8E2AEC7F15D840E30078156B /* begin@2x.png in Resources */,
 				8E2AEC8015D840E30078156B /* recording.png in Resources */,
 				8E2AEC8115D840E30078156B /* recording@2x.png in Resources */,
+				8E5DB1C315DA0688000AA099 /* Polaroid@2x.png in Resources */,
+				8E5DB1C415DA0688000AA099 /* Polaroid.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

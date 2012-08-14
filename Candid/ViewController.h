@@ -18,7 +18,6 @@
 
 @property (nonatomic,strong) AVAudioRecorder* recorder;
 @property (nonatomic,strong) NSTimer* timer;
-@property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (strong, nonatomic) NSMutableArray* pictureData;
 @property (nonatomic) int volumeMax;
 @property (weak, nonatomic) IBOutlet UILabel *picturesTaken;
@@ -28,7 +27,6 @@
 @property (nonatomic,strong) NSTimer* updateTimer;
 @property (nonatomic, strong) NSTimer* timedPicture;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
-@property (weak, nonatomic) IBOutlet UIView *imageBorder;
 
 - (void)levelTimerCallback:(NSTimer *)timer;
 - (void)setupRecorder;
