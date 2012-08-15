@@ -58,6 +58,7 @@ const int tooLoudTimedShot = 30;
 @synthesize updateTimer = _updateTimer;
 @synthesize timedPicture = _timedPicture;
 @synthesize cameraButton = _cameraButton;
+@synthesize table = _table;
 
 
 //*********************************************************
@@ -95,6 +96,7 @@ const int tooLoudTimedShot = 30;
 {
     [self setPicturesTaken:nil];
     [self setCameraButton:nil];
+    [self setTable:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -288,6 +290,36 @@ const int tooLoudTimedShot = 30;
     }
     self.averageUpdatePeak += diff;
 }
+
+//*********************************************************
+//*********************************************************
+#pragma mark - Table View Delegate/Datasource
+//*********************************************************
+//*********************************************************
+
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* cellID = @"THING";
+    ImageCell* cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if(cell == nil) {
+        cell = [[ImageCell alloc] init];
+    }
+    
+    
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    
+}
+
+
+
 
 
 //*********************************************************

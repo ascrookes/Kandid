@@ -11,11 +11,10 @@
 #import <CoreAudio/CoreAudioTypes.h>
 #import <ImageIO/ImageIO.h>
 #import "ImageCell.h"
-#import "ScrollBar.h"
 #import <QuartzCore/QuartzCore.h>
 
 
-@interface ViewController : UIViewController <AVAudioRecorderDelegate>
+@interface ViewController : UIViewController <AVAudioRecorderDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic,strong) AVAudioRecorder* recorder;
 @property (nonatomic,strong) NSTimer* timer;
@@ -28,6 +27,7 @@
 @property (nonatomic,strong) NSTimer* updateTimer;
 @property (nonatomic, strong) NSTimer* timedPicture;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
+@property (weak, nonatomic) IBOutlet UITableView *table;
 
 - (void)levelTimerCallback:(NSTimer *)timer;
 - (void)setupRecorder;
