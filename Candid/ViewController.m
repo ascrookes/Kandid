@@ -106,9 +106,41 @@ const int tooLoudTimedShot = 30;
 //*********************************************************
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [UIView setAnimationsEnabled:YES];
+}
+
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    [UIView setAnimationsEnabled:NO];
+    /* Your original orientation booleans*/
+    
+    return TRUE;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-    return YES;
+    // This is set to rotate against the screens rotation
+    // Thus giving the appereance that whatever this is applied does not move
+    CGAffineTransform antiRotate;
+    switch (toInterfaceOrientation) {
+        case UIInterfaceOrientationLandscapeLeft:
+            antiRotate = CGAffineTransformMakeRotation(M_PI_2); // 90 degress
+            break;
+        case UIInterfaceOrientationLandscapeRight:
+            antiRotate = CGAffineTransformMakeRotation(M_PI + M_PI_2); // 270 degrees
+            break;
+        case UIInterfaceOrientationPortraitUpsideDown:
+            antiRotate = CGAffineTransformMakeRotation(M_PI); // 180 degrees
+            break;
+        default:
+            antiRotate = CGAffineTransformMakeRotation(0.0);
+            break;
+    }
+    self.view.transform          = antiRotate;
+    self.cameraButton.transform  = antiRotate;
+    self.picturesTaken.transform = antiRotate;
 }
 
 

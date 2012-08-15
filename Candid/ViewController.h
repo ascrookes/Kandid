@@ -12,6 +12,7 @@
 #import <ImageIO/ImageIO.h>
 #import "ImageCell.h"
 #import "ScrollBar.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface ViewController : UIViewController <AVAudioRecorderDelegate>
