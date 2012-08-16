@@ -280,7 +280,7 @@ const int TABLE_WIDTH   = 250;
 {
     bool update = NO;
     double avgPeak = self.totalPeak/self.timeIntervals;
-    if(avgPeak > -5) {
+    if(avgPeak > -8) {
         self.volumeMax = 0;
         if(![self.timedPicture isValid]) {
             self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:tooLoudTimedShot target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
