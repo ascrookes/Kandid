@@ -8,6 +8,12 @@
 
 #import "ViewController.h"
 
+
+//*********************************************************
+//*********************************************************
+#pragma mark - Camera constants
+//*********************************************************
+//*********************************************************
 const int secondsBetweenImages = -5;
 const int peakDifference = 5;
 const int adjustNum = 5;
@@ -16,6 +22,16 @@ const int updateTime = 10;
 const int maxCushion = 20;
 // if the max average is greater than -5 set it too take images on a timer
 const int tooLoudTimedShot = 30;
+
+//*********************************************************
+//*********************************************************
+#pragma mark - UI constants
+//*********************************************************
+//*********************************************************
+const int CAMERA_HEIGHT = 175;
+const int CAMERA_WIDTH  = 320;
+const int TABLE_HEIGHT  = 321;
+const int TABLE_WIDTH   = 250;
 
 @interface ViewController ()
 
@@ -45,7 +61,7 @@ const int tooLoudTimedShot = 30;
 @synthesize camDevice = _camDevice;
 @synthesize session = _session;
 
-@synthesize pictureData = _pictureData;
+@synthesize imageManager = _imageManager;
 
 @synthesize volumeMax = _volumeMax;
 @synthesize picturesTaken = _picturesTaken;
@@ -109,16 +125,19 @@ const int tooLoudTimedShot = 30;
 
 
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
     [UIView setAnimationsEnabled:YES];
+    
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
     [UIView setAnimationsEnabled:NO];
-    /* Your original orientation booleans*/
-    
-    return TRUE;
+    [self setUIBasedOnOrientation:interfaceOrientation];
+    return YES;
+    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -140,11 +159,38 @@ const int tooLoudTimedShot = 30;
             antiRotate = CGAffineTransformMakeRotation(0.0);
             break;
     }
-    self.view.transform          = antiRotate;
     self.cameraButton.transform  = antiRotate;
-    self.picturesTaken.transform = antiRotate;
+    self.table.transform = antiRotate;
 }
 
+- (void)setUIBasedOnOrientation:(UIInterfaceOrientation)orientation
+{
+    CGRect camFrame;
+    CGRect tableFrame;
+    switch (orientation) {
+        case UIInterfaceOrientationLandscapeRight:
+            camFrame   = CGRectMake(0, 0, CAMERA_HEIGHT, CAMERA_WIDTH);
+            tableFrame = CGRectMake(159, 35, TABLE_HEIGHT, TABLE_WIDTH);
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+            camFrame   = CGRectMake(305, 0, CAMERA_HEIGHT, CAMERA_WIDTH);
+            tableFrame = CGRectMake(0, 35, TABLE_HEIGHT, TABLE_WIDTH);
+            break;
+        case UIInterfaceOrientationPortrait:
+            camFrame   = CGRectMake(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+            tableFrame = CGRectMake(35, 159, TABLE_WIDTH, TABLE_HEIGHT);
+            break;
+        case UIInterfaceOrientationPortraitUpsideDown:
+            camFrame   = CGRectMake(0, 305, CAMERA_WIDTH, CAMERA_HEIGHT);
+            tableFrame = CGRectMake(35, 0, TABLE_WIDTH, TABLE_HEIGHT);
+            break;
+        default:
+            NSLog(@"WTF MAN!!!!!!!!!!!");
+            break;
+    }
+    self.cameraButton.frame = camFrame;
+    self.table.frame = tableFrame;
+}
 
 
 //*********************************************************
@@ -192,7 +238,7 @@ const int tooLoudTimedShot = 30;
         [videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]];
     }
     [self.imageCapture captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
-        
+        NSLog(@"CAPTURING");
         if(!CMSampleBufferIsValid(imageSampleBuffer) || !CMSampleBufferDataIsReady(imageSampleBuffer)) {
             // the buffer is not ready to capture the image and would crash
             // Reset the time so it doesnt wait to take another picture
@@ -200,9 +246,13 @@ const int tooLoudTimedShot = 30;
             return;
         }
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
+        [self.imageManager addImageData:imageData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.table reloadData];
+        });
         UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
         self.numPictures++;
-        self.picturesTaken.text = [NSString stringWithFormat:@"%i",self.numPictures];
+        self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
     }];
 }
 
@@ -299,27 +349,29 @@ const int tooLoudTimedShot = 30;
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* cellID = @"THING";
+    static NSString* cellID = @"Image Cell Polaroid";
     ImageCell* cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if(cell == nil) {
         cell = [[ImageCell alloc] init];
     }
-    
-    
+    [cell addImage:[self.imageManager getImageAtIndex:([self.imageManager count] - 1 - indexPath.row)]];
+    return cell;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
+    return [self.imageManager count];
 }
 
-
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // DONT DO SHIT
+}
 
 
 //*********************************************************
@@ -328,6 +380,13 @@ const int tooLoudTimedShot = 30;
 //*********************************************************
 //*********************************************************
 
+- (void)didReceiveMemoryWarning
+{
+    //clears the images but keeps the data
+    //when access images from the manager it
+    //will recreate deleted images from the data
+    [self.imageManager conserveMemory];
+}
 
 - (IBAction)toggleRecording:(id)sender 
 {
@@ -344,7 +403,7 @@ const int tooLoudTimedShot = 30;
     [self.updateTimer invalidate];
     [self.recorder stop];
     [self.session stopRunning];
-    [self.cameraButton setImage:[UIImage imageNamed:@"begin.png"] forState:UIControlStateNormal];
+    [self.cameraButton setImage:[UIImage imageNamed:@"Polaroid.png"] forState:UIControlStateNormal];
 }
 
 - (void)startEverything
@@ -355,7 +414,7 @@ const int tooLoudTimedShot = 30;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
-    [self.cameraButton setImage:[UIImage imageNamed:@"recording.png"] forState:UIControlStateNormal];
+    [self.cameraButton setImage:[UIImage imageNamed:@"PolaroidRunning.png"] forState:UIControlStateNormal];
 }
 
 //*********************************************************
@@ -484,14 +543,13 @@ const int tooLoudTimedShot = 30;
     return _timedPicture;
 }
 
-- (NSMutableArray*)pictureData
+- (ImageManager*)imageManager
 {
-    if(!_pictureData) {
-        _pictureData = [[NSMutableArray alloc] init];
+    if(!_imageManager) {
+        _imageManager = [[ImageManager alloc] init];
     }
-    return _pictureData;
+    return _imageManager;
 }
-
 
 
 

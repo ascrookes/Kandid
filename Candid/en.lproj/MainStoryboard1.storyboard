@@ -25,8 +25,11 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="toggleRecording:" destination="2" eventType="touchUpInside" id="rlK-Jc-kRC"/>
+                                </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="250" sectionHeaderHeight="22" sectionFooterHeight="22" id="4uH-cK-5J5">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="250" sectionHeaderHeight="22" sectionFooterHeight="22" id="4uH-cK-5J5">
                                 <rect key="frame" x="35" y="159" width="250" height="321"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -38,8 +41,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="250" height="249"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="osq-a5-Nmm">
-                                                    <rect key="frame" x="10" y="10" width="230" height="229"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" id="osq-a5-Nmm">
+                                                    <rect key="frame" x="25" y="13" width="200" height="200"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
@@ -55,43 +58,48 @@
                                     <outlet property="delegate" destination="2" id="0f7-Xs-dph"/>
                                 </connections>
                             </tableView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="DPj-NA-yZz">
+                                <rect key="frame" x="224" y="442" width="61" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" red="0.85490202903747559" green="0.054901964962482452" blue="0.1098039299249649" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <gestureRecognizers/>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="cameraButton" destination="EFK-46-90h" id="cUG-g0-F6S"/>
+                        <outlet property="picturesTaken" destination="DPj-NA-yZz" id="AUq-6i-chW"/>
                         <outlet property="table" destination="4uH-cK-5J5" id="XkF-3Y-jQF"/>
                     </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="109" y="19"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="m4h-tS-YGo">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mCQ-aM-zGq" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="bPu-H6-OzS" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="kpe-db-R6o">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="Screenshot 2012.08.07 23.43.25.png" id="sbz-I3-ODZ">
-                                <rect key="frame" x="0.0" y="110" width="320" height="350"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-            </objects>
-            <point key="canvasLocation" x="630" y="24"/>
-        </scene>
     </scenes>
     <resources>
         <image name="Polaroid.png" width="320" height="175"/>
-        <image name="Screenshot 2012.08.07 23.43.25.png" width="640" height="960"/>
     </resources>
+    <classes>
+        <class className="ImageCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="toggleRecording:"/>
+                <relationship kind="outlet" name="cameraButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="picturesTaken" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="table" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

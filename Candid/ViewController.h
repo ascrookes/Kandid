@@ -12,13 +12,13 @@
 #import <ImageIO/ImageIO.h>
 #import "ImageCell.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ImageManager.h"
 
 
 @interface ViewController : UIViewController <AVAudioRecorderDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic,strong) AVAudioRecorder* recorder;
 @property (nonatomic,strong) NSTimer* timer;
-@property (strong, nonatomic) NSMutableArray* pictureData;
 @property (nonatomic) int volumeMax;
 @property (weak, nonatomic) IBOutlet UILabel *picturesTaken;
 @property (nonatomic) double totalPeak;
@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSTimer* timedPicture;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property (weak, nonatomic) IBOutlet UITableView *table;
+@property (strong,nonatomic) ImageManager* imageManager;
 
 - (void)levelTimerCallback:(NSTimer *)timer;
 - (void)setupRecorder;

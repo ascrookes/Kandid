@@ -15,7 +15,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        // Initialization code
+        // Initialization coded    return self;
     }
     return self;
 }
@@ -27,11 +27,11 @@
     // Configure the view for the selected state
 }
 
-- (ImageCell*)imageCellWithImage:(UIImage*)image reuseIdentifier:(NSString*)reuseIdentifier
+// Consider making the image fade in like a polaroid would
+- (void)addImage:(UIImage*)image
 {
-    ImageCell* cell = [[ImageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     self.imageView.image = image;
-    return cell;
+    [self.imageView setClipsToBounds:YES];
 }
 
 @end
