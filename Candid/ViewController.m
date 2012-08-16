@@ -22,6 +22,7 @@ const int updateTime = 10;
 const int maxCushion = 20;
 // if the max average is greater than -5 set it too take images on a timer
 const int tooLoudTimedShot = 30;
+const int timedShotLevel = -8;
 
 //*********************************************************
 //*********************************************************
@@ -280,7 +281,7 @@ const int TABLE_WIDTH   = 250;
 {
     bool update = NO;
     double avgPeak = self.totalPeak/self.timeIntervals;
-    if(avgPeak > -8) {
+    if(avgPeak > timedShotLevel) {
         self.volumeMax = 0;
         if(![self.timedPicture isValid]) {
             self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:tooLoudTimedShot target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
@@ -294,7 +295,6 @@ const int TABLE_WIDTH   = 250;
             self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
         }
     }
-    
     
     double peakDiff = self.averageUpdatePeak - avgPeak;
     int diffNum = 0;
@@ -323,7 +323,6 @@ const int TABLE_WIDTH   = 250;
         [self.timedPicture invalidate];
     }
 }
-
 
 
 //*********************************************************
