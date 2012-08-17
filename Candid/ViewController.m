@@ -22,7 +22,7 @@ const int updateTime = 10;
 const int maxCushion = 20;
 // if the max average is greater than -5 set it too take images on a timer
 const int tooLoudTimedShot = 30;
-const int timedShotLevel = -8;
+const int timedShotLevel = -7;
 
 //*********************************************************
 //*********************************************************
@@ -53,6 +53,7 @@ const int TABLE_WIDTH   = 250;
 
 
 @implementation ViewController
+@synthesize levelLabel = _levelLabel;
 
 @synthesize recorder = _recorder;
 @synthesize timer = _timer;
@@ -114,6 +115,7 @@ const int TABLE_WIDTH   = 250;
     [self setPicturesTaken:nil];
     [self setCameraButton:nil];
     [self setTable:nil];
+    [self setLevelLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -271,6 +273,7 @@ const int TABLE_WIDTH   = 250;
     float peak = [self.recorder peakPowerForChannel:0];
     self.totalPeak += peak;
     self.timeIntervals++;
+    self.levelLabel.text = [NSString stringWithFormat:@"Level: %f", peak];
     if(peak >= self.volumeMax && [self.lastTakenTime timeIntervalSinceNow] < secondsBetweenImages && ![self.timedPicture isValid] && self.session.running && self.recorder.recording) {
         [self captureNow];
     }
@@ -279,7 +282,7 @@ const int TABLE_WIDTH   = 250;
 //Action for self.updateTimer
 - (void)monitorVolume
 {
-    bool update = NO;
+    bool update = YES;
     double avgPeak = self.totalPeak/self.timeIntervals;
     if(avgPeak > timedShotLevel) {
         self.volumeMax = 0;
@@ -300,10 +303,10 @@ const int TABLE_WIDTH   = 250;
     int diffNum = 0;
     if(peakDiff > peakDifference) {
         diffNum = -1 * adjustNum;
-        update = YES;
     } else if(peakDiff < 0) {
         diffNum = adjustNum;
-        update = YES;
+    } else {
+        update = NO;
     }
     self.totalPeak = 0;
     self.timeIntervals = 0;
@@ -316,7 +319,7 @@ const int TABLE_WIDTH   = 250;
 - (void)captureIfTimerIsValid
 {
     double avgPeak = self.totalPeak/self.timeIntervals;
-    if(avgPeak > -5) {
+    if(avgPeak > timedShotLevel) {
         [self captureNow];
         self.volumeMax = 0;
     } else {

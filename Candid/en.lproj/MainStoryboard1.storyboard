@@ -65,6 +65,13 @@
                                 <color key="textColor" red="0.85490202903747559" green="0.054901964962482452" blue="0.1098039299249649" alpha="1" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Level: %i" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="dRu-ju-R5u">
+                                <rect key="frame" x="0.0" y="431" width="196" height="49"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.98823535442352295" green="0.058823533356189728" blue="0.0078431377187371254" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <gestureRecognizers/>
@@ -72,6 +79,7 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="cameraButton" destination="EFK-46-90h" id="cUG-g0-F6S"/>
+                        <outlet property="levelLabel" destination="dRu-ju-R5u" id="9Xn-bP-Gvx"/>
                         <outlet property="picturesTaken" destination="DPj-NA-yZz" id="AUq-6i-chW"/>
                         <outlet property="table" destination="4uH-cK-5J5" id="XkF-3Y-jQF"/>
                     </connections>
@@ -95,6 +103,7 @@
             <relationships>
                 <relationship kind="action" name="toggleRecording:"/>
                 <relationship kind="outlet" name="cameraButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="levelLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="picturesTaken" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="table" candidateClass="UITableView"/>
             </relationships>

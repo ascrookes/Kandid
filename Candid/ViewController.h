@@ -37,4 +37,10 @@
 - (void)monitorVolume;
 
 
+
+#pragma mark - DELME (DEBUG PURPOSES)
+
+@property (weak, nonatomic) IBOutlet UILabel *levelLabel;
+
+
 @end
