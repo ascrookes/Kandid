@@ -274,9 +274,18 @@ const int TABLE_WIDTH   = 250;
     self.totalPeak += peak;
     self.timeIntervals++;
     self.levelLabel.text = [NSString stringWithFormat:@"Level: %f", peak];
-    if(peak >= self.volumeMax && [self.lastTakenTime timeIntervalSinceNow] < secondsBetweenImages && ![self.timedPicture isValid] && self.session.running && self.recorder.recording) {
+    if([self allowedToCapturePeak:peak]) {
         [self captureNow];
     }
+}
+
+- (BOOL)allowedToCapturePeak:(float)peak
+{
+    return  peak >= self.volumeMax &&
+            [self.lastTakenTime timeIntervalSinceNow] < secondsBetweenImages &&
+            ![self.timedPicture isValid]
+            && self.session.running
+            && self.recorder.recording;
 }
 
 //Action for self.updateTimer
