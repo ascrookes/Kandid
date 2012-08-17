@@ -250,12 +250,12 @@ const int TABLE_WIDTH   = 250;
         }
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
         [self.imageManager addImageData:imageData];
+        self.numPictures++;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.table reloadData];
+            self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
         });
         UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
-        self.numPictures++;
-        self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
     }];
 }
 
@@ -297,7 +297,6 @@ const int TABLE_WIDTH   = 250;
         self.volumeMax = 0;
         if(![self.timedPicture isValid]) {
             self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:tooLoudTimedShot target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
-
         }
         [self.updateTimer invalidate];
         self.updateTimer = nil;

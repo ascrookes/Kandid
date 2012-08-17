@@ -20,7 +20,6 @@
 @property (nonatomic,strong) AVAudioRecorder* recorder;
 @property (nonatomic,strong) NSTimer* timer;
 @property (nonatomic) int volumeMax;
-@property (weak, nonatomic) IBOutlet UILabel *picturesTaken;
 @property (nonatomic) double totalPeak;
 @property (nonatomic) double timeIntervals;
 @property (nonatomic) double averageUpdatePeak;
@@ -41,6 +40,8 @@
 #pragma mark - DELME (DEBUG PURPOSES)
 
 @property (weak, nonatomic) IBOutlet UILabel *levelLabel;
+@property (weak, nonatomic) IBOutlet UILabel *picturesTaken; // maybe keep this, but make it blend with the polaroid
+
 
 
 @end
