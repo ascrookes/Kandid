@@ -31,13 +31,14 @@
 @property (nonatomic) int updateTimerActionCount;
 @property (weak, nonatomic) IBOutlet UIView *stopView;
 @property (nonatomic) int picturesTakenThisMinute;
+@property (weak, nonatomic) IBOutlet UIButton *startButton;
+
 
 - (void)levelTimerCallback:(NSTimer *)timer;
 - (void)setupRecorder;
 - (void)captureNow;
 - (IBAction)toggleRecording:(id)sender;
 - (void)monitorVolume;
-
 
 
 #pragma mark - DELME (DEBUG PURPOSES)

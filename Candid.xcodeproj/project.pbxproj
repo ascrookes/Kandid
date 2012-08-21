@@ -32,6 +32,8 @@
 		8E9AC53415DCA4940085B344 /* ImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E9AC53315DCA4940085B344 /* ImageManager.m */; };
 		8ECFE8EA15DB6A0D00E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
 		8ECFE8EB15DB6A3400E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
+		8EEEF45F15E37F8100F419D7 /* FilmRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EEEF45D15E37F8100F419D7 /* FilmRoll.png */; };
+		8EEEF46015E37F8100F419D7 /* FilmRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EEEF45E15E37F8100F419D7 /* FilmRoll@2x.png */; };
 		8EF4AEC815A0C3B900CED0E8 /* cam.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EF4AEC715A0C3B900CED0E8 /* cam.png */; };
 		8EF4AECB15A0C45900CED0E8 /* camIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EF4AECA15A0C45900CED0E8 /* camIcon.png */; };
 		8EF8CFA615DB6512006FC79B /* PolaroidRunning.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EF8CFA215DB6512006FC79B /* PolaroidRunning.png */; };
@@ -83,6 +85,8 @@
 		8E9AC53315DCA4940085B344 /* ImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageManager.m; sourceTree = "<group>"; };
 		8ECFE8E815DB6A0D00E86971 /* ImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCell.h; sourceTree = "<group>"; };
 		8ECFE8E915DB6A0D00E86971 /* ImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCell.m; sourceTree = "<group>"; };
+		8EEEF45D15E37F8100F419D7 /* FilmRoll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FilmRoll.png; sourceTree = "<group>"; };
+		8EEEF45E15E37F8100F419D7 /* FilmRoll@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FilmRoll@2x.png"; sourceTree = "<group>"; };
 		8EF4AEC715A0C3B900CED0E8 /* cam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cam.png; sourceTree = "<group>"; };
 		8EF4AECA15A0C45900CED0E8 /* camIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camIcon.png; sourceTree = "<group>"; };
 		8EF8CFA215DB6512006FC79B /* PolaroidRunning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PolaroidRunning.png; sourceTree = "<group>"; };
@@ -216,6 +220,8 @@
 				8EF8CFA315DB6512006FC79B /* PolaroidRunning@2x.png */,
 				8EF8CFA415DB6512006FC79B /* Polaroid.png */,
 				8EF8CFA515DB6512006FC79B /* Polaroid@2x.png */,
+				8EEEF45D15E37F8100F419D7 /* FilmRoll.png */,
+				8EEEF45E15E37F8100F419D7 /* FilmRoll@2x.png */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -303,6 +309,8 @@
 				8EF8CFA715DB6512006FC79B /* PolaroidRunning@2x.png in Resources */,
 				8EF8CFA815DB6512006FC79B /* Polaroid.png in Resources */,
 				8EF8CFA915DB6512006FC79B /* Polaroid@2x.png in Resources */,
+				8EEEF45F15E37F8100F419D7 /* FilmRoll.png in Resources */,
+				8EEEF46015E37F8100F419D7 /* FilmRoll@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
