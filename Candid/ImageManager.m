@@ -22,10 +22,14 @@ const int IMAGE_SIZE = 200;
 //*********************************************************
 //*********************************************************
 
-- (void)addImageData:(NSData*)imageData
+- (void)addImageData:(NSData*)imageData save:(BOOL)saveImage
 {
     [self.imageData addObject:imageData];
     [self.thumbnails addObject:[self thumbnailFromData:imageData]];
+    
+    if(saveImage) {
+        [self saveImage:imageData watermark:YES];
+    }
 }
 
 - (UIImage*)getImageAtIndex:(NSInteger)index
@@ -45,11 +49,37 @@ const int IMAGE_SIZE = 200;
     CGSize size = CGSizeMake(IMAGE_SIZE, IMAGE_SIZE);
     UIGraphicsBeginImageContext(size);
     [img drawInRect:CGRectMake(0,0,size.width,size.height)];
+
     UIImage* thumbnail = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
     return thumbnail;
 }
+
+- (UIImage*)lastImage
+{
+    return [self getImageAtIndex:[self.thumbnails count] - 1];
+}
+
+- (void)saveImage:(NSData*)imageData watermark:(BOOL)watermark
+{
+    UIImage* img = [UIImage imageWithData:imageData];
+    UIGraphicsBeginImageContext(img.size);
+    [img drawInRect:CGRectMake(0, 0, img.size.width, img.size.height)];
+    
+    // If waterwark add a watermark to the bottom right corner of the saved image
+    // WHY WONT THE WATERMAR STAY WHEN I SAVE THE IMAGE
+    if(watermark) {
+        //NSString* mark = @"Candid";
+        //[mark drawInRect:CGRectMake(0, 0, img.size.width, img.size.height) withFont:[UIFont fontWithName:@"Didot" size:45]];
+    }
+    
+    UIImage* saveImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIImageWriteToSavedPhotosAlbum(saveImage, nil, nil, nil);
+    UIGraphicsEndImageContext();
+
+}
+
 
 
 

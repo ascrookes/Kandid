@@ -28,6 +28,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property (weak, nonatomic) IBOutlet UITableView *table;
 @property (strong,nonatomic) ImageManager* imageManager;
+@property (nonatomic) int updateTimerActionCount;
+@property (weak, nonatomic) IBOutlet UIView *stopView;
+@property (nonatomic) int picturesTakenThisMinute;
 
 - (void)levelTimerCallback:(NSTimer *)timer;
 - (void)setupRecorder;
@@ -41,6 +44,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *picturesTaken; // maybe keep this, but make it blend with the polaroid
+@property (weak, nonatomic) IBOutlet UIImageView *imgView;
 
 
 

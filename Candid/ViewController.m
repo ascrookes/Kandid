@@ -14,15 +14,17 @@
 #pragma mark - Camera constants
 //*********************************************************
 //*********************************************************
-const int secondsBetweenImages = -5;
-const int peakDifference = 5;
-const int adjustNum = 5;
-const int updateTime = 10;
+const int SECONDS_BETWEEN_IMAGES = -10;
+const int PEAK_DIFFERENCE = 5;
+const int ADJUST_NUM = 5;
+const int UPDATE_TIME = 5;
+const int MINUTE = 60/UPDATE_TIME;
 // The cushion above the max to monitor where the max should be
-const int maxCushion = 20;
+const int MAX_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
-const int tooLoudTimedShot = 30;
-const int timedShotLevel = -7;
+const int TOO_LOUD_TIMED_SHOT = 30;
+const int TIMED_SHOT_LEVEL = -7;
+const int MAX_PICTURES_PER_MINUTE = 5;
 
 //*********************************************************
 //*********************************************************
@@ -77,6 +79,9 @@ const int TABLE_WIDTH   = 250;
 @synthesize timedPicture = _timedPicture;
 @synthesize cameraButton = _cameraButton;
 @synthesize table = _table;
+@synthesize updateTimerActionCount;
+@synthesize stopView = _stopView;
+@synthesize picturesTakenThisMinute;
 
 
 //*********************************************************
@@ -93,19 +98,10 @@ const int TABLE_WIDTH   = 250;
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
     }    
-    self.lastTakenTime = [NSDate date];
     self.volumeMax = -5.0;
-    self.averageUpdatePeak = self.volumeMax - maxCushion;
-    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
-
-    self.camDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    self.camInput  = [AVCaptureDeviceInput deviceInputWithDevice:self.camDevice error:nil];
+    self.averageUpdatePeak = self.volumeMax - MAX_CUSHION;
     
-    [self.session addInput:self.camInput];
-    [self.session addOutput:self.imageCapture];
-    
-    [self.session startRunning];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
+    [self startEverything];
 }
 
      
@@ -116,6 +112,7 @@ const int TABLE_WIDTH   = 250;
     [self setCameraButton:nil];
     [self setTable:nil];
     [self setLevelLabel:nil];
+    [self setStopView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -127,11 +124,9 @@ const int TABLE_WIDTH   = 250;
 //*********************************************************
 
 
-
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     [UIView setAnimationsEnabled:YES];
-    
 }
 
 
@@ -140,13 +135,12 @@ const int TABLE_WIDTH   = 250;
     [UIView setAnimationsEnabled:NO];
     [self setUIBasedOnOrientation:interfaceOrientation];
     return YES;
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     // This is set to rotate against the screens rotation
-    // Thus giving the appereance that whatever this is applied does not move
+    // Thus giving the appereance of whatever this is applied does not move
     CGAffineTransform antiRotate;
     switch (toInterfaceOrientation) {
         case UIInterfaceOrientationLandscapeLeft:
@@ -164,28 +158,36 @@ const int TABLE_WIDTH   = 250;
     }
     self.cameraButton.transform  = antiRotate;
     self.table.transform = antiRotate;
+    self.stopView.transform = antiRotate;
 }
 
+
+//Moves the items on screen (silently
 - (void)setUIBasedOnOrientation:(UIInterfaceOrientation)orientation
 {
     CGRect camFrame;
     CGRect tableFrame;
+    CGRect stopViewFrame;
     switch (orientation) {
         case UIInterfaceOrientationLandscapeRight:
             camFrame   = CGRectMake(0, 0, CAMERA_HEIGHT, CAMERA_WIDTH);
             tableFrame = CGRectMake(159, 35, TABLE_HEIGHT, TABLE_WIDTH);
+            stopViewFrame = CGRectMake(0, 0, 480, 320);
             break;
         case UIInterfaceOrientationLandscapeLeft:
             camFrame   = CGRectMake(305, 0, CAMERA_HEIGHT, CAMERA_WIDTH);
             tableFrame = CGRectMake(0, 35, TABLE_HEIGHT, TABLE_WIDTH);
+            stopViewFrame = CGRectMake(0, 0, 480, 320);
             break;
         case UIInterfaceOrientationPortrait:
             camFrame   = CGRectMake(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
             tableFrame = CGRectMake(35, 159, TABLE_WIDTH, TABLE_HEIGHT);
+            stopViewFrame = CGRectMake(0, 0, 320, 480);
             break;
         case UIInterfaceOrientationPortraitUpsideDown:
             camFrame   = CGRectMake(0, 305, CAMERA_WIDTH, CAMERA_HEIGHT);
             tableFrame = CGRectMake(35, 0, TABLE_WIDTH, TABLE_HEIGHT);
+            stopViewFrame = CGRectMake(0, 0, 320, 480);
             break;
         default:
             NSLog(@"WTF MAN!!!!!!!!!!!");
@@ -193,7 +195,10 @@ const int TABLE_WIDTH   = 250;
     }
     self.cameraButton.frame = camFrame;
     self.table.frame = tableFrame;
+    self.stopView.frame = stopViewFrame;
 }
+
+
 
 
 //*********************************************************
@@ -207,16 +212,16 @@ const int TABLE_WIDTH   = 250;
     NSURL *url = [NSURL fileURLWithPath:@"/dev/null"];
     
     NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
-                              [NSNumber numberWithFloat: 44100.0],                 AVSampleRateKey,
+                              [NSNumber numberWithFloat: 24000.0],                 AVSampleRateKey,
                               [NSNumber numberWithInt: kAudioFormatAppleLossless], AVFormatIDKey,
                               [NSNumber numberWithInt: 1],                         AVNumberOfChannelsKey,
-                              [NSNumber numberWithInt: AVAudioQualityHigh],         AVEncoderAudioQualityKey,
+                              [NSNumber numberWithInt: AVAudioQualityHigh],        AVEncoderAudioQualityKey,
                               nil];
     
     NSError* error;
     
-    _recorder = [[AVAudioRecorder alloc] initWithURL:url settings:settings error:&error];
-    _recorder.delegate = self;
+    self.recorder = [[AVAudioRecorder alloc] initWithURL:url settings:settings error:&error];
+    self.recorder.delegate = self;
 }
 
 
@@ -249,13 +254,14 @@ const int TABLE_WIDTH   = 250;
             return;
         }
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
-        [self.imageManager addImageData:imageData];
+        [self.imageManager addImageData:imageData save:YES];
         self.numPictures++;
+        self.picturesTakenThisMinute++;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.table reloadData];
             self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
         });
-        UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
+        //UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
     }];
 }
 
@@ -269,11 +275,11 @@ const int TABLE_WIDTH   = 250;
 //Action for self.timer
 - (void)levelTimerCallback:(NSTimer *)timer
 {
-	[_recorder updateMeters];
+	[self.recorder updateMeters];
     float peak = [self.recorder peakPowerForChannel:0];
     self.totalPeak += peak;
     self.timeIntervals++;
-    self.levelLabel.text = [NSString stringWithFormat:@"Level: %f", peak];
+    self.levelLabel.text = [NSString stringWithFormat:@"Level: %f Max: %i", peak, self.volumeMax];
     if([self allowedToCapturePeak:peak]) {
         [self captureNow];
     }
@@ -282,10 +288,11 @@ const int TABLE_WIDTH   = 250;
 - (BOOL)allowedToCapturePeak:(float)peak
 {
     return  peak >= self.volumeMax &&
-            [self.lastTakenTime timeIntervalSinceNow] < secondsBetweenImages &&
+            [self.lastTakenTime timeIntervalSinceNow] < SECONDS_BETWEEN_IMAGES &&
             ![self.timedPicture isValid]
             && self.session.running
-            && self.recorder.recording;
+            && self.recorder.recording
+            && self.picturesTakenThisMinute < MAX_PICTURES_PER_MINUTE;
 }
 
 //Action for self.updateTimer
@@ -293,26 +300,29 @@ const int TABLE_WIDTH   = 250;
 {
     bool update = YES;
     double avgPeak = self.totalPeak/self.timeIntervals;
-    if(avgPeak > timedShotLevel) {
-        self.volumeMax = 0;
-        if(![self.timedPicture isValid]) {
-            self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:tooLoudTimedShot target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
-        }
+    // If the average volume is very close to 0 set up a timer for a timed shot and stop he regular timer
+    if(avgPeak > TIMED_SHOT_LEVEL) {
+        self.volumeMax = -5;
         [self.updateTimer invalidate];
-        self.updateTimer = nil;
+        if(![self.timedPicture isValid]) {
+            self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:TOO_LOUD_TIMED_SHOT target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
+        }
+    // Else if the other timer is invalid start it again
     } else if(![self.updateTimer isValid]) {
         [self.timedPicture invalidate];
-        if(![self.updateTimer isValid]) {
-            self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
+        if([self.updateTimer isValid]) {
+            self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
         }
     }
     
+    // If the average is too far away decrease the thresholds
+    // If the average is louder than the cushion from the threshold increase the thresholds
     double peakDiff = self.averageUpdatePeak - avgPeak;
     int diffNum = 0;
-    if(peakDiff > peakDifference) {
-        diffNum = -1 * adjustNum;
+    if(peakDiff > PEAK_DIFFERENCE) {
+        diffNum = -1 * ADJUST_NUM;
     } else if(peakDiff < 0) {
-        diffNum = adjustNum;
+        diffNum = ADJUST_NUM;
     } else {
         update = NO;
     }
@@ -322,12 +332,17 @@ const int TABLE_WIDTH   = 250;
     if(update) {
         [self adjustMetersWithNum:diffNum];
     }
+    self.updateTimerActionCount++;
+    if(self.updateTimerActionCount >= MINUTE) {
+        self.picturesTakenThisMinute = 0;
+        self.updateTimerActionCount = 0;
+    }
 }
 
 - (void)captureIfTimerIsValid
 {
     double avgPeak = self.totalPeak/self.timeIntervals;
-    if(avgPeak > timedShotLevel) {
+    if(avgPeak > TIMED_SHOT_LEVEL) {
         [self captureNow];
         self.volumeMax = 0;
     } else {
@@ -344,11 +359,10 @@ const int TABLE_WIDTH   = 250;
 
 - (void)adjustMetersWithNum:(double)diff
 {
-    self.totalPeak += diff * self.timeIntervals;
     if([self.updateTimer isValid]) {
         self.volumeMax += diff;
+        self.averageUpdatePeak += diff;
     }
-    self.averageUpdatePeak += diff;
 }
 
 //*********************************************************
@@ -356,6 +370,7 @@ const int TABLE_WIDTH   = 250;
 #pragma mark - Table View Delegate/Datasource
 //*********************************************************
 //*********************************************************
+
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -383,6 +398,7 @@ const int TABLE_WIDTH   = 250;
     // DONT DO SHIT
 }
 
+ 
 
 //*********************************************************
 //*********************************************************
@@ -400,32 +416,45 @@ const int TABLE_WIDTH   = 250;
 
 - (IBAction)toggleRecording:(id)sender 
 {
-    if(_session.running && _recorder.recording) {
+    if(self.session.running && self.recorder.recording) {
         [self stopEverything];
     } else {
         [self startEverything];
     }
 }
 
-- (void)stopEverything
+- (IBAction)stopEverything
 {
     [self.timer invalidate];
     [self.updateTimer invalidate];
     [self.recorder stop];
     [self.session stopRunning];
     [self.cameraButton setImage:[UIImage imageNamed:@"Polaroid.png"] forState:UIControlStateNormal];
+    [UIView animateWithDuration:1 animations:^{
+        self.stopView.hidden = YES;
+    }];
+    
 }
 
-- (void)startEverything
+- (IBAction)startEverything
 {
     // the camera needs time to warm up so this stops black pictures from being taken
     self.lastTakenTime = [NSDate date];
     [self.recorder record];
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
-    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateTime target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
+    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
     [self.cameraButton setImage:[UIImage imageNamed:@"PolaroidRunning.png"] forState:UIControlStateNormal];
+    [UIView animateWithDuration:1 animations:^{
+        self.stopView.hidden = NO;
+    }];
 }
+
+- (IBAction)hide:(id)sender
+{
+    NSLog(@"HIDING");
+}
+
 
 //*********************************************************
 //*********************************************************
@@ -446,6 +475,8 @@ const int TABLE_WIDTH   = 250;
     if(!_session) {
         _session = [[AVCaptureSession alloc] init];
         _session.sessionPreset = AVCaptureSessionPresetPhoto;
+        [_session addInput:self.camInput];
+        [_session addOutput:self.imageCapture];
     }
     
     return _session;

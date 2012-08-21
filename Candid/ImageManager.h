@@ -13,9 +13,12 @@
 @property (nonatomic,strong) NSMutableArray* imageData;
 @property (nonatomic,strong) NSMutableArray* thumbnails;
 
-- (void)addImageData:(NSData*)imageData;
+- (void)addImageData:(NSData*)imageData save:(BOOL)saveImage;
 - (UIImage*)getImageAtIndex:(NSInteger)index;
 - (void)conserveMemory;
 - (NSInteger)count;
+- (UIImage*)lastImage;
+- (void)saveImage:(NSData*)imageData watermark:(BOOL)watermark;
+
 
 @end
