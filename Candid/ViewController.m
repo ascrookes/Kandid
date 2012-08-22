@@ -25,6 +25,7 @@ const int MAX_CUSHION = 15;
 const int TOO_LOUD_TIMED_SHOT = 30;
 const int TIMED_SHOT_LEVEL = -7;
 const int MAX_PICTURES_PER_MINUTE = 5;
+const int BUTTON_WIDTH = 160;
 
 
 //*********************************************************
@@ -80,9 +81,10 @@ const int START_BUTTON_HEIGHT = 65;
 @synthesize cameraButton = _cameraButton;
 @synthesize table = _table;
 @synthesize updateTimerActionCount;
-@synthesize stopView = _stopView;
+@synthesize hideView = _hideView;
 @synthesize picturesTakenThisMinute;
 @synthesize startButton = _startButton;
+@synthesize hideButton = _hideButton;
 
 
 //*********************************************************
@@ -95,6 +97,9 @@ const int START_BUTTON_HEIGHT = 65;
 {
     [super viewDidLoad];
 
+    [self.startButton setImage:[UIImage imageNamed:@"startButton.png"] forState:UIControlStateNormal];
+    [self.hideButton  setImage:[UIImage imageNamed:@"hideButton.png"]  forState:UIControlStateNormal];
+    
     if(!self.recorder.recording) {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
@@ -103,7 +108,6 @@ const int START_BUTTON_HEIGHT = 65;
     self.averageUpdatePeak = self.volumeMax - MAX_CUSHION;
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
-    [self startEverything];
 }
 
      
@@ -114,8 +118,9 @@ const int START_BUTTON_HEIGHT = 65;
     [self setCameraButton:nil];
     [self setTable:nil];
     [self setLevelLabel:nil];
-    [self setStopView:nil];
+    [self setHideView:nil];
     [self setStartButton:nil];
+    [self setHideButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -126,19 +131,21 @@ const int START_BUTTON_HEIGHT = 65;
 //*********************************************************
 //*********************************************************
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    //[UIView setAnimationsEnabled:NO];
+    //[self setUIBasedOnOrientation:interfaceOrientation];
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
 
+/*
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     [UIView setAnimationsEnabled:YES];
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    [UIView setAnimationsEnabled:NO];
-    [self setUIBasedOnOrientation:interfaceOrientation];
-    return YES;
-}
+
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
@@ -161,7 +168,7 @@ const int START_BUTTON_HEIGHT = 65;
     }
     self.cameraButton.transform  = antiRotate;
     self.table.transform         = antiRotate;
-    self.stopView.transform      = antiRotate;
+    self.hideView.transform      = antiRotate;
     self.startButton.transform   = antiRotate;
 }
 
@@ -170,27 +177,27 @@ const int START_BUTTON_HEIGHT = 65;
 - (void)setUIBasedOnOrientation:(UIInterfaceOrientation)orientation
 {
     CGRect tableFrame;
-    CGRect stopViewFrame;
+    CGRect hideViewFrame;
     CGRect startButton;
     switch (orientation) {
         case UIInterfaceOrientationLandscapeRight:
             tableFrame = CGRectMake(0, TABLE_DELTA_X, 480-START_BUTTON_HEIGHT, TABLE_WIDTH);
-            stopViewFrame = CGRectMake(0, 0, 480, 320);
+            hideViewFrame = CGRectMake(0, 0, 480, 320);
             startButton = CGRectMake(480-START_BUTTON_HEIGHT, 0, START_BUTTON_HEIGHT, 320);
             break;
         case UIInterfaceOrientationLandscapeLeft:
             tableFrame = CGRectMake(START_BUTTON_HEIGHT, TABLE_DELTA_X, 480-START_BUTTON_HEIGHT, TABLE_WIDTH);
-            stopViewFrame = CGRectMake(0, 0, 480, 320);
+            hideViewFrame = CGRectMake(0, 0, 480, 320);
             startButton = CGRectMake(0, 0, START_BUTTON_HEIGHT, 320);
             break;
         case UIInterfaceOrientationPortrait:
             tableFrame = CGRectMake(TABLE_DELTA_X, 0, TABLE_WIDTH, 480-START_BUTTON_HEIGHT);
-            stopViewFrame = CGRectMake(0, 0, 320, 480);
+            hideViewFrame = CGRectMake(0, 0, 320, 480);
             startButton = CGRectMake(0, 480-START_BUTTON_HEIGHT, 320, START_BUTTON_HEIGHT);
             break;
         case UIInterfaceOrientationPortraitUpsideDown:
             tableFrame = CGRectMake(TABLE_DELTA_X, START_BUTTON_HEIGHT, TABLE_WIDTH, 480-START_BUTTON_HEIGHT);
-            stopViewFrame = CGRectMake(0, 0, 320, 480);
+            hideViewFrame = CGRectMake(0, 0, 320, 480);
             startButton = CGRectMake(0, 0, 320, START_BUTTON_HEIGHT);
             break;
         default:
@@ -198,10 +205,10 @@ const int START_BUTTON_HEIGHT = 65;
             break;
     }
     self.table.frame = tableFrame;
-    self.stopView.frame = stopViewFrame;
+    self.hideView.frame = hideViewFrame;
     self.startButton.frame = startButton;
 }
-
+*/
 
 
 
@@ -382,7 +389,7 @@ const int START_BUTTON_HEIGHT = 65;
     if(cell == nil) {
         cell = [[ImageCell alloc] init];
     }
-    [cell addImage:[self.imageManager getImageAtIndex:([self.imageManager count] - 1 - indexPath.row)]];
+    [cell addImage:[self.imageManager getImageAtIndex:indexPath.row]];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
@@ -433,11 +440,8 @@ const int START_BUTTON_HEIGHT = 65;
     [self.updateTimer invalidate];
     [self.recorder stop];
     [self.session stopRunning];
-    [self.cameraButton setImage:[UIImage imageNamed:@"Polaroid.png"] forState:UIControlStateNormal];
-    [UIView animateWithDuration:1 animations:^{
-        self.stopView.hidden = YES;
-    }];
-    
+    [self.startButton setTitle:@"Start!" forState:UIControlStateNormal];
+    [self.startButton setImage:[UIImage imageNamed:@"startButton.png"] forState:UIControlStateNormal];
 }
 
 - (IBAction)startEverything
@@ -448,15 +452,13 @@ const int START_BUTTON_HEIGHT = 65;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
-    [self.cameraButton setImage:[UIImage imageNamed:@"PolaroidRunning.png"] forState:UIControlStateNormal];
-    [UIView animateWithDuration:1 animations:^{
-        self.stopView.hidden = NO;
-    }];
+    [self.startButton setTitle:@"Stop!" forState:UIControlStateNormal];
+    [self.startButton setImage:[UIImage imageNamed:@"stopButton.png"] forState:UIControlStateNormal];
 }
 
-- (IBAction)hide:(id)sender
+- (IBAction)toggleHide:(id)sender
 {
-    NSLog(@"HIDING");
+    self.hideView.hidden = (self.hideView.hidden) ? NO : YES;
 }
 
 

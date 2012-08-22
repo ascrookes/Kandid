@@ -29,9 +29,10 @@
 @property (weak, nonatomic) IBOutlet UITableView *table;
 @property (strong,nonatomic) ImageManager* imageManager;
 @property (nonatomic) int updateTimerActionCount;
-@property (weak, nonatomic) IBOutlet UIView *stopView;
+@property (weak, nonatomic) IBOutlet UIView *hideView;
 @property (nonatomic) int picturesTakenThisMinute;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
+@property (weak, nonatomic) IBOutlet UIButton *hideButton;
 
 
 - (void)levelTimerCallback:(NSTimer *)timer;
