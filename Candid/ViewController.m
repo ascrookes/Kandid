@@ -14,7 +14,7 @@
 #pragma mark - Camera constants
 //*********************************************************
 //*********************************************************
-const int SECONDS_BETWEEN_IMAGES = -8;
+const int SECONDS_BETWEEN_IMAGES = -5;
 const int PEAK_DIFFERENCE = 5;
 const int ADJUST_NUM = 5;
 const int UPDATE_TIME = 5;
@@ -23,8 +23,8 @@ const int MINUTE = 60/UPDATE_TIME;
 const int MAX_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
 const int TOO_LOUD_TIMED_SHOT = 30;
-const int TIMED_SHOT_LEVEL = -7;
-const int MAX_PICTURES_PER_MINUTE = 5;
+const int TIMED_SHOT_LEVEL = -5;
+const int MAX_PICTURES_PER_MINUTE = 10;
 const int BUTTON_WIDTH = 160;
 
 
@@ -97,8 +97,8 @@ const int START_BUTTON_HEIGHT = 65;
 {
     [super viewDidLoad];
 
-    [self.startButton setImage:[UIImage imageNamed:@"startButton.png"] forState:UIControlStateNormal];
-    [self.hideButton  setImage:[UIImage imageNamed:@"hideButton.png"]  forState:UIControlStateNormal];
+    [self.startButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+    [self.hideButton  setImage:[UIImage imageNamed:@"hide.png"]  forState:UIControlStateNormal];
     
     if(!self.recorder.recording) {
         [self.recorder prepareToRecord];
@@ -440,8 +440,7 @@ const int START_BUTTON_HEIGHT = 65;
     [self.updateTimer invalidate];
     [self.recorder stop];
     [self.session stopRunning];
-    [self.startButton setTitle:@"Start!" forState:UIControlStateNormal];
-    [self.startButton setImage:[UIImage imageNamed:@"startButton.png"] forState:UIControlStateNormal];
+    [self.startButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
 }
 
 - (IBAction)startEverything
@@ -452,8 +451,7 @@ const int START_BUTTON_HEIGHT = 65;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
-    [self.startButton setTitle:@"Stop!" forState:UIControlStateNormal];
-    [self.startButton setImage:[UIImage imageNamed:@"stopButton.png"] forState:UIControlStateNormal];
+    [self.startButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
 }
 
 - (IBAction)toggleHide:(id)sender
