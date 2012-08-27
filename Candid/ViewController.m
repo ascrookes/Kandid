@@ -257,7 +257,7 @@ const int START_BUTTON_HEIGHT = 65;
         [videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]];
     }
     [self.imageCapture captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
-        //NSLog(@"CAPTURING");
+        
         if(!CMSampleBufferIsValid(imageSampleBuffer) || !CMSampleBufferDataIsReady(imageSampleBuffer)) {
             // the buffer is not ready to capture the image and would crash
             // Reset the time so it doesnt wait to take another picture
@@ -272,6 +272,7 @@ const int START_BUTTON_HEIGHT = 65;
             [self.table reloadData];
             self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
         });
+        NSLog(@"CAPTURING: %i",self.numPictures);
     }];
 }
 

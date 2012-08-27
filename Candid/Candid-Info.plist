@@ -16,6 +16,8 @@
 			<array>
 				<string>cam.png</string>
 				<string>camIcon.png</string>
+				<string>icon.png</string>
+				<string>icon@2x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
