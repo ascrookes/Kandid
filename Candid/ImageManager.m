@@ -11,6 +11,14 @@
 // images are square so this is the width and height
 const int IMAGE_SIZE = 200;
 
+// the distance from the images dimensions that the watermark is placed
+// (these values are subtracted from the dimensions)
+const int WATERMARK_DELTA_X = 150;
+const int WATERMARK_DELTA_Y = 60;
+// Used for the fram of the label used to draw that watermark
+const int WATERMARK_WIDTH   = 130;
+const int WATERMARK_HEIGHT  = 40;
+
 @implementation ImageManager
 
 @synthesize imageData = _imageData;
@@ -39,7 +47,6 @@ const int IMAGE_SIZE = 200;
         image = [self thumbnailFromData:[self.imageData objectAtIndex:index]];
         [self.thumbnails replaceObjectAtIndex:index withObject:image];
     }
-    
     return image;
 }
 
@@ -63,25 +70,47 @@ const int IMAGE_SIZE = 200;
 
 - (void)saveImage:(NSData*)imageData watermark:(BOOL)watermark
 {
+    UIImage* saveImage;
+    if(watermark) {
+        saveImage = [self addWatermarkToImageData:imageData];
+    } else {
+        saveImage = [UIImage imageWithData:imageData];
+    }
+    UIImageWriteToSavedPhotosAlbum(saveImage, nil, nil, nil);
+    UIGraphicsEndImageContext();
+}
+
+// Draws the image in a context and then creates a label
+// and draws that label on top of the image and returns that one
+- (UIImage*)addWatermarkToImageData:(NSData*)imageData
+{
     UIImage* img = [UIImage imageWithData:imageData];
     UIGraphicsBeginImageContext(img.size);
     [img drawInRect:CGRectMake(0, 0, img.size.width, img.size.height)];
     
-    // If waterwark add a watermark to the bottom right corner of the saved image
-    // WHY WONT THE WATERMAR STAY WHEN I SAVE THE IMAGE
-    if(watermark) {
-        //NSString* mark = @"Candid";
-        //[mark drawInRect:CGRectMake(0, 0, img.size.width, img.size.height) withFont:[UIFont fontWithName:@"Didot" size:45]];
-    }
+    int imgWidth = img.size.width;
+    int imgHeight = img.size.height;
+    // 2.4 and 7.5 are just percentages I found to work well with situating the waterwark in relation to the size of the image
+    // the image varies by device camera quality so mae sure this works for all cams
+    //int widthDelta  = 2.8;
+    int heightDelta = 9.0;
+
+    UILabel* watermark = [[UILabel alloc] initWithFrame:CGRectMake(0, imgHeight - imgHeight/heightDelta, imgWidth, imgHeight/heightDelta)];
+    watermark.baselineAdjustment = UIBaselineAdjustmentAlignBaselines;
+    watermark.textAlignment = UITextAlignmentRight;
+    watermark.backgroundColor = [UIColor clearColor];
+    watermark.textColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.8];
+    watermark.text = @"Candid ";
+    watermark.font = [UIFont fontWithName:@"Didot-Italic" size:imgWidth/8];
+    watermark.shadowColor = [UIColor blackColor];
+    watermark.shadowOffset = CGSizeMake(0, -1.5);
+    [watermark drawTextInRect:watermark.frame];
     
     UIImage* saveImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIImageWriteToSavedPhotosAlbum(saveImage, nil, nil, nil);
     UIGraphicsEndImageContext();
-
+    
+    return saveImage;
 }
-
-
-
 
 //*********************************************************
 //*********************************************************
@@ -89,6 +118,7 @@ const int IMAGE_SIZE = 200;
 //*********************************************************
 //*********************************************************
 
+// Fill the entire thumbnail array with a BOOL (NO), since thumbnails can be recreated
 - (void)conserveMemory
 {
     for(int i = 0; i < [self.thumbnails count]; i++)
@@ -97,6 +127,7 @@ const int IMAGE_SIZE = 200;
     }
 }
 
+// use image data because that is always accurate in terms of photos
 - (NSInteger)count
 {
     return [self.imageData count];

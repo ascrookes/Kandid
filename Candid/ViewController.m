@@ -19,12 +19,13 @@ const int PEAK_DIFFERENCE = 5;
 const int ADJUST_NUM = 5;
 const int UPDATE_TIME = 5;
 const int MINUTE = 60/UPDATE_TIME;
+const int MAIN_TIMER_REPEAT_TIME = 0.1;
 // The cushion above the max to monitor where the max should be
 const int MAX_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
 const int TOO_LOUD_TIMED_SHOT = 30;
-const int TIMED_SHOT_LEVEL = -5;
-const int MAX_PICTURES_PER_MINUTE = 10;
+const int TIMED_SHOT_LEVEL = -6;
+const int MAX_PICTURES_PER_MINUTE = 8;
 const int BUTTON_WIDTH = 160;
 
 
@@ -56,6 +57,7 @@ const int START_BUTTON_HEIGHT = 65;
 
 
 @implementation ViewController
+
 @synthesize levelLabel = _levelLabel;
 
 @synthesize recorder = _recorder;
@@ -138,6 +140,7 @@ const int START_BUTTON_HEIGHT = 65;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+// Orientation Stuff
 /*
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
@@ -211,7 +214,6 @@ const int START_BUTTON_HEIGHT = 65;
 */
 
 
-
 //*********************************************************
 //*********************************************************
 #pragma mark - AV Stuff
@@ -220,6 +222,7 @@ const int START_BUTTON_HEIGHT = 65;
 
 - (void)setupRecorder
 {
+    // Doesnt save the audio, throws it away
     NSURL *url = [NSURL fileURLWithPath:@"/dev/null"];
     
     NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -236,6 +239,7 @@ const int START_BUTTON_HEIGHT = 65;
 }
 
 
+// Captures an image, adds that image to the table in view, and saves it to the library
 - (void)captureNow
 {
     self.lastTakenTime = [NSDate date];
@@ -249,8 +253,8 @@ const int START_BUTTON_HEIGHT = 65;
                 break;
             }
         }
-        if (videoConnection) { 
-            break; 
+        if (videoConnection) {
+            break;
         }
     }
     if(videoConnection) {
@@ -283,7 +287,9 @@ const int START_BUTTON_HEIGHT = 65;
 //*********************************************************
 //*********************************************************
 
-//Action for self.timer
+
+// Called by self.timer and checks if it is loud enough for a picture to be taken
+// Takes the function to take a picture if that is the case
 - (void)levelTimerCallback:(NSTimer *)timer
 {
 	[self.recorder updateMeters];
@@ -296,6 +302,7 @@ const int START_BUTTON_HEIGHT = 65;
     }
 }
 
+// Given the current volume peak it says if a picture should be taken
 - (BOOL)allowedToCapturePeak:(float)peak
 {
     return  peak >= self.volumeMax &&
@@ -306,7 +313,11 @@ const int START_BUTTON_HEIGHT = 65;
             && self.picturesTakenThisMinute < MAX_PICTURES_PER_MINUTE;
 }
 
-//Action for self.updateTimer
+// Action for self.updateTimer
+// Updates the max and cushion based on the average peak
+// And starts the appropriate timer if it is not running
+// It will start the timedPicture timer if it is too loud to rely on the volume
+// It will start updateTimer so that timer can function
 - (void)monitorVolume
 {
     bool update = YES;
@@ -350,6 +361,7 @@ const int START_BUTTON_HEIGHT = 65;
     }
 }
 
+// Only capture if the average volume is greater than what is designated as too loud (TIMED_SHOT_LEVEL)
 - (void)captureIfTimerIsValid
 {
     double avgPeak = self.totalPeak/self.timeIntervals;
@@ -418,11 +430,12 @@ const int START_BUTTON_HEIGHT = 65;
 //*********************************************************
 //*********************************************************
 
+
+//clears the images but keeps the data
+//when access images from the manager it
+//will recreate deleted images from the data
 - (void)didReceiveMemoryWarning
 {
-    //clears the images but keeps the data
-    //when access images from the manager it
-    //will recreate deleted images from the data
     [self.imageManager conserveMemory];
 }
 
@@ -442,6 +455,7 @@ const int START_BUTTON_HEIGHT = 65;
     [self.recorder stop];
     [self.session stopRunning];
     [self.startButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+    self.levelLabel.text = @"Not Running";
 }
 
 - (IBAction)startEverything
@@ -449,7 +463,7 @@ const int START_BUTTON_HEIGHT = 65;
     // the camera needs time to warm up so this stops black pictures from being taken
     self.lastTakenTime = [NSDate date];
     [self.recorder record];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:MAIN_TIMER_REPEAT_TIME target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
     [self.startButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
