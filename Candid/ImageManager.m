@@ -19,6 +19,9 @@ const int WATERMARK_DELTA_Y = 60;
 const int WATERMARK_WIDTH   = 130;
 const int WATERMARK_HEIGHT  = 40;
 
+// The bigger this number the small the watermark
+const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
+
 @implementation ImageManager
 
 @synthesize imageData = _imageData;
@@ -99,9 +102,9 @@ const int WATERMARK_HEIGHT  = 40;
     watermark.baselineAdjustment = UIBaselineAdjustmentAlignBaselines;
     watermark.textAlignment = UITextAlignmentRight;
     watermark.backgroundColor = [UIColor clearColor];
-    watermark.textColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.8];
+    watermark.textColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.6];
     watermark.text = @"Candid ";
-    watermark.font = [UIFont fontWithName:@"Didot-Italic" size:imgWidth/8];
+    watermark.font = [UIFont fontWithName:@"Didot-Italic" size:imgWidth/WATER_MARK_FONT_REDUCE_FACTOR];
     watermark.shadowColor = [UIColor blackColor];
     watermark.shadowOffset = CGSizeMake(0, -1.5);
     [watermark drawTextInRect:watermark.frame];
