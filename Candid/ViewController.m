@@ -108,7 +108,7 @@ const int START_BUTTON_HEIGHT = 65;
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
     }    
-    self.volumeMax = -5.0;
+    self.volumeMax = -10.0;
     self.averageUpdatePeak = self.volumeMax - MAX_CUSHION;
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
@@ -331,7 +331,9 @@ const int START_BUTTON_HEIGHT = 65;
     if(cell == nil) {
         cell = [[ImageCell alloc] init];
     }
-    [cell addImage:[self.imageManager getImageAtIndex:indexPath.row]];
+    // add the images to the table in reverse order and limit to 10
+    // hopefully that will stop the app from crashing as much
+    [cell addImage:[self.imageManager getImageAtIndex:[self.imageManager count] - indexPath.row - 1]];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
@@ -343,7 +345,8 @@ const int START_BUTTON_HEIGHT = 65;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.imageManager count];
+    int count = [self.imageManager count];
+    return (count < 10) ? count : 10;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -365,7 +368,10 @@ const int START_BUTTON_HEIGHT = 65;
 //will recreate deleted images from the data
 - (void)didReceiveMemoryWarning
 {
+    self.table.userInteractionEnabled = NO;
     [self.imageManager conserveMemory];
+    [self.table reloadData];
+    self.table.userInteractionEnabled = YES;
 }
 
 - (IBAction)toggleRecording:(id)sender 
@@ -398,8 +404,7 @@ const int START_BUTTON_HEIGHT = 65;
     [self.startButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
 }
 
-- (IBAction)toggleHide:(id)sender
-{
+- (IBAction)toggleHide:(id)sender {
     self.hideView.hidden = (self.hideView.hidden) ? NO : YES;
 }
 
