@@ -14,6 +14,7 @@
 #pragma mark - Camera constants
 //*********************************************************
 //*********************************************************
+
 const int SECONDS_BETWEEN_IMAGES = -5;
 const int PEAK_DIFFERENCE = 5;
 const int ADJUST_NUM = 5;
@@ -23,7 +24,7 @@ const int MAIN_TIMER_REPEAT_TIME = 0.1;
 // The cushion above the max to monitor where the max should be
 const int MAX_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
-const int TOO_LOUD_TIMED_SHOT = 30;
+const int TOO_LOUD_TIMED_SHOT = 10;
 const int TIMED_SHOT_LEVEL = -6;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int BUTTON_WIDTH = 160;
@@ -34,6 +35,7 @@ const int BUTTON_WIDTH = 160;
 #pragma mark - UI constants
 //*********************************************************
 //*********************************************************
+
 const int TABLE_WIDTH   = 300;
 const int TABLE_DELTA_X = 10;
 const int START_BUTTON_HEIGHT = 65;
@@ -112,8 +114,6 @@ const int START_BUTTON_HEIGHT = 65;
     self.table.separatorColor  = [UIColor blackColor];
 }
 
-     
-
 - (void)viewDidUnload
 {
     [self setPicturesTaken:nil];
@@ -139,79 +139,6 @@ const int START_BUTTON_HEIGHT = 65;
     //[self setUIBasedOnOrientation:interfaceOrientation];
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
-// Orientation Stuff
-/*
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    [UIView setAnimationsEnabled:YES];
-}
-
-
-
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    // This is set to rotate against the screens rotation
-    // Thus giving the appereance of whatever this is applied does not move
-    CGAffineTransform antiRotate;
-    switch (toInterfaceOrientation) {
-        case UIInterfaceOrientationLandscapeLeft:
-            antiRotate = CGAffineTransformMakeRotation(M_PI_2); // 90 degress
-            break;
-        case UIInterfaceOrientationLandscapeRight:
-            antiRotate = CGAffineTransformMakeRotation(M_PI + M_PI_2); // 270 degrees
-            break;
-        case UIInterfaceOrientationPortraitUpsideDown:
-            antiRotate = CGAffineTransformMakeRotation(M_PI); // 180 degrees
-            break;
-        default:
-            antiRotate = CGAffineTransformMakeRotation(0.0);
-            break;
-    }
-    self.cameraButton.transform  = antiRotate;
-    self.table.transform         = antiRotate;
-    self.hideView.transform      = antiRotate;
-    self.startButton.transform   = antiRotate;
-}
-
-
-//Moves the items on screen (silently
-- (void)setUIBasedOnOrientation:(UIInterfaceOrientation)orientation
-{
-    CGRect tableFrame;
-    CGRect hideViewFrame;
-    CGRect startButton;
-    switch (orientation) {
-        case UIInterfaceOrientationLandscapeRight:
-            tableFrame = CGRectMake(0, TABLE_DELTA_X, 480-START_BUTTON_HEIGHT, TABLE_WIDTH);
-            hideViewFrame = CGRectMake(0, 0, 480, 320);
-            startButton = CGRectMake(480-START_BUTTON_HEIGHT, 0, START_BUTTON_HEIGHT, 320);
-            break;
-        case UIInterfaceOrientationLandscapeLeft:
-            tableFrame = CGRectMake(START_BUTTON_HEIGHT, TABLE_DELTA_X, 480-START_BUTTON_HEIGHT, TABLE_WIDTH);
-            hideViewFrame = CGRectMake(0, 0, 480, 320);
-            startButton = CGRectMake(0, 0, START_BUTTON_HEIGHT, 320);
-            break;
-        case UIInterfaceOrientationPortrait:
-            tableFrame = CGRectMake(TABLE_DELTA_X, 0, TABLE_WIDTH, 480-START_BUTTON_HEIGHT);
-            hideViewFrame = CGRectMake(0, 0, 320, 480);
-            startButton = CGRectMake(0, 480-START_BUTTON_HEIGHT, 320, START_BUTTON_HEIGHT);
-            break;
-        case UIInterfaceOrientationPortraitUpsideDown:
-            tableFrame = CGRectMake(TABLE_DELTA_X, START_BUTTON_HEIGHT, TABLE_WIDTH, 480-START_BUTTON_HEIGHT);
-            hideViewFrame = CGRectMake(0, 0, 320, 480);
-            startButton = CGRectMake(0, 0, 320, START_BUTTON_HEIGHT);
-            break;
-        default:
-            NSLog(@"WTF MAN!!!!!!!!!!!");
-            break;
-    }
-    self.table.frame = tableFrame;
-    self.hideView.frame = hideViewFrame;
-    self.startButton.frame = startButton;
-}
-*/
 
 
 //*********************************************************
@@ -260,7 +187,9 @@ const int START_BUTTON_HEIGHT = 65;
     if(videoConnection) {
         [videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]];
     }
-    [self.imageCapture captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
+    
+    [self.imageCapture captureStillImageAsynchronouslyFromConnection:videoConnection
+                                                   completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
         
         if(!CMSampleBufferIsValid(imageSampleBuffer) || !CMSampleBufferDataIsReady(imageSampleBuffer)) {
             // the buffer is not ready to capture the image and would crash
@@ -305,12 +234,12 @@ const int START_BUTTON_HEIGHT = 65;
 // Given the current volume peak it says if a picture should be taken
 - (BOOL)allowedToCapturePeak:(float)peak
 {
-    return  peak >= self.volumeMax &&
-            [self.lastTakenTime timeIntervalSinceNow] < SECONDS_BETWEEN_IMAGES &&
-            ![self.timedPicture isValid]
+    return     peak >= self.volumeMax
+            && [self.lastTakenTime timeIntervalSinceNow] < SECONDS_BETWEEN_IMAGES
+            && ![self.timedPicture isValid]
             && self.session.running
-            && self.recorder.recording
-            && self.picturesTakenThisMinute < MAX_PICTURES_PER_MINUTE;
+            && self.recorder.recording;
+            //&& self.picturesTakenThisMinute <= MAX_PICTURES_PER_MINUTE;
 }
 
 // Action for self.updateTimer

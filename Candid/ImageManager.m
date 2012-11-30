@@ -36,7 +36,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 - (void)addImageData:(NSData*)imageData save:(BOOL)saveImage
 {
     [self.imageData addObject:imageData];
-    [self.thumbnails addObject:[self thumbnailFromData:imageData]];
+     [self.thumbnails addObject:[self thumbnailFromData:imageData]];
     
     if(saveImage) {
         [self saveImage:imageData watermark:YES];

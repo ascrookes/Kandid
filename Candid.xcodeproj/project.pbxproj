@@ -40,6 +40,10 @@
 		8E9AC53415DCA4940085B344 /* ImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E9AC53315DCA4940085B344 /* ImageManager.m */; };
 		8ECFE8EA15DB6A0D00E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
 		8ECFE8EB15DB6A3400E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
+		8EF7AD6B1668725F00D08EF0 /* iPhone5Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */; };
+		8EF7AD74166879DF00D08EF0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EF7AD73166879DF00D08EF0 /* Default-568h@2x.png */; };
+		8EF7AD76166879E200D08EF0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EF7AD75166879E200D08EF0 /* Default@2x.png */; };
+		8EF7AD78166879E500D08EF0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EF7AD77166879E500D08EF0 /* Default.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +95,10 @@
 		8E9AC53315DCA4940085B344 /* ImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageManager.m; sourceTree = "<group>"; };
 		8ECFE8E815DB6A0D00E86971 /* ImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCell.h; sourceTree = "<group>"; };
 		8ECFE8E915DB6A0D00E86971 /* ImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCell.m; sourceTree = "<group>"; };
+		8EF7AD6A1668725E00D08EF0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone5Storyboard.storyboard; sourceTree = "<group>"; };
+		8EF7AD73166879DF00D08EF0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		8EF7AD75166879E200D08EF0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		8EF7AD77166879E500D08EF0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +133,9 @@
 		8E5EB9C915964C3D00C4E185 = {
 			isa = PBXGroup;
 			children = (
+				8EF7AD77166879E500D08EF0 /* Default.png */,
+				8EF7AD75166879E200D08EF0 /* Default@2x.png */,
+				8EF7AD73166879DF00D08EF0 /* Default-568h@2x.png */,
 				8E2E897B15E990DC002D4DA1 /* icon@2x.png */,
 				8E2E897915E990D9002D4DA1 /* icon.png */,
 				8E916BFF15DF2353004C65AB /* UI */,
@@ -166,6 +177,7 @@
 				8E5EB9E715964C3E00C4E185 /* AppDelegate.h */,
 				8E5EB9E815964C3E00C4E185 /* AppDelegate.m */,
 				8E5EB9EA15964C3E00C4E185 /* MainStoryboard1.storyboard */,
+				8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */,
 				8E5EB9ED15964C3E00C4E185 /* ViewController.h */,
 				8E5EB9EE15964C3E00C4E185 /* ViewController.m */,
 				8E9AC53215DCA4940085B344 /* ImageManager.h */,
@@ -305,6 +317,10 @@
 				8E2E898A15E992F9002D4DA1 /* stop@2x.png in Resources */,
 				8E2E898B15E992F9002D4DA1 /* start.png in Resources */,
 				8E2E898C15E992F9002D4DA1 /* start@2x.png in Resources */,
+				8EF7AD6B1668725F00D08EF0 /* iPhone5Storyboard.storyboard in Resources */,
+				8EF7AD74166879DF00D08EF0 /* Default-568h@2x.png in Resources */,
+				8EF7AD76166879E200D08EF0 /* Default@2x.png in Resources */,
+				8EF7AD78166879E500D08EF0 /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,6 +407,14 @@
 				8E5EBA0015964C3E00C4E185 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8EF7AD6A1668725E00D08EF0 /* en */,
+			);
+			name = iPhone5Storyboard.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

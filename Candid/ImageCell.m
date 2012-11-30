@@ -8,7 +8,7 @@
 
 #import "ImageCell.h"
 
-@implementation ImageCell
+@implementation ImageCell 
 @synthesize imageView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
