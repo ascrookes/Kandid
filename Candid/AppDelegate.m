@@ -23,15 +23,14 @@
         CGSize result = [[UIScreen mainScreen] bounds].size;
         CGFloat scale = [UIScreen mainScreen].scale;
         result = CGSizeMake(result.width * scale, result.height * scale);
-        NSLog(@"RESULT: %f", result.height);
+        // this is the height of the iPhone 5 Screen
+        // change the storyboard to use the entire screen
         if(result.height == 1136){
             storyBoard = [UIStoryboard storyboardWithName:@"iPhone5Storyboard" bundle:nil];
             UIViewController *initViewController = [storyBoard instantiateInitialViewController];
             [self.window setRootViewController:initViewController];
-            NSLog(@"CHANgINg STORYBOARD");
         }
     }
-    
     
     return YES;
 }

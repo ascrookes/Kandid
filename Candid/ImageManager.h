@@ -10,8 +10,6 @@
 
 @interface ImageManager : NSObject
 
-@property (nonatomic,strong) NSMutableArray* imageData;
-@property (nonatomic,strong) NSMutableArray* thumbnails;
 
 - (void)addImageData:(NSData*)imageData save:(BOOL)saveImage;
 - (UIImage*)getImageAtIndex:(NSInteger)index;
@@ -19,6 +17,7 @@
 - (NSInteger)count;
 - (UIImage*)lastImage;
 - (void)saveImage:(NSData*)imageData watermark:(BOOL)watermark;
+- (void)clearImageData;
 
 
 @end

@@ -22,6 +22,13 @@ const int WATERMARK_HEIGHT  = 40;
 // The bigger this number the small the watermark
 const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 
+@interface ImageManager ()
+
+@property (nonatomic,strong) NSMutableArray* imageData;
+@property (nonatomic,strong) NSMutableArray* thumbnails;
+
+@end
+
 @implementation ImageManager
 
 @synthesize imageData = _imageData;
@@ -36,10 +43,10 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 - (void)addImageData:(NSData*)imageData save:(BOOL)saveImage
 {
     [self.imageData addObject:imageData];
-     [self.thumbnails addObject:[self thumbnailFromData:imageData]];
+    [self.thumbnails addObject:[self thumbnailFromData:imageData]];
     
     if(saveImage) {
-        [self saveImage:imageData watermark:YES];
+        [self saveImage:imageData watermark:YES/* if not a premium user... */];
     }
 }
 
@@ -128,6 +135,14 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     {
         [self.thumbnails replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:NO]];
     }
+}
+
+// if this is the datasource for a table (or something like that)
+// reload the data immedietly after calling this function
+- (void)clearImageData
+{
+    self.imageData = NULL;
+    self.thumbnails = NULL;
 }
 
 // use image data because that is always accurate in terms of photos

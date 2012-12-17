@@ -25,7 +25,7 @@ const int MAIN_TIMER_REPEAT_TIME = 0.1;
 const int MAX_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
 const int TOO_LOUD_TIMED_SHOT = 10;
-const int TIMED_SHOT_LEVEL = -6;
+const int TIMED_SHOT_LEVEL = -5;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int BUTTON_WIDTH = 160;
 
@@ -102,7 +102,7 @@ const int START_BUTTON_HEIGHT = 65;
     [super viewDidLoad];
 
     [self.startButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
-    [self.hideButton  setImage:[UIImage imageNamed:@"hide.png"]  forState:UIControlStateNormal];
+    [self.hideButton  setImage:[UIImage imageNamed:@"clear.png"]  forState:UIControlStateNormal];
     
     if(!self.recorder.recording) {
         [self.recorder prepareToRecord];
@@ -202,6 +202,7 @@ const int START_BUTTON_HEIGHT = 65;
         self.numPictures++;
         self.picturesTakenThisMinute++;
         dispatch_async(dispatch_get_main_queue(), ^{
+            //[self.table reloadRowsAtIndexPaths:[self.table visibleCells] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self.table reloadData];
             self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
         });
@@ -346,7 +347,7 @@ const int START_BUTTON_HEIGHT = 65;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     int count = [self.imageManager count];
-    return (count < 10) ? count : 10;
+    return (count < 25) ? count : 25;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -354,7 +355,61 @@ const int START_BUTTON_HEIGHT = 65;
     // DONT DO SHIT
 }
 
- 
+//*********************************************************
+//*********************************************************
+#pragma mark - IBActions
+//*********************************************************
+//*********************************************************
+
+
+- (IBAction)toggleRecording:(id)sender 
+{
+    if(self.session.running && self.recorder.recording) {
+        [self stopEverything];
+    } else {
+        [self startEverything];
+    }
+}
+
+- (IBAction)stopEverything
+{
+    [self.timer invalidate];
+    [self.updateTimer invalidate];
+    [self.recorder stop];
+    [self.session stopRunning];
+    [self.startButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+    [self.hideButton setImage:[UIImage imageNamed:@"clear.png"] forState:UIControlStateNormal];
+    [self.hideButton removeTarget:self action:@selector(toggleHide:) forControlEvents:UIControlEventTouchUpInside];
+    [self.hideButton addTarget:self action:@selector(clearFilmRoll:) forControlEvents:UIControlEventTouchUpInside];
+    self.levelLabel.text = @"Not Running";
+}
+
+- (IBAction)startEverything
+{
+    // the camera needs time to warm up so this stops black pictures from being taken
+    self.lastTakenTime = [NSDate date];
+    [self.recorder record];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:MAIN_TIMER_REPEAT_TIME target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
+    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
+    [self.session startRunning];
+    [self.startButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+    [self.hideButton setImage:[UIImage imageNamed:@"hide.png"] forState:UIControlStateNormal];
+    [self.hideButton removeTarget:self action:@selector(clearFilmRoll:) forControlEvents:UIControlEventTouchUpInside];
+    [self.hideButton addTarget:self action:@selector(toggleHide:) forControlEvents:UIControlEventTouchUpInside];
+
+}
+
+- (IBAction)toggleHide:(id)sender {
+    self.hideView.hidden = !self.hideView.hidden;
+}
+
+- (IBAction)clearFilmRoll:(id)sender {
+    [self.imageManager clearImageData];
+    [self.table reloadData];
+    self.numPictures = 0;
+    self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
+}
+
 
 //*********************************************************
 //*********************************************************
@@ -374,39 +429,6 @@ const int START_BUTTON_HEIGHT = 65;
     self.table.userInteractionEnabled = YES;
 }
 
-- (IBAction)toggleRecording:(id)sender 
-{
-    if(self.session.running && self.recorder.recording) {
-        [self stopEverything];
-    } else {
-        [self startEverything];
-    }
-}
-
-- (IBAction)stopEverything
-{
-    [self.timer invalidate];
-    [self.updateTimer invalidate];
-    [self.recorder stop];
-    [self.session stopRunning];
-    [self.startButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
-    self.levelLabel.text = @"Not Running";
-}
-
-- (IBAction)startEverything
-{
-    // the camera needs time to warm up so this stops black pictures from being taken
-    self.lastTakenTime = [NSDate date];
-    [self.recorder record];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:MAIN_TIMER_REPEAT_TIME target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
-    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
-    [self.session startRunning];
-    [self.startButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
-}
-
-- (IBAction)toggleHide:(id)sender {
-    self.hideView.hidden = (self.hideView.hidden) ? NO : YES;
-}
 
 
 //*********************************************************

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
     </dependencies>
     <scenes>
@@ -32,7 +31,7 @@
                                 <rect key="frame" x="0.0" y="519" width="320" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Baskerville-BoldItalic" family="Baskerville" pointSize="24"/>
-                                <state key="normal" backgroundImage="hide.png">
+                                <state key="normal" image="clear.png">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -40,7 +39,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="toggleHide:" destination="2" eventType="touchUpInside" id="nlL-lx-RG6"/>
+                                    <action selector="clearFilmRoll:" destination="2" eventType="touchUpInside" id="fIw-KC-SLC"/>
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="250" sectionHeaderHeight="22" sectionFooterHeight="22" id="4uH-cK-5J5">
@@ -130,7 +129,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="hide.png" width="320" height="58"/>
+        <image name="clear.png" width="328" height="63"/>
         <image name="start.png" width="320" height="61"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

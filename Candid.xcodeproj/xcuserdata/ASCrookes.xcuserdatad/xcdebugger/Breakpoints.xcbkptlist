@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "375941189.693723"
+         timestampString = "377477042.453969"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "346"
-         endingLineNumber = "346"
+         startingLineNumber = "347"
+         endingLineNumber = "347"
          landmarkName = "-tableView:numberOfRowsInSection:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ImageManager.m"
-         timestampString = "375941220.277471"
+         timestampString = "377477042.453969"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "136"
-         endingLineNumber = "136"
+         startingLineNumber = "151"
+         endingLineNumber = "151"
          landmarkName = "-count"
          landmarkType = "5">
       </FileBreakpoint>
