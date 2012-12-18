@@ -400,7 +400,13 @@ const int START_BUTTON_HEIGHT = 65;
 }
 
 - (IBAction)toggleHide:(id)sender {
-    self.hideView.hidden = !self.hideView.hidden;
+    if(self.hideView.hidden) {
+        self.hideView.hidden = NO;
+        // fade the labels on the view
+    } else {
+        self.hideView.hidden = YES;
+        // put the labels back on. no animation since it happens in the background
+    }
 }
 
 - (IBAction)clearFilmRoll:(id)sender {
