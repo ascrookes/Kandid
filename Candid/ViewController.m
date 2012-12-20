@@ -28,6 +28,15 @@ const int TOO_LOUD_TIMED_SHOT = 10;
 const int TIMED_SHOT_LEVEL = -5;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int BUTTON_WIDTH = 160;
+const int VOLUME_MIN = -60; // the minimum the volume limit can get
+
+// if this changes, also change the setFlashMode function
+// so that is bounds check correctly
+typedef enum FLASH_MODE {
+    FLASH_MODE_ON = 0,
+    FLASH_MODE_OFF = 1,
+    /*FLASH_MODE_AUTO = 2*/
+} FLASH_MODE;
 
 
 //*********************************************************
@@ -54,6 +63,7 @@ const int START_BUTTON_HEIGHT = 65;
 @property (nonatomic, strong) AVCaptureSession* session;
 @property (nonatomic, strong) NSDate* lastTakenTime;
 @property (nonatomic) int numPictures;
+@property (nonatomic) FLASH_MODE /*change this to the enum*/ flashMode;
 
 @end
 
@@ -112,6 +122,7 @@ const int START_BUTTON_HEIGHT = 65;
     self.averageUpdatePeak = self.volumeMax - MAX_CUSHION;
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
+    self.flashMode = FLASH_MODE_OFF;
 }
 
 - (void)viewDidUnload
@@ -123,6 +134,7 @@ const int START_BUTTON_HEIGHT = 65;
     [self setHideView:nil];
     [self setStartButton:nil];
     [self setHideButton:nil];
+    [self setFlashButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -158,9 +170,7 @@ const int START_BUTTON_HEIGHT = 65;
                               [NSNumber numberWithInt: 1],                         AVNumberOfChannelsKey,
                               [NSNumber numberWithInt: AVAudioQualityHigh],        AVEncoderAudioQualityKey,
                               nil];
-    
     NSError* error;
-    
     self.recorder = [[AVAudioRecorder alloc] initWithURL:url settings:settings error:&error];
     self.recorder.delegate = self;
 }
@@ -169,13 +179,18 @@ const int START_BUTTON_HEIGHT = 65;
 // Captures an image, adds that image to the table in view, and saves it to the library
 - (void)captureNow
 {
+    BOOL useFlash = (self.flashMode == FLASH_MODE_ON);
+    if(useFlash) {
+        [self changeTorchMode:AVCaptureTorchModeOn];
+        sleep(1); // TODO -- get rid of this somehow, it delays the taking of the picture
+                  // which is not wanted
+        
+    }
     self.lastTakenTime = [NSDate date];
     AVCaptureConnection *videoConnection = nil;
-    for (AVCaptureConnection *connection in self.imageCapture.connections){
-        for (AVCaptureInputPort *port in [connection inputPorts]){
-            
+    for (AVCaptureConnection *connection in self.imageCapture.connections) {
+        for (AVCaptureInputPort *port in [connection inputPorts]) {
             if ([[port mediaType] isEqual:AVMediaTypeVideo]){
-                
                 videoConnection = connection;
                 break;
             }
@@ -197,7 +212,9 @@ const int START_BUTTON_HEIGHT = 65;
             self.lastTakenTime = [NSDate distantPast];
             return;
         }
+
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
+        
         [self.imageManager addImageData:imageData save:YES];
         self.numPictures++;
         self.picturesTakenThisMinute++;
@@ -205,7 +222,11 @@ const int START_BUTTON_HEIGHT = 65;
             //[self.table reloadRowsAtIndexPaths:[self.table visibleCells] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self.table reloadData];
             self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
+            if(useFlash) {
+                [self changeTorchMode:AVCaptureTorchModeOff];
+            }
         });
+        //[self toggleFlash];
         NSLog(@"CAPTURING: %i",self.numPictures);
     }];
 }
@@ -377,6 +398,8 @@ const int START_BUTTON_HEIGHT = 65;
     [self.updateTimer invalidate];
     [self.recorder stop];
     [self.session stopRunning];
+    self.camDevice = nil;
+    self.camInput  = nil;
     [self.startButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
     [self.hideButton setImage:[UIImage imageNamed:@"clear.png"] forState:UIControlStateNormal];
     [self.hideButton removeTarget:self action:@selector(toggleHide:) forControlEvents:UIControlEventTouchUpInside];
@@ -416,6 +439,22 @@ const int START_BUTTON_HEIGHT = 65;
     self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
 }
 
+- (IBAction)toggleFlashMode:(id)sender {
+    self.flashMode++;
+    NSLog(@"FLASH MODE: %i", self.flashMode);
+    switch (self.flashMode) {
+        case FLASH_MODE_ON:
+            [self.flashButton setTitle:@"FLASH ON" forState:UIControlStateNormal];
+            break;
+        case FLASH_MODE_OFF:
+            [self.flashButton setTitle:@"FLASH OFF" forState:UIControlStateNormal];
+            break;
+        default:
+            [self.flashButton setTitle:@"DEFAULT, WHAT???" forState:UIControlStateNormal];
+            break;
+    }
+}
+
 
 //*********************************************************
 //*********************************************************
@@ -435,6 +474,23 @@ const int START_BUTTON_HEIGHT = 65;
     self.table.userInteractionEnabled = YES;
 }
 
+- (void)toggleFlash
+{
+    if(self.camDevice.torchActive) {
+        [self changeTorchMode:AVCaptureTorchModeOff];
+    } else {
+        [self changeTorchMode:AVCaptureTorchModeOn];
+    }
+}
+
+- (void)changeTorchMode:(AVCaptureTorchMode)mode
+{
+    [self.session beginConfiguration];
+    [self.camDevice lockForConfiguration:nil];
+    [self.camDevice setTorchMode:mode];
+    [self.camDevice unlockForConfiguration];
+    [self.session commitConfiguration];
+}
 
 
 //*********************************************************
@@ -487,6 +543,8 @@ const int START_BUTTON_HEIGHT = 65;
 {
     if(!_camDevice) {
         _camDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+//        [self.camDevice lockForConfiguration:nil];
+//        self.camDevice.torchMode = AVCaptureTorchModeOn;
     }
     
     return _camDevice;
@@ -545,8 +603,8 @@ const int START_BUTTON_HEIGHT = 65;
 {
     if(volumeMax > 0)
         _volumeMax = 0;
-    else if(volumeMax < -50)
-        _volumeMax = -50;
+    else if(volumeMax < VOLUME_MIN)
+        _volumeMax = VOLUME_MIN;
     else
         _volumeMax = volumeMax;
 }
@@ -571,6 +629,18 @@ const int START_BUTTON_HEIGHT = 65;
         _imageManager = [[ImageManager alloc] init];
     }
     return _imageManager;
+}
+
+// bounds check the flash mode
+- (void)setFlashMode:(FLASH_MODE)flashMode
+{
+    if(flashMode > FLASH_MODE_OFF) {
+        _flashMode = FLASH_MODE_ON;
+    } else if(flashMode < FLASH_MODE_ON) {
+        _flashMode = FLASH_MODE_OFF;
+    } else {
+        _flashMode = flashMode;
+    }
 }
 
 

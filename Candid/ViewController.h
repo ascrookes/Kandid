@@ -33,6 +33,7 @@
 @property (nonatomic) int picturesTakenThisMinute;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UIButton *hideButton;
+@property (weak, nonatomic) IBOutlet UIButton *flashButton;
 
 
 - (void)levelTimerCallback:(NSTimer *)timer;
