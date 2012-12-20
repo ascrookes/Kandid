@@ -226,10 +226,10 @@
 		8E916BFF15DF2353004C65AB /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				8E756204168002AE00A3F308 /* clear.png */,
-				8E756205168002AE00A3F308 /* clear@2x.png */,
 				8E2E897D15E991EA002D4DA1 /* FilmRoll.png */,
 				8E2E897E15E991EA002D4DA1 /* FilmRoll@2x.png */,
+				8E756204168002AE00A3F308 /* clear.png */,
+				8E756205168002AE00A3F308 /* clear@2x.png */,
 				8E2E898115E992F9002D4DA1 /* hide.png */,
 				8E2E898215E992F9002D4DA1 /* hide@2x.png */,
 				8E2E898315E992F9002D4DA1 /* stop.png */,
