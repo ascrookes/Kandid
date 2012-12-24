@@ -33,8 +33,8 @@ const int VOLUME_MIN = -60; // the minimum the volume limit can get
 // if this changes, also change the setFlashMode function
 // so that is bounds check correctly
 typedef enum FLASH_MODE {
-    FLASH_MODE_ON = 0,
-    FLASH_MODE_OFF = 1,
+    FLASH_MODE_ON   = 0,
+    FLASH_MODE_OFF  = 1,
     /*FLASH_MODE_AUTO = 2*/
 } FLASH_MODE;
 
@@ -62,6 +62,7 @@ const int START_BUTTON_HEIGHT = 65;
 @property (nonatomic, strong) AVCaptureDevice* camDevice;
 @property (nonatomic, strong) AVCaptureSession* session;
 @property (nonatomic, strong) NSDate* lastTakenTime;
+@property (nonatomic, strong) AVCaptureConnection *videoConnection;
 @property (nonatomic) int numPictures;
 @property (nonatomic) FLASH_MODE /*change this to the enum*/ flashMode;
 
@@ -79,6 +80,7 @@ const int START_BUTTON_HEIGHT = 65;
 @synthesize camInput = _camInput;
 @synthesize camDevice = _camDevice;
 @synthesize session = _session;
+@synthesize videoConnection = _videoConnection;
 
 @synthesize imageManager = _imageManager;
 
@@ -184,26 +186,10 @@ const int START_BUTTON_HEIGHT = 65;
         [self changeTorchMode:AVCaptureTorchModeOn];
         sleep(1); // TODO -- get rid of this somehow, it delays the taking of the picture
                   // which is not wanted
-        
     }
     self.lastTakenTime = [NSDate date];
-    AVCaptureConnection *videoConnection = nil;
-    for (AVCaptureConnection *connection in self.imageCapture.connections) {
-        for (AVCaptureInputPort *port in [connection inputPorts]) {
-            if ([[port mediaType] isEqual:AVMediaTypeVideo]){
-                videoConnection = connection;
-                break;
-            }
-        }
-        if (videoConnection) {
-            break;
-        }
-    }
-    if(videoConnection) {
-        [videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]];
-    }
     
-    [self.imageCapture captureStillImageAsynchronouslyFromConnection:videoConnection
+    [self.imageCapture captureStillImageAsynchronouslyFromConnection:self.videoConnection
                                                    completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
         
         if(!CMSampleBufferIsValid(imageSampleBuffer) || !CMSampleBufferDataIsReady(imageSampleBuffer)) {
@@ -222,9 +208,7 @@ const int START_BUTTON_HEIGHT = 65;
             //[self.table reloadRowsAtIndexPaths:[self.table visibleCells] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self.table reloadData];
             self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
-            if(useFlash) {
-                [self changeTorchMode:AVCaptureTorchModeOff];
-            }
+            [self changeTorchMode:AVCaptureTorchModeOff];
         });
         //[self toggleFlash];
         NSLog(@"CAPTURING: %i",self.numPictures);
@@ -419,10 +403,10 @@ const int START_BUTTON_HEIGHT = 65;
     [self.hideButton setImage:[UIImage imageNamed:@"hide.png"] forState:UIControlStateNormal];
     [self.hideButton removeTarget:self action:@selector(clearFilmRoll:) forControlEvents:UIControlEventTouchUpInside];
     [self.hideButton addTarget:self action:@selector(toggleHide:) forControlEvents:UIControlEventTouchUpInside];
-
 }
 
-- (IBAction)toggleHide:(id)sender {
+- (IBAction)toggleHide:(id)sender
+{
     if(self.hideView.hidden) {
         self.hideView.hidden = NO;
         // fade the labels on the view
@@ -432,24 +416,31 @@ const int START_BUTTON_HEIGHT = 65;
     }
 }
 
-- (IBAction)clearFilmRoll:(id)sender {
+- (IBAction)clearFilmRoll:(id)sender
+{
     [self.imageManager clearImageData];
     [self.table reloadData];
     self.numPictures = 0;
     self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
 }
 
-- (IBAction)toggleFlashMode:(id)sender {
+- (IBAction)toggleFlashMode:(id)sender
+{
     self.flashMode++;
-    NSLog(@"FLASH MODE: %i", self.flashMode);
     switch (self.flashMode) {
         case FLASH_MODE_ON:
-            [self.flashButton setTitle:@"FLASH ON" forState:UIControlStateNormal];
+            [self.flashButton setImage:[UIImage imageNamed:@"flashOn.png"] forState:UIControlStateNormal];
             break;
         case FLASH_MODE_OFF:
-            [self.flashButton setTitle:@"FLASH OFF" forState:UIControlStateNormal];
+            [self.flashButton setImage:[UIImage imageNamed:@"flashOff.png"] forState:UIControlStateNormal];
             break;
+        /*
+        case FLASH_MODE_AUTO:
+            [self.flashButton setTitle:@"FLASH AUTO" forState:UIControlStateNormal];
+            break;
+         */
         default:
+            NSLog(@"FLASH MODE: %i", self.flashMode);
             [self.flashButton setTitle:@"DEFAULT, WHAT???" forState:UIControlStateNormal];
             break;
     }
@@ -642,6 +633,27 @@ const int START_BUTTON_HEIGHT = 65;
         _flashMode = flashMode;
     }
 }
+
+- (AVCaptureConnection*)videoConnection {
+    if(!_videoConnection) {
+        for (AVCaptureConnection *connection in self.imageCapture.connections) {
+            for (AVCaptureInputPort *port in [connection inputPorts]) {
+                if ([[port mediaType] isEqual:AVMediaTypeVideo]){
+                    _videoConnection = connection;
+                    break;
+                }
+            }
+            if (_videoConnection) {
+                break;
+            }
+        }
+    }
+    if(_videoConnection)
+        [_videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]];
+    
+    return _videoConnection;
+}
+
 
 
 @end

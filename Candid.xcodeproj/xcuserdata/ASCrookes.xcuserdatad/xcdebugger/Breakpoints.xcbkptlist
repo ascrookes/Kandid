@@ -8,12 +8,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "377687764.034647"
+         timestampString = "378027369.157404"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "365"
-         endingLineNumber = "365"
-         landmarkName = "-tableView:numberOfRowsInSection:"
+         startingLineNumber = "349"
+         endingLineNumber = "349"
+         landmarkName = "-numberOfSectionsInTableView:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -27,6 +27,19 @@
          startingLineNumber = "151"
          endingLineNumber = "151"
          landmarkName = "-count"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Candid/ViewController.m"
+         timestampString = "378027369.157404"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "188"
+         endingLineNumber = "188"
+         landmarkName = "-captureNow"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
