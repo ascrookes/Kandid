@@ -123,11 +123,14 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="hideButton" destination="xq1-si-S2z" id="mgq-MZ-bCw"/>
+                        <outlet property="hideLabel" destination="DOE-vO-UDq" id="BQg-2u-Shn"/>
                         <outlet property="hideView" destination="uvR-e8-GfZ" id="msg-m4-46O"/>
                         <outlet property="levelLabel" destination="dRu-ju-R5u" id="9Xn-bP-Gvx"/>
+                        <outlet property="numPixHiddenLabel" destination="DPj-NA-yZz" id="Ux8-wD-ZQb"/>
                         <outlet property="picturesTaken" destination="DPj-NA-yZz" id="AUq-6i-chW"/>
                         <outlet property="startButton" destination="hhb-qY-NRF" id="zlw-2x-JDv"/>
                         <outlet property="table" destination="4uH-cK-5J5" id="XkF-3Y-jQF"/>
+                        <outlet property="volumeHideLabel" destination="dRu-ju-R5u" id="yNc-Nw-HDO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -162,12 +165,15 @@
                 <relationship kind="outlet" name="cameraButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="flashButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="hideButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="hideLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="hideView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="imgView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="levelLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="numPixHiddenLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="picturesTaken" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="startButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="table" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="volumeHideLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
     </classes>

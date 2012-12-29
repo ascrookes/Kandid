@@ -35,6 +35,12 @@
 @property (weak, nonatomic) IBOutlet UIButton *hideButton;
 @property (weak, nonatomic) IBOutlet UIButton *flashButton;
 
+// The hidden view stuff
+@property (weak, nonatomic) IBOutlet UILabel *hideLabel;
+@property (weak, nonatomic) IBOutlet UILabel *numPixHiddenLabel;
+@property (weak, nonatomic) IBOutlet UILabel *volumeHideLabel;
+@property (nonatomic, strong) NSTimer* hideTimer;
+
 
 - (void)levelTimerCallback:(NSTimer *)timer;
 - (void)setupRecorder;

@@ -15,7 +15,7 @@
 //*********************************************************
 //*********************************************************
 
-const int SECONDS_BETWEEN_IMAGES = -5;
+const int SECONDS_BETWEEN_IMAGES = -3;
 const int PEAK_DIFFERENCE = 5;
 const int ADJUST_NUM = 5;
 const int UPDATE_TIME = 5;
@@ -101,6 +101,10 @@ const int START_BUTTON_HEIGHT = 65;
 @synthesize picturesTakenThisMinute;
 @synthesize startButton = _startButton;
 @synthesize hideButton = _hideButton;
+@synthesize hideLabel = _hideLabel;
+@synthesize numPixHiddenLabel = _numPixHiddenLabel;
+@synthesize volumeHideLabel = _volumeHideLabel;
+@synthesize hideTimer = _hideTimer;
 
 
 //*********************************************************
@@ -137,6 +141,9 @@ const int START_BUTTON_HEIGHT = 65;
     [self setStartButton:nil];
     [self setHideButton:nil];
     [self setFlashButton:nil];
+    [self setHideLabel:nil];
+    [self setNumPixHiddenLabel:nil];
+    [self setVolumeHideLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -408,12 +415,41 @@ const int START_BUTTON_HEIGHT = 65;
 - (IBAction)toggleHide:(id)sender
 {
     if(self.hideView.hidden) {
+        self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
         self.hideView.hidden = NO;
+        
         // fade the labels on the view
     } else {
+        [self.hideTimer invalidate];
         self.hideView.hidden = YES;
+        [self showHiddenLabels];
         // put the labels back on. no animation since it happens in the background
     }
+}
+
+- (void)hideLabels
+{
+    [UIView animateWithDuration:1.25 animations:^{
+        self.hideLabel.alpha = 0;
+        // TODO -- change these to ZERO
+        self.numPixHiddenLabel.alpha = 0.2;
+        self.volumeHideLabel.alpha = 0.2;
+        self.hideView.alpha = 1;
+    } completion:^(BOOL finished) {
+        self.hideLabel.hidden = YES;
+        //self.numPixHiddenLabel.hidden = YES;
+        //self.volumeHideLabel.hidden = YES;
+    }];
+}
+
+- (void)showHiddenLabels
+{
+    self.hideLabel.alpha = 0.9;
+    self.numPixHiddenLabel.alpha = 1;
+    self.volumeHideLabel.alpha = 1;
+    self.hideLabel.hidden = NO;
+    self.numPixHiddenLabel.hidden = NO;
+    self.volumeHideLabel.hidden = NO;
 }
 
 - (IBAction)clearFilmRoll:(id)sender
@@ -462,6 +498,7 @@ const int START_BUTTON_HEIGHT = 65;
     self.table.userInteractionEnabled = NO;
     [self.imageManager conserveMemory];
     [self.table reloadData];
+    self.videoConnection = NULL;
     self.table.userInteractionEnabled = YES;
 }
 
