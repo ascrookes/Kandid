@@ -22,7 +22,7 @@ const int UPDATE_TIME = 5;
 const int MINUTE = 60/UPDATE_TIME;
 const int MAIN_TIMER_REPEAT_TIME = 0.1;
 // The cushion above the max to monitor where the max should be
-const int MAX_CUSHION = 15;
+const int VOLUME_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
 const int TOO_LOUD_TIMED_SHOT = 10;
 const int TIMED_SHOT_LEVEL = -5;
@@ -31,10 +31,10 @@ const int BUTTON_WIDTH = 160;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
 
 // if this changes, also change the setFlashMode function
-// so that is bounds check correctly
+// so that it bounds check correctly
 typedef enum FLASH_MODE {
     FLASH_MODE_ON   = 0,
-    FLASH_MODE_OFF  = 1,
+    FLASH_MODE_OFF  = 1, 
     /*FLASH_MODE_AUTO = 2*/
 } FLASH_MODE;
 
@@ -85,6 +85,7 @@ const int START_BUTTON_HEIGHT = 65;
 @synthesize imageManager = _imageManager;
 
 @synthesize volumeMax = _volumeMax;
+@synthesize volumeMin = _volumeMin;
 @synthesize picturesTaken = _picturesTaken;
 
 @synthesize lastTakenTime = _lastTakenTime;
@@ -125,7 +126,7 @@ const int START_BUTTON_HEIGHT = 65;
         self.recorder.meteringEnabled = YES;
     }    
     self.volumeMax = -10.0;
-    self.averageUpdatePeak = self.volumeMax - MAX_CUSHION;
+    self.averageUpdatePeak = self.volumeMax - VOLUME_CUSHION;
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
     self.flashMode = FLASH_MODE_OFF;
@@ -191,7 +192,7 @@ const int START_BUTTON_HEIGHT = 65;
     BOOL useFlash = (self.flashMode == FLASH_MODE_ON);
     if(useFlash) {
         [self changeTorchMode:AVCaptureTorchModeOn];
-        sleep(1); // TODO -- get rid of this somehow, it delays the taking of the picture
+        sleep(0.75); // TODO -- get rid of this somehow, it delays the taking of the picture
                   // which is not wanted
     }
     self.lastTakenTime = [NSDate date];
@@ -247,7 +248,7 @@ const int START_BUTTON_HEIGHT = 65;
 // Given the current volume peak it says if a picture should be taken
 - (BOOL)allowedToCapturePeak:(float)peak
 {
-    return     peak >= self.volumeMax
+    return     peak >= self.volumeMax /*|| peak <= self.volumeMin -- add this to capture images when the volume decresses a lot*/
             && [self.lastTakenTime timeIntervalSinceNow] < SECONDS_BETWEEN_IMAGES
             && ![self.timedPicture isValid]
             && self.session.running
@@ -262,26 +263,30 @@ const int START_BUTTON_HEIGHT = 65;
 // It will start updateTimer so that timer can function
 - (void)monitorVolume
 {
-    bool update = YES;
     double avgPeak = self.totalPeak/self.timeIntervals;
-    // If the average volume is very close to 0 set up a timer for a timed shot and stop he regular timer
+    // If the average volume is very close to 0 set up a timer for a timed shot and stop the regular timer
     if(avgPeak > TIMED_SHOT_LEVEL) {
         self.volumeMax = -5;
-        [self.updateTimer invalidate];
         if(![self.timedPicture isValid]) {
             self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:TOO_LOUD_TIMED_SHOT target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
         }
-    // Else if the other timer is invalid start it again
-    } else if(![self.updateTimer isValid]) {
+    // Else stop the timed shot timer
+    } else {
         [self.timedPicture invalidate];
-        if([self.updateTimer isValid]) {
-            self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
-        }
     }
     
-    // If the average is too far away decrease the thresholds
-    // If the average is louder than the cushion from the threshold increase the thresholds
     double peakDiff = self.averageUpdatePeak - avgPeak;
+    [self monitorThreshold:peakDiff];
+    
+}
+
+// the difference in the current average peak and the current peak for the past
+- (void)monitorThreshold:(double)peakDiff
+{
+    NSLog(@"The peak diff: %f", peakDiff);
+    // If the average is too far away decrease the threshold
+    // If the average is louder than the cushion from the threshold increase the threshold
+    bool update = YES;
     int diffNum = 0;
     if(peakDiff > PEAK_DIFFERENCE) {
         diffNum = -1 * ADJUST_NUM;
@@ -296,11 +301,14 @@ const int START_BUTTON_HEIGHT = 65;
     if(update) {
         [self adjustMetersWithNum:diffNum];
     }
+    
+    // used to monitor images taken per minute
     self.updateTimerActionCount++;
     if(self.updateTimerActionCount >= MINUTE) {
         self.picturesTakenThisMinute = 0;
         self.updateTimerActionCount = 0;
     }
+
 }
 
 // Only capture if the average volume is greater than what is designated as too loud (TIMED_SHOT_LEVEL)
@@ -635,6 +643,13 @@ const int START_BUTTON_HEIGHT = 65;
         _volumeMax = VOLUME_MIN;
     else
         _volumeMax = volumeMax;
+}
+
+// if the max is VOLUME_CUSHION LESS THAN THE AVERAGE
+// than the min should be max - 2*VOLUME_CUSHION
+- (int)volumeMin
+{
+    return self.volumeMax - (2 * VOLUME_CUSHION) - 5;
 }
 
 - (void)setAverageUpdatePeak:(double)averageUpdatePeak

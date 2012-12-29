@@ -20,6 +20,7 @@
 @property (nonatomic,strong) AVAudioRecorder* recorder;
 @property (nonatomic,strong) NSTimer* timer;
 @property (nonatomic) int volumeMax;
+@property (nonatomic) int volumeMin;
 @property (nonatomic) double totalPeak;
 @property (nonatomic) double timeIntervals;
 @property (nonatomic) double averageUpdatePeak;
