@@ -117,10 +117,6 @@ const int START_BUTTON_HEIGHT = 65;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    [self.startButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
-    [self.hideButton  setImage:[UIImage imageNamed:@"clear.png"]  forState:UIControlStateNormal];
-    
     if(!self.recorder.recording) {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
@@ -145,6 +141,7 @@ const int START_BUTTON_HEIGHT = 65;
     [self setHideLabel:nil];
     [self setNumPixHiddenLabel:nil];
     [self setVolumeHideLabel:nil];
+    [self setNumPixBarButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -192,8 +189,8 @@ const int START_BUTTON_HEIGHT = 65;
     BOOL useFlash = (self.flashMode == FLASH_MODE_ON);
     if(useFlash) {
         [self changeTorchMode:AVCaptureTorchModeOn];
-        sleep(0.75); // TODO -- get rid of this somehow, it delays the taking of the picture
-                  // which is not wanted
+        sleep(1.0); // TODO -- get rid of this somehow, it delays the taking of the picture
+                    // which is not wanted
     }
     self.lastTakenTime = [NSDate date];
     
@@ -283,7 +280,6 @@ const int START_BUTTON_HEIGHT = 65;
 // the difference in the current average peak and the current peak for the past
 - (void)monitorThreshold:(double)peakDiff
 {
-    NSLog(@"The peak diff: %f", peakDiff);
     // If the average is too far away decrease the threshold
     // If the average is louder than the cushion from the threshold increase the threshold
     bool update = YES;
@@ -399,10 +395,7 @@ const int START_BUTTON_HEIGHT = 65;
     [self.session stopRunning];
     self.camDevice = nil;
     self.camInput  = nil;
-    [self.startButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
-    [self.hideButton setImage:[UIImage imageNamed:@"clear.png"] forState:UIControlStateNormal];
-    [self.hideButton removeTarget:self action:@selector(toggleHide:) forControlEvents:UIControlEventTouchUpInside];
-    [self.hideButton addTarget:self action:@selector(clearFilmRoll:) forControlEvents:UIControlEventTouchUpInside];
+    [self.startButton setImage:[UIImage imageNamed:@"cameraStart.png"] forState:UIControlStateNormal];
     self.levelLabel.text = @"Not Running";
 }
 
@@ -414,20 +407,19 @@ const int START_BUTTON_HEIGHT = 65;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:MAIN_TIMER_REPEAT_TIME target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
-    [self.startButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
-    [self.hideButton setImage:[UIImage imageNamed:@"hide.png"] forState:UIControlStateNormal];
-    [self.hideButton removeTarget:self action:@selector(clearFilmRoll:) forControlEvents:UIControlEventTouchUpInside];
-    [self.hideButton addTarget:self action:@selector(toggleHide:) forControlEvents:UIControlEventTouchUpInside];
+    [self.startButton setImage:[UIImage imageNamed:@"cameraStop.png"] forState:UIControlStateNormal];
 }
 
 - (IBAction)toggleHide:(id)sender
 {
     if(self.hideView.hidden) {
+        [self navigationController].navigationBar.alpha = 0;
         self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
         self.hideView.hidden = NO;
         
         // fade the labels on the view
     } else {
+        [self navigationController].navigationBar.alpha = 1;
         [self.hideTimer invalidate];
         self.hideView.hidden = YES;
         [self showHiddenLabels];
@@ -452,9 +444,10 @@ const int START_BUTTON_HEIGHT = 65;
 
 - (void)showHiddenLabels
 {
-    self.hideLabel.alpha = 0.9;
+    self.hideView.alpha = 0.9;
     self.numPixHiddenLabel.alpha = 1;
     self.volumeHideLabel.alpha = 1;
+    self.hideLabel.alpha = 1;
     self.hideLabel.hidden = NO;
     self.numPixHiddenLabel.hidden = NO;
     self.volumeHideLabel.hidden = NO;
@@ -488,6 +481,13 @@ const int START_BUTTON_HEIGHT = 65;
             [self.flashButton setTitle:@"DEFAULT, WHAT???" forState:UIControlStateNormal];
             break;
     }
+}
+
+- (IBAction)showSettings:(id)sender
+{
+    NSLog(@"Should show the settings");
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Uh Oh!" message:@"Got lazy and didn't do this part yet" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alert show];
 }
 
 
@@ -600,6 +600,7 @@ const int START_BUTTON_HEIGHT = 65;
     if(!_numPictures) {
         _numPictures = 0;
     }
+    self.numPixBarButton.title = [NSString stringWithFormat:@"Pix: %i", _numPictures];
     return _numPictures;
 }
 

@@ -35,6 +35,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UIButton *hideButton;
 @property (weak, nonatomic) IBOutlet UIButton *flashButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *numPixBarButton;
+
 
 // The hidden view stuff
 @property (weak, nonatomic) IBOutlet UILabel *hideLabel;

@@ -1,19 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Cfl-Ny-wks">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Navigation Controller-->
+        <scene sceneID="dpB-Sa-aIa">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="Cfl-Ny-wks" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="rYo-9B-U3n">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="2" kind="relationship" relationship="rootViewController" id="Smp-U2-HE9"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UuY-lh-ViN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-269" y="6"/>
+        </scene>
+        <!--View Controller - Candid-->
         <scene sceneID="5">
             <objects>
                 <viewController id="2" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="44" width="320" height="524"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="250" sectionHeaderHeight="22" sectionFooterHeight="22" id="4uH-cK-5J5">
-                                <rect key="frame" x="10" y="49" width="300" height="470"/>
+                                <rect key="frame" x="10" y="-4" width="300" height="490"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <prototypes>
@@ -42,11 +57,11 @@
                                     <outlet property="delegate" destination="2" id="0f7-Xs-dph"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hhb-qY-NRF" userLabel="Start/Stop">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hhb-qY-NRF" userLabel="Clear">
+                                <rect key="frame" x="224" y="470" width="96" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" backgroundImage="start.png">
+                                <state key="normal" backgroundImage="clearButton.png">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -54,14 +69,14 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="toggleRecording:" destination="2" eventType="touchUpInside" id="jXC-mB-mPy"/>
+                                    <action selector="clearFilmRoll:" destination="2" eventType="touchUpInside" id="oQs-jr-jLs"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xq1-si-S2z" userLabel="Hide/Clear">
-                                <rect key="frame" x="0.0" y="514" width="320" height="55"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xq1-si-S2z" userLabel="Hide">
+                                <rect key="frame" x="0.0" y="470" width="96" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Baskerville-BoldItalic" family="Baskerville" pointSize="24"/>
-                                <state key="normal" image="clear.png">
+                                <state key="normal" image="hideButton.png">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -69,10 +84,25 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="clearFilmRoll:" destination="2" eventType="touchUpInside" id="fIw-KC-SLC"/>
+                                    <action selector="toggleHide:" destination="2" eventType="touchUpInside" id="ZX1-Ld-iQx"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="WRa-Tz-X2Z">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cw7-Is-qNJ" userLabel="Start/Stop">
+                                <rect key="frame" x="96" y="455" width="128" height="70"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" backgroundImage="cameraStart.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleRecording:" destination="2" eventType="touchUpInside" id="ddr-87-VHg"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="WRa-Tz-X2Z" userLabel="Flash">
                                 <rect key="frame" x="226" y="80" width="64" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -88,25 +118,25 @@
                                 </connections>
                             </button>
                             <view hidden="YES" alpha="0.90000000000000002" contentMode="scaleToFill" id="uvR-e8-GfZ" userLabel="Hidden View">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="525"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Touch To Show" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="10" id="DOE-vO-UDq">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="525"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <fontDescription key="fontDescription" name="Baskerville-BoldItalic" family="Baskerville" pointSize="92"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="0.25" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="DPj-NA-yZz">
-                                        <rect key="frame" x="239" y="509" width="61" height="32"/>
+                                        <rect key="frame" x="239" y="466" width="61" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Not Running" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="dRu-ju-R5u">
-                                        <rect key="frame" x="20" y="500" width="250" height="49"/>
+                                        <rect key="frame" x="20" y="457" width="250" height="49"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -123,16 +153,25 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <gestureRecognizers/>
                     </view>
+                    <navigationItem key="navigationItem" title="Candid" id="pNR-CD-Oxf">
+                        <barButtonItem key="leftBarButtonItem" title="Pix: 0" id="g8z-bP-ico"/>
+                        <barButtonItem key="rightBarButtonItem" title="Settings" id="Kne-as-cvL">
+                            <connections>
+                                <action selector="showSettings:" destination="2" id="LW3-8f-Ogn"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="flashButton" destination="WRa-Tz-X2Z" id="MFg-W5-KpS"/>
-                        <outlet property="hideButton" destination="xq1-si-S2z" id="mgq-MZ-bCw"/>
+                        <outlet property="hideButton" destination="xq1-si-S2z" id="AwB-76-bbG"/>
                         <outlet property="hideLabel" destination="DOE-vO-UDq" id="8eG-jq-WOq"/>
                         <outlet property="hideView" destination="uvR-e8-GfZ" id="msg-m4-46O"/>
                         <outlet property="levelLabel" destination="dRu-ju-R5u" id="9Xn-bP-Gvx"/>
+                        <outlet property="numPixBarButton" destination="g8z-bP-ico" id="D7Q-O4-ECd"/>
                         <outlet property="numPixHiddenLabel" destination="DPj-NA-yZz" id="aLe-29-Q32"/>
                         <outlet property="picturesTaken" destination="DPj-NA-yZz" id="AUq-6i-chW"/>
-                        <outlet property="startButton" destination="hhb-qY-NRF" id="zlw-2x-JDv"/>
+                        <outlet property="startButton" destination="cw7-Is-qNJ" id="Lxt-WG-yzK"/>
                         <outlet property="table" destination="4uH-cK-5J5" id="XkF-3Y-jQF"/>
                         <outlet property="volumeHideLabel" destination="dRu-ju-R5u" id="1Ga-dx-0To"/>
                     </connections>
@@ -144,13 +183,14 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="109" y="19"/>
+            <point key="canvasLocation" x="185" y="6"/>
         </scene>
     </scenes>
     <resources>
-        <image name="clear.png" width="320" height="58"/>
+        <image name="cameraStart.png" width="128" height="74"/>
+        <image name="clearButton.png" width="96" height="59"/>
         <image name="flashOff.png" width="70" height="30"/>
-        <image name="start.png" width="320" height="61"/>
+        <image name="hideButton.png" width="96" height="59"/>
     </resources>
     <classes>
         <class className="ImageCell" superclassName="UITableViewCell">
@@ -163,6 +203,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
             <relationships>
                 <relationship kind="action" name="clearFilmRoll:"/>
+                <relationship kind="action" name="showSettings:"/>
                 <relationship kind="action" name="toggleFlashMode:"/>
                 <relationship kind="action" name="toggleHide:"/>
                 <relationship kind="action" name="toggleRecording:"/>
@@ -173,6 +214,7 @@
                 <relationship kind="outlet" name="hideView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="imgView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="levelLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="numPixBarButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="numPixHiddenLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="picturesTaken" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="startButton" candidateClass="UIButton"/>

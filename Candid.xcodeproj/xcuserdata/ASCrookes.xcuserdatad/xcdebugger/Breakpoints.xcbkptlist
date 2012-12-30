@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "378451027.087346"
+         timestampString = "378532186.44852"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "359"
-         endingLineNumber = "359"
+         startingLineNumber = "354"
+         endingLineNumber = "354"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Candid/ViewController.m"
-         timestampString = "378449840.585661"
+         timestampString = "378532186.44852"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "189"
-         endingLineNumber = "189"
+         startingLineNumber = "186"
+         endingLineNumber = "186"
          landmarkName = "@implementation ViewController"
          landmarkType = "3">
       </FileBreakpoint>

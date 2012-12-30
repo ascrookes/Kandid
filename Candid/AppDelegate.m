@@ -16,7 +16,7 @@
 {
     // Override point for customization after application launch.
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-    
+    [self customizeAppearance];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         UIStoryboard *storyBoard;
         
@@ -34,6 +34,13 @@
     
     return YES;
 }
+
+- (void)customizeAppearance
+{
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"navBar.png"] forBarMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setTintColor:[UIColor darkGrayColor]];
+}
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {
