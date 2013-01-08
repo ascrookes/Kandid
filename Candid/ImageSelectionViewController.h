@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ImageManager.h"
+#import "ImageCollectionCell.h"
 
-@interface ImageSelectionViewController : UIViewController
+@interface ImageSelectionViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, ImageCollectionCellDelegate>
+
+@property (nonatomic, strong) ImageManager* imageManager;
+@property (nonatomic, strong) IBOutlet UICollectionView* collectionView;
+
++ (ImageSelectionViewController*)imageSelectionWithManager:(ImageManager*)manager;
++ (void)presentModalImageSelectionWithManager:(ImageManager*)manager;
 
 @end

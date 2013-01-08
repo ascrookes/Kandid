@@ -122,6 +122,10 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     return saveImage;
 }
 
+- (void)saveImageAtIndex:(NSInteger)index {
+    [self saveImage:[self.imageData objectAtIndex:index] watermark:NO];
+}
+
 //*********************************************************
 //*********************************************************
 #pragma mark - Memory & Misc
@@ -153,7 +157,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 
 //*********************************************************
 //*********************************************************
-#pragma mark - Setters
+#pragma mark - Getters/Setters
 //*********************************************************
 //*********************************************************
 

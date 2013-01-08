@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "ImageSelectionViewController.h"
+#import "MTStatusBarOverlay.h"
 
 
 //*********************************************************
@@ -29,6 +31,7 @@ const int TIMED_SHOT_LEVEL = -5;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int BUTTON_WIDTH = 160;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
+const int MAX_IMAGES_IN_TABLE = 25;
 
 // if this changes, also change the setFlashMode function
 // so that it bounds check correctly
@@ -38,18 +41,13 @@ typedef enum FLASH_MODE {
     /*FLASH_MODE_AUTO = 2*/
 } FLASH_MODE;
 
+typedef enum ClearAlertViewIndex {
+    ClearAlertViewIndexClear,
+    ClearAlertViewIndexNevermind
+} ClearAlertViewIndex;
 
-//*********************************************************
-//*********************************************************
-#pragma mark - UI constants
-//*********************************************************
-//*********************************************************
 
-const int TABLE_WIDTH   = 300;
-const int TABLE_DELTA_X = 10;
-const int START_BUTTON_HEIGHT = 65;
-
-@interface ViewController ()
+@interface ViewController () <UIAlertViewDelegate>
 
 //*********************************************************
 //*********************************************************
@@ -65,6 +63,8 @@ const int START_BUTTON_HEIGHT = 65;
 @property (nonatomic, strong) AVCaptureConnection *videoConnection;
 @property (nonatomic) int numPictures;
 @property (nonatomic) FLASH_MODE /*change this to the enum*/ flashMode;
+@property (nonatomic) BOOL isRunning;
+@property (nonatomic) BOOL shouldResumeAfterInterruption;
 
 @end
 
@@ -120,12 +120,19 @@ const int START_BUTTON_HEIGHT = 65;
     if(!self.recorder.recording) {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
-    }    
+    }
+    
     self.volumeMax = -10.0;
     self.averageUpdatePeak = self.volumeMax - VOLUME_CUSHION;
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
     self.flashMode = FLASH_MODE_OFF;
+    self.isRunning = NO;
+    self.shouldResumeAfterInterruption = NO;
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopEverything) name:@"stopEverything" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginInterruption) name:@"beginInterruption" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endInterruption) name:@"endInterruption" object:nil];
 }
 
 - (void)viewDidUnload
@@ -215,7 +222,6 @@ const int START_BUTTON_HEIGHT = 65;
             self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
             [self changeTorchMode:AVCaptureTorchModeOff];
         });
-        //[self toggleFlash];
         NSLog(@"CAPTURING: %i",self.numPictures);
     }];
 }
@@ -363,7 +369,7 @@ const int START_BUTTON_HEIGHT = 65;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     int count = [self.imageManager count];
-    return (count < 25) ? count : 25;
+    return (count < MAX_IMAGES_IN_TABLE) ? count : MAX_IMAGES_IN_TABLE;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -381,10 +387,22 @@ const int START_BUTTON_HEIGHT = 65;
 - (IBAction)toggleRecording:(id)sender 
 {
     if(self.session.running && self.recorder.recording) {
-        [self stopEverything];
+        [self stopEverythingWithStatusAnimation:YES];
     } else {
         [self startEverything];
     }
+}
+
+- (IBAction)stopEverythingWithStatusAnimation:(BOOL)statusAnimation
+{
+    [self stopEverything];
+    if(statusAnimation) {
+        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+        [overlay postImmediateFinishMessage:@"Finished" duration:1.5 animated:YES];
+        overlay.progress = 1.0;
+    }
+    // present the view with the images
+    //[self presentModalViewController:[ImageSelectionViewController imageSelectionWithManager:self.imageManager] animated:YES];
 }
 
 - (IBAction)stopEverything
@@ -397,10 +415,13 @@ const int START_BUTTON_HEIGHT = 65;
     self.camInput  = nil;
     [self.startButton setImage:[UIImage imageNamed:@"cameraStart.png"] forState:UIControlStateNormal];
     self.levelLabel.text = @"Not Running";
+    self.isRunning = NO;
+
 }
 
 - (IBAction)startEverything
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"test-observer" object:nil];
     // the camera needs time to warm up so this stops black pictures from being taken
     self.lastTakenTime = [NSDate date];
     [self.recorder record];
@@ -408,6 +429,12 @@ const int START_BUTTON_HEIGHT = 65;
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
     [self.startButton setImage:[UIImage imageNamed:@"cameraStop.png"] forState:UIControlStateNormal];
+    self.isRunning = YES;
+    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+    overlay.hidesActivity = YES;
+    overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
+    overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
+    [overlay postMessage:@"Running..."];
 }
 
 - (IBAction)toggleHide:(id)sender
@@ -432,8 +459,8 @@ const int START_BUTTON_HEIGHT = 65;
     [UIView animateWithDuration:1.25 animations:^{
         self.hideLabel.alpha = 0;
         // TODO -- change these to ZERO
-        self.numPixHiddenLabel.alpha = 0.2;
-        self.volumeHideLabel.alpha = 0.2;
+        self.numPixHiddenLabel.alpha = 0.25;
+        self.volumeHideLabel.alpha = 0.25;
         self.hideView.alpha = 1;
     } completion:^(BOOL finished) {
         self.hideLabel.hidden = YES;
@@ -455,10 +482,8 @@ const int START_BUTTON_HEIGHT = 65;
 
 - (IBAction)clearFilmRoll:(id)sender
 {
-    [self.imageManager clearImageData];
-    [self.table reloadData];
-    self.numPictures = 0;
-    self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Images will disappear but have already been saved" delegate:self cancelButtonTitle:@"Clear!" otherButtonTitles:@"Nevermind", nil];
+    [alert show];
 }
 
 - (IBAction)toggleFlashMode:(id)sender
@@ -488,6 +513,19 @@ const int START_BUTTON_HEIGHT = 65;
     NSLog(@"Should show the settings");
     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Uh Oh!" message:@"Got lazy and didn't do this part yet" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
+}
+
+- (IBAction)showSelction:(id)sender
+{
+    if([self.imageManager count] == 0) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No images" message:@"Please try again once there are images" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        ImageSelectionViewController* isvc = [self.storyboard instantiateViewControllerWithIdentifier:@"selectionView"];
+        isvc.imageManager = self.imageManager;
+        [self presentModalViewController:isvc animated:YES];
+    }
+    
 }
 
 
@@ -526,6 +564,55 @@ const int START_BUTTON_HEIGHT = 65;
     [self.camDevice setTorchMode:mode];
     [self.camDevice unlockForConfiguration];
     [self.session commitConfiguration];
+}
+
+//*********************************************************
+//*********************************************************
+#pragma mark - AVAudioSessionDelegate
+//*********************************************************
+//*********************************************************
+
+- (void)beginInterruption
+{
+    NSLog(@"interruption begin");
+    self.shouldResumeAfterInterruption = self.isRunning;
+    if(self.isRunning) {
+        [self stopEverythingWithStatusAnimation:YES];
+    }
+}
+
+- (void)inputIsAvailableChanged:(BOOL)isInputAvailable
+{
+    NSLog(@"Input Is Available Changed: %d", isInputAvailable);
+    if(!isInputAvailable) {
+        [self stopEverythingWithStatusAnimation:YES];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Not available" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (void)endInterruption
+{
+    if(self.shouldResumeAfterInterruption) {
+        [self startEverything];
+    }
+    self.shouldResumeAfterInterruption = NO;
+}
+
+//*********************************************************
+//*********************************************************
+#pragma mark - Alert View Delegate
+//*********************************************************
+//*********************************************************
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == ClearAlertViewIndexClear) {
+        [self.imageManager clearImageData];
+        [self.table reloadData];
+        self.numPictures = 0;
+        self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
+    }
 }
 
 
@@ -579,8 +666,9 @@ const int START_BUTTON_HEIGHT = 65;
 {
     if(!_camDevice) {
         _camDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-//        [self.camDevice lockForConfiguration:nil];
-//        self.camDevice.torchMode = AVCaptureTorchModeOn;
+        [_camDevice lockForConfiguration:nil];
+        [_camDevice setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
+        [_camDevice unlockForConfiguration];
     }
     
     return _camDevice;
@@ -600,7 +688,7 @@ const int START_BUTTON_HEIGHT = 65;
     if(!_numPictures) {
         _numPictures = 0;
     }
-    self.numPixBarButton.title = [NSString stringWithFormat:@"Pix: %i", _numPictures];
+    self.numPixBarButton.title = [NSString stringWithFormat:@"# Pix: %i", _numPictures];
     return _numPictures;
 }
 
