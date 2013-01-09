@@ -57,6 +57,7 @@
 @property (weak, nonatomic) IBOutlet UILabel  *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *picturesTaken; // maybe keep this, but make it blend with the polaroid
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *orientationArrow;
 
 
 

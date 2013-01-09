@@ -135,10 +135,47 @@ typedef enum ClearAlertViewIndex {
     self.flashMode = FLASH_MODE_OFF;
     self.isRunning = NO;
     self.shouldResumeAfterInterruption = NO;
+    self.orientationArrow.title = @"";
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationNotification) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopEverything) name:@"stopEverything" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginInterruption) name:@"beginInterruption" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endInterruption) name:@"endInterruption" object:nil];
+}
+
+// since the UI does not rotate show something to indicate
+// that the camera can face any direction
+- (void)deviceOrientationNotification
+{
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    switch (orientation) {
+        case UIDeviceOrientationPortrait:
+            [self.orientationArrow setImage:[UIImage imageNamed:@"up.png"]];
+            NSLog(@"port");
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            [self.orientationArrow setImage:[UIImage imageNamed:@"down.png"]];
+            NSLog(@"upside down");
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            [self.orientationArrow setImage:[UIImage imageNamed:@"right.png"]];
+            NSLog(@"landscape left");
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            [self.orientationArrow setImage:[UIImage imageNamed:@"left.png"]];
+            NSLog(@"landscape right");
+            break;
+        case UIDeviceOrientationFaceDown:
+            NSLog(@"face down");
+            break;
+        case UIDeviceOrientationFaceUp:
+            // maybe turn the camera off if the camera is facing down
+            NSLog(@"face up");
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)viewDidUnload
@@ -155,6 +192,7 @@ typedef enum ClearAlertViewIndex {
     [self setNumPixHiddenLabel:nil];
     [self setVolumeHideLabel:nil];
     [self setNumPixBarButton:nil];
+    [self setOrientationArrow:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -630,6 +668,8 @@ typedef enum ClearAlertViewIndex {
 //*********************************************************
 //*********************************************************
 
+// does not need any information
+// when it does add arguments to customize the DB entry
 - (void)addImageToDB
 {
     NSLog(@"ADDING IMAGE TO DB");
