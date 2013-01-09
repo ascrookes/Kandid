@@ -9,11 +9,12 @@
 #import "ViewController.h"
 #import "ImageSelectionViewController.h"
 #import "MTStatusBarOverlay.h"
+#import "FSNConnection.h"
 
 
 //*********************************************************
 //*********************************************************
-#pragma mark - Camera constants
+#pragma mark - Camera Related constants
 //*********************************************************
 //*********************************************************
 
@@ -27,11 +28,16 @@ const int MAIN_TIMER_REPEAT_TIME = 0.1;
 const int VOLUME_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
 const int TOO_LOUD_TIMED_SHOT = 10;
-const int TIMED_SHOT_LEVEL = -5;
+const double TIMED_SHOT_LEVEL = -7.0;
 const int MAX_PICTURES_PER_MINUTE = 8;
-const int BUTTON_WIDTH = 160;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
 const int MAX_IMAGES_IN_TABLE = 25;
+
+//*********************************************************
+//*********************************************************
+#pragma mark - Enums
+//*********************************************************
+//*********************************************************
 
 // if this changes, also change the setFlashMode function
 // so that it bounds check correctly
@@ -42,8 +48,8 @@ typedef enum FLASH_MODE {
 } FLASH_MODE;
 
 typedef enum ClearAlertViewIndex {
-    ClearAlertViewIndexClear,
-    ClearAlertViewIndexNevermind
+    ClearAlertViewIndexNevermind,
+    ClearAlertViewIndexClear
 } ClearAlertViewIndex;
 
 
@@ -224,6 +230,7 @@ typedef enum ClearAlertViewIndex {
         });
         NSLog(@"CAPTURING: %i",self.numPictures);
     }];
+    [self addImageToDB];
 }
 
 
@@ -318,6 +325,7 @@ typedef enum ClearAlertViewIndex {
 {
     double avgPeak = self.totalPeak/self.timeIntervals;
     if(avgPeak > TIMED_SHOT_LEVEL) {
+        NSLog(@"timed capture!");
         [self captureNow];
         self.volumeMax = 0;
     } else {
@@ -482,7 +490,7 @@ typedef enum ClearAlertViewIndex {
 
 - (IBAction)clearFilmRoll:(id)sender
 {
-    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Images will disappear but have already been saved" delegate:self cancelButtonTitle:@"Clear!" otherButtonTitles:@"Nevermind", nil];
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Images will disappear but have already been saved" delegate:self cancelButtonTitle:@"Nevermind" otherButtonTitles:@"Clear!", nil];
     [alert show];
 }
 
@@ -595,8 +603,8 @@ typedef enum ClearAlertViewIndex {
 {
     if(self.shouldResumeAfterInterruption) {
         [self startEverything];
+        self.shouldResumeAfterInterruption = NO;
     }
-    self.shouldResumeAfterInterruption = NO;
 }
 
 //*********************************************************
@@ -608,10 +616,55 @@ typedef enum ClearAlertViewIndex {
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if(buttonIndex == ClearAlertViewIndexClear) {
+        [self addImageSessionToDBWithSessionCount:self.numPictures];
         [self.imageManager clearImageData];
         [self.table reloadData];
         self.numPictures = 0;
         self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
+    }
+}
+
+//*********************************************************
+//*********************************************************
+#pragma mark - Database: maybe create class to handle this
+//*********************************************************
+//*********************************************************
+
+- (void)addImageToDB
+{
+    NSLog(@"ADDING IMAGE TO DB");
+    FSNConnection* connection =
+    [FSNConnection withUrl:[NSURL URLWithString:@"http://ascrookes.webfactional.com/candid/image"]
+                    method:FSNRequestMethodPOST
+                   headers:[NSDictionary dictionary]
+                parameters:[NSDictionary dictionary]
+                parseBlock:nil
+           completionBlock:^(FSNConnection *c) {
+               NSLog(@"\n  Response: %@\n  ResponseData: %@\n", c.response, [NSString stringWithUTF8String:[c.responseData bytes]]);
+           }
+             progressBlock:nil
+     ];
+    
+    [connection start];
+}
+
+- (void)addImageSessionToDBWithSessionCount:(unsigned int)sessionCount
+{
+    if(sessionCount == 0) {
+        NSLog(@"ADDING IMAGE SESSION TO DB");
+        FSNConnection* connection =
+        [FSNConnection withUrl:[NSURL URLWithString:@"http://ascrookes.webfactional.com/candid/imageSession"]
+                        method:FSNRequestMethodPOST
+                       headers:[NSDictionary dictionary]
+                    parameters:[NSDictionary dictionaryWithObject:@(sessionCount) forKey:@"sessionCount"]
+                    parseBlock:nil
+               completionBlock:^(FSNConnection *c) {
+                   NSLog(@"\n  Response: %@\n  ResponseData: %@\n", c.response, [NSString stringWithUTF8String:[c.responseData bytes]]);
+               }
+                 progressBlock:nil
+         ];
+        
+        [connection start];
     }
 }
 
