@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "ImageSelectionViewController.h"
 #import "MTStatusBarOverlay.h"
-#import "FSNConnection.h"
+#import "DatabaseManager.h"
 
 
 //*********************************************************
@@ -28,7 +28,7 @@ const int MAIN_TIMER_REPEAT_TIME = 0.1;
 const int VOLUME_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
 const int TOO_LOUD_TIMED_SHOT = 10;
-const double TIMED_SHOT_LEVEL = -7.0;
+const double TIMED_SHOT_LEVEL = -5.5;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
 const int MAX_IMAGES_IN_TABLE = 25;
@@ -152,20 +152,17 @@ typedef enum ClearAlertViewIndex {
     switch (orientation) {
         case UIDeviceOrientationPortrait:
             [self.orientationArrow setImage:[UIImage imageNamed:@"up.png"]];
-            NSLog(@"port");
             break;
         case UIDeviceOrientationPortraitUpsideDown:
             [self.orientationArrow setImage:[UIImage imageNamed:@"down.png"]];
-            NSLog(@"upside down");
             break;
         case UIDeviceOrientationLandscapeLeft:
             [self.orientationArrow setImage:[UIImage imageNamed:@"right.png"]];
-            NSLog(@"landscape left");
             break;
         case UIDeviceOrientationLandscapeRight:
             [self.orientationArrow setImage:[UIImage imageNamed:@"left.png"]];
-            NSLog(@"landscape right");
             break;
+        /*
         case UIDeviceOrientationFaceDown:
             NSLog(@"face down");
             break;
@@ -173,6 +170,7 @@ typedef enum ClearAlertViewIndex {
             // maybe turn the camera off if the camera is facing down
             NSLog(@"face up");
             break;
+         */
         default:
             break;
     }
@@ -268,7 +266,7 @@ typedef enum ClearAlertViewIndex {
         });
         NSLog(@"CAPTURING: %i",self.numPictures);
     }];
-    [self addImageToDB];
+    [DatabaseManager addImageToDB];
 }
 
 
@@ -314,7 +312,6 @@ typedef enum ClearAlertViewIndex {
     double avgPeak = self.totalPeak/self.timeIntervals;
     // If the average volume is very close to 0 set up a timer for a timed shot and stop the regular timer
     if(avgPeak > TIMED_SHOT_LEVEL) {
-        self.volumeMax = -5;
         if(![self.timedPicture isValid]) {
             self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:TOO_LOUD_TIMED_SHOT target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
         }
@@ -442,13 +439,10 @@ typedef enum ClearAlertViewIndex {
 - (IBAction)stopEverythingWithStatusAnimation:(BOOL)statusAnimation
 {
     [self stopEverything];
-    if(statusAnimation) {
-        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-        [overlay postImmediateFinishMessage:@"Finished" duration:1.5 animated:YES];
-        overlay.progress = 1.0;
-    }
-    // present the view with the images
-    //[self presentModalViewController:[ImageSelectionViewController imageSelectionWithManager:self.imageManager] animated:YES];
+    NSString* finishMsg = (statusAnimation) ? @"Stopping..." : @" ";
+    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+    [overlay postImmediateFinishMessage:finishMsg duration:1.5 animated:YES];
+    overlay.progress = 1.0;
 }
 
 - (IBAction)stopEverything
@@ -478,8 +472,8 @@ typedef enum ClearAlertViewIndex {
     self.isRunning = YES;
     MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
     overlay.hidesActivity = YES;
-    overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
-    overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
+    overlay.animation = MTStatusBarOverlayAnimationFallDown;
+    overlay.detailViewMode = MTDetailViewModeHistory;
     [overlay postMessage:@"Running..."];
 }
 
@@ -542,13 +536,7 @@ typedef enum ClearAlertViewIndex {
         case FLASH_MODE_OFF:
             [self.flashButton setImage:[UIImage imageNamed:@"flashOff.png"] forState:UIControlStateNormal];
             break;
-        /*
-        case FLASH_MODE_AUTO:
-            [self.flashButton setTitle:@"FLASH AUTO" forState:UIControlStateNormal];
-            break;
-         */
         default:
-            NSLog(@"FLASH MODE: %i", self.flashMode);
             [self.flashButton setTitle:@"DEFAULT, WHAT???" forState:UIControlStateNormal];
             break;
     }
@@ -587,6 +575,7 @@ typedef enum ClearAlertViewIndex {
 //will recreate deleted images from the data
 - (void)didReceiveMemoryWarning
 {
+    NSLog(@"Memory warning :(");
     self.table.userInteractionEnabled = NO;
     [self.imageManager conserveMemory];
     [self.table reloadData];
@@ -620,10 +609,9 @@ typedef enum ClearAlertViewIndex {
 
 - (void)beginInterruption
 {
-    NSLog(@"interruption begin");
     self.shouldResumeAfterInterruption = self.isRunning;
     if(self.isRunning) {
-        [self stopEverythingWithStatusAnimation:YES];
+        [self stopEverythingWithStatusAnimation:NO];
     }
 }
 
@@ -654,7 +642,7 @@ typedef enum ClearAlertViewIndex {
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if(buttonIndex == ClearAlertViewIndexClear) {
-        [self addImageSessionToDBWithSessionCount:self.numPictures];
+        [DatabaseManager addImageSessionToDBWithSessionCount:self.numPictures];
         [self.imageManager clearImageData];
         [self.table reloadData];
         self.numPictures = 0;
@@ -662,51 +650,6 @@ typedef enum ClearAlertViewIndex {
     }
 }
 
-//*********************************************************
-//*********************************************************
-#pragma mark - Database: maybe create class to handle this
-//*********************************************************
-//*********************************************************
-
-// does not need any information
-// when it does add arguments to customize the DB entry
-- (void)addImageToDB
-{
-    NSLog(@"ADDING IMAGE TO DB");
-    FSNConnection* connection =
-    [FSNConnection withUrl:[NSURL URLWithString:@"http://ascrookes.webfactional.com/candid/image"]
-                    method:FSNRequestMethodPOST
-                   headers:[NSDictionary dictionary]
-                parameters:[NSDictionary dictionary]
-                parseBlock:nil
-           completionBlock:^(FSNConnection *c) {
-               NSLog(@"\n  Response: %@\n  ResponseData: %@\n", c.response, [NSString stringWithUTF8String:[c.responseData bytes]]);
-           }
-             progressBlock:nil
-     ];
-    
-    [connection start];
-}
-
-- (void)addImageSessionToDBWithSessionCount:(unsigned int)sessionCount
-{
-    if(sessionCount == 0) {
-        NSLog(@"ADDING IMAGE SESSION TO DB");
-        FSNConnection* connection =
-        [FSNConnection withUrl:[NSURL URLWithString:@"http://ascrookes.webfactional.com/candid/imageSession"]
-                        method:FSNRequestMethodPOST
-                       headers:[NSDictionary dictionary]
-                    parameters:[NSDictionary dictionaryWithObject:@(sessionCount) forKey:@"sessionCount"]
-                    parseBlock:nil
-               completionBlock:^(FSNConnection *c) {
-                   NSLog(@"\n  Response: %@\n  ResponseData: %@\n", c.response, [NSString stringWithUTF8String:[c.responseData bytes]]);
-               }
-                 progressBlock:nil
-         ];
-        
-        [connection start];
-    }
-}
 
 
 //*********************************************************
@@ -887,7 +830,6 @@ typedef enum ClearAlertViewIndex {
     
     return _videoConnection;
 }
-
 
 
 @end

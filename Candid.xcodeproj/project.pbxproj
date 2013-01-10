@@ -26,6 +26,7 @@
 		8E595F25169E391F0047C39B /* right.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E595F1E169E391F0047C39B /* right.png */; };
 		8E595F26169E391F0047C39B /* right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E595F1F169E391F0047C39B /* right@2x.png */; };
 		8E595F28169E39230047C39B /* down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E595F27169E39230047C39B /* down@2x.png */; };
+		8E595F2B169E49850047C39B /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E595F2A169E49850047C39B /* DatabaseManager.m */; };
 		8E5EB9D915964C3E00C4E185 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E5EB9D815964C3E00C4E185 /* UIKit.framework */; };
 		8E5EB9DB15964C3E00C4E185 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E5EB9DA15964C3E00C4E185 /* Foundation.framework */; };
 		8E5EB9DD15964C3E00C4E185 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E5EB9DC15964C3E00C4E185 /* CoreGraphics.framework */; };
@@ -104,6 +105,8 @@
 		8E595F1E169E391F0047C39B /* right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right.png; sourceTree = "<group>"; };
 		8E595F1F169E391F0047C39B /* right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "right@2x.png"; sourceTree = "<group>"; };
 		8E595F27169E39230047C39B /* down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "down@2x.png"; sourceTree = "<group>"; };
+		8E595F29169E49850047C39B /* DatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
+		8E595F2A169E49850047C39B /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
 		8E5EB9D415964C3E00C4E185 /* Candid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Candid.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E5EB9D815964C3E00C4E185 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8E5EB9DA15964C3E00C4E185 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -240,6 +243,8 @@
 				8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */,
 				8E5EB9ED15964C3E00C4E185 /* ViewController.h */,
 				8E5EB9EE15964C3E00C4E185 /* ViewController.m */,
+				8E595F29169E49850047C39B /* DatabaseManager.h */,
+				8E595F2A169E49850047C39B /* DatabaseManager.m */,
 				8E1CA7891699419F00C32142 /* ImageSelectionViewController.h */,
 				8E1CA78A1699419F00C32142 /* ImageSelectionViewController.m */,
 				8E9AC53215DCA4940085B344 /* ImageManager.h */,
@@ -481,6 +486,7 @@
 				8E5EB9EF15964C3E00C4E185 /* ViewController.m in Sources */,
 				8E9AC53415DCA4940085B344 /* ImageManager.m in Sources */,
 				8E1CA78B1699419F00C32142 /* ImageSelectionViewController.m in Sources */,
+				8E595F2B169E49850047C39B /* DatabaseManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
