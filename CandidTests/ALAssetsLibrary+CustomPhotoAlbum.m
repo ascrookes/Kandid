@@ -15,9 +15,7 @@
     [[[ALAssetsLibrary alloc] init]
      saveImage:image
      toAlbum:albumName
-     withCompletionBlock:^(NSError *error) {
-         NSLog(@"completion");
-     }];
+     withCompletionBlock:^(NSError *error) {}];
 }
 
 -(void)saveImage:(UIImage*)image toAlbum:(NSString*)albumName withCompletionBlock:(SaveImageCompletion)completionBlock

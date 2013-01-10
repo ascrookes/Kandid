@@ -60,7 +60,6 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     if([image isMemberOfClass:[NSNull class]]) {
         image = [self thumbnailFromData:[self.imageData objectAtIndex:index]];
         [self.thumbnails replaceObjectAtIndex:index withObject:image];
-        NSLog(@"the image was not there, recreating");
     }
     return image;
 }
@@ -138,7 +137,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 //*********************************************************
 //*********************************************************
 
-// Fill the entire thumbnail array with a BOOL (NO), since thumbnails can be recreated
+// Fill the entire thumbnail array with a NULL, since thumbnails can be recreated
 - (void)conserveMemory
 {
     for(int i = 0; i < [self.thumbnails count]; i++)

@@ -11,7 +11,6 @@
 #import "MTStatusBarOverlay.h"
 #import "DatabaseManager.h"
 
-
 //*********************************************************
 //*********************************************************
 #pragma mark - Camera Related constants
@@ -28,7 +27,7 @@ const int MAIN_TIMER_REPEAT_TIME = 0.1;
 const int VOLUME_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
 const int TOO_LOUD_TIMED_SHOT = 10;
-const double TIMED_SHOT_LEVEL = -5.5;
+const double TIMED_SHOT_LEVEL = -7.5;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
 const int MAX_IMAGES_IN_TABLE = 25;
@@ -134,10 +133,9 @@ typedef enum ClearAlertViewIndex {
     self.flashMode = FLASH_MODE_OFF;
     self.isRunning = NO;
     self.shouldResumeAfterInterruption = NO;
-    self.orientationArrow.title = @"";
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationNotification) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUI) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopEverything) name:@"stopEverything" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginInterruption) name:@"beginInterruption" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endInterruption) name:@"endInterruption" object:nil];
@@ -145,35 +143,33 @@ typedef enum ClearAlertViewIndex {
 
 // since the UI does not rotate show something to indicate
 // that the camera can face any direction
-- (void)deviceOrientationNotification
+- (void)updateUI
 {
+    NSString* imgName = (self.isRunning) ? @"cameraStop.png" : @"cameraStart.png";
+    CGAffineTransform rotation;
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     switch (orientation) {
         case UIDeviceOrientationPortrait:
-            [self.orientationArrow setImage:[UIImage imageNamed:@"up.png"]];
+            rotation = CGAffineTransformMakeRotation(0.0);
             break;
         case UIDeviceOrientationPortraitUpsideDown:
-            [self.orientationArrow setImage:[UIImage imageNamed:@"down.png"]];
+            rotation = CGAffineTransformMakeRotation(M_PI);
             break;
         case UIDeviceOrientationLandscapeLeft:
-            [self.orientationArrow setImage:[UIImage imageNamed:@"right.png"]];
+            rotation = CGAffineTransformMakeRotation(M_PI_2);
             break;
         case UIDeviceOrientationLandscapeRight:
-            [self.orientationArrow setImage:[UIImage imageNamed:@"left.png"]];
+            rotation = CGAffineTransformMakeRotation(M_PI + M_PI_2);
             break;
-        /*
-        case UIDeviceOrientationFaceDown:
-            NSLog(@"face down");
-            break;
-        case UIDeviceOrientationFaceUp:
-            // maybe turn the camera off if the camera is facing down
-            NSLog(@"face up");
-            break;
-         */
         default:
-            break;
+            return;
     }
+    [self.cameraImage setImage:[UIImage imageNamed:imgName]];
+    [UIView animateWithDuration:0.25 animations:^{
+        self.cameraImage.transform = rotation;
+    }];
 }
+
 
 - (void)viewDidUnload
 {
@@ -189,7 +185,7 @@ typedef enum ClearAlertViewIndex {
     [self setNumPixHiddenLabel:nil];
     [self setVolumeHideLabel:nil];
     [self setNumPixBarButton:nil];
-    [self setOrientationArrow:nil];
+    [self setCameraImage:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -332,14 +328,14 @@ typedef enum ClearAlertViewIndex {
 {
     // If the average is too far away decrease the threshold
     // If the average is louder than the cushion from the threshold increase the threshold
-    NSLog(@"\nthe peak diff: %f\naverage update: %f\nmax volume: %i", peakDiff, self.averageUpdatePeak, self.volumeMax);
+    //NSLog(@"\nthe peak diff: %f\naverage update: %f\nmax volume: %i", peakDiff, self.averageUpdatePeak, self.volumeMax);
     bool update = YES;
     int diffNum = 0;
     if(peakDiff > PEAK_DIFFERENCE) {
-        NSLog(@"decreasing threshold");
+        //NSLog(@"decreasing threshold");
         diffNum = -1 * ADJUST_NUM;
     } else if(peakDiff < 0) {
-        NSLog(@"increasing threshold");
+        //NSLog(@"increasing threshold");
         diffNum = ADJUST_NUM;
     } else {
         update = NO;
@@ -457,15 +453,13 @@ typedef enum ClearAlertViewIndex {
     [self.session stopRunning];
     self.camDevice = nil;
     self.camInput  = nil;
-    [self.startButton setImage:[UIImage imageNamed:@"cameraStart.png"] forState:UIControlStateNormal];
     self.levelLabel.text = @"Not Running";
     self.isRunning = NO;
-
+    [self updateUI];
 }
 
 - (IBAction)startEverything
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"test-observer" object:nil];
     self.volumeMax = -5;
     // the camera needs time to warm up so this stops black pictures from being taken
     self.lastTakenTime = [NSDate date];
@@ -473,8 +467,8 @@ typedef enum ClearAlertViewIndex {
     self.timer = [NSTimer scheduledTimerWithTimeInterval:MAIN_TIMER_REPEAT_TIME target:self selector:@selector(levelTimerCallback:) userInfo:nil repeats:YES];
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
-    [self.startButton setImage:[UIImage imageNamed:@"cameraStop.png"] forState:UIControlStateNormal];
     self.isRunning = YES;
+    [self updateUI];
     MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
     overlay.hidesActivity = YES;
     overlay.animation = MTStatusBarOverlayAnimationFallDown;

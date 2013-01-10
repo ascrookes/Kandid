@@ -36,6 +36,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *hideButton;
 @property (weak, nonatomic) IBOutlet UIButton *flashButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *numPixBarButton;
+@property (weak, nonatomic) IBOutlet UIImageView *cameraImage;
 
 
 // The hidden view stuff
@@ -57,7 +58,6 @@
 @property (weak, nonatomic) IBOutlet UILabel  *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *picturesTaken; // maybe keep this, but make it blend with the polaroid
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *orientationArrow;
 
 
 
