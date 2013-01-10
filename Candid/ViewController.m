@@ -128,8 +128,7 @@ typedef enum ClearAlertViewIndex {
         self.recorder.meteringEnabled = YES;
     }
     
-    self.volumeMax = -10.0;
-    self.averageUpdatePeak = self.volumeMax - VOLUME_CUSHION;
+    self.volumeMax = -5.0;
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
     self.flashMode = FLASH_MODE_OFF;
@@ -321,6 +320,9 @@ typedef enum ClearAlertViewIndex {
     }
     
     double peakDiff = self.averageUpdatePeak - avgPeak;
+    if(self.averageUpdatePeak > self.volumeMax) {
+        NSLog(@"THE average IS greater THAN the volume MAX!\nShould adjust that here");
+    }
     [self monitorThreshold:peakDiff];
     
 }
@@ -330,11 +332,14 @@ typedef enum ClearAlertViewIndex {
 {
     // If the average is too far away decrease the threshold
     // If the average is louder than the cushion from the threshold increase the threshold
+    NSLog(@"\nthe peak diff: %f\naverage update: %f\nmax volume: %i", peakDiff, self.averageUpdatePeak, self.volumeMax);
     bool update = YES;
     int diffNum = 0;
     if(peakDiff > PEAK_DIFFERENCE) {
+        NSLog(@"decreasing threshold");
         diffNum = -1 * ADJUST_NUM;
     } else if(peakDiff < 0) {
+        NSLog(@"increasing threshold");
         diffNum = ADJUST_NUM;
     } else {
         update = NO;
@@ -379,7 +384,6 @@ typedef enum ClearAlertViewIndex {
 {
     if([self.updateTimer isValid]) {
         self.volumeMax += diff;
-        self.averageUpdatePeak += diff;
     }
 }
 
@@ -462,6 +466,7 @@ typedef enum ClearAlertViewIndex {
 - (IBAction)startEverything
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"test-observer" object:nil];
+    self.volumeMax = -5;
     // the camera needs time to warm up so this stops black pictures from being taken
     self.lastTakenTime = [NSDate date];
     [self.recorder record];
@@ -747,14 +752,6 @@ typedef enum ClearAlertViewIndex {
     return _timeIntervals;
 }
 
-- (double)averageUpdatePeak
-{
-    if(!_averageUpdatePeak) {
-        _averageUpdatePeak = 0;
-    }
-    return _averageUpdatePeak;
-}
-
 - (int)volumeMax
 {
     if(!_volumeMax) {
@@ -773,16 +770,15 @@ typedef enum ClearAlertViewIndex {
         _volumeMax = volumeMax;
 }
 
+- (double)averageUpdatePeak {
+    return self.volumeMax - VOLUME_CUSHION;
+}
+
 // if the max is VOLUME_CUSHION LESS THAN THE AVERAGE
 // than the min should be max - 2*VOLUME_CUSHION
 - (int)volumeMin
 {
     return self.volumeMax - (2 * VOLUME_CUSHION) - 5;
-}
-
-- (void)setAverageUpdatePeak:(double)averageUpdatePeak
-{
-    _averageUpdatePeak = (averageUpdatePeak > 0) ? 0 : averageUpdatePeak;
 }
 
 - (NSTimer*)timedPicture
