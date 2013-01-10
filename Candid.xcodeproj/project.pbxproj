@@ -27,6 +27,9 @@
 		8E595F26169E391F0047C39B /* right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E595F1F169E391F0047C39B /* right@2x.png */; };
 		8E595F28169E39230047C39B /* down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E595F27169E39230047C39B /* down@2x.png */; };
 		8E595F2B169E49850047C39B /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E595F2A169E49850047C39B /* DatabaseManager.m */; };
+		8E595F35169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E595F34169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
+		8E595F38169E76900047C39B /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E595F37169E76900047C39B /* AssetsLibrary.framework */; };
+		8E595F39169E7AD90047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E595F34169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
 		8E5EB9D915964C3E00C4E185 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E5EB9D815964C3E00C4E185 /* UIKit.framework */; };
 		8E5EB9DB15964C3E00C4E185 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E5EB9DA15964C3E00C4E185 /* Foundation.framework */; };
 		8E5EB9DD15964C3E00C4E185 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E5EB9DC15964C3E00C4E185 /* CoreGraphics.framework */; };
@@ -107,6 +110,9 @@
 		8E595F27169E39230047C39B /* down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "down@2x.png"; sourceTree = "<group>"; };
 		8E595F29169E49850047C39B /* DatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
 		8E595F2A169E49850047C39B /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
+		8E595F33169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAssetsLibrary+CustomPhotoAlbum.h"; path = "CandidTests/ALAssetsLibrary+CustomPhotoAlbum.h"; sourceTree = "<group>"; };
+		8E595F34169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAssetsLibrary+CustomPhotoAlbum.m"; path = "CandidTests/ALAssetsLibrary+CustomPhotoAlbum.m"; sourceTree = "<group>"; };
+		8E595F37169E76900047C39B /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		8E5EB9D415964C3E00C4E185 /* Candid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Candid.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E5EB9D815964C3E00C4E185 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8E5EB9DA15964C3E00C4E185 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -168,6 +174,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E595F38169E76900047C39B /* AssetsLibrary.framework in Frameworks */,
 				8E5EBA1E1596918500C4E185 /* ImageIO.framework in Frameworks */,
 				8E5EBA181596754300C4E185 /* CoreImage.framework in Frameworks */,
 				8E5EBA161596753C00C4E185 /* CoreMedia.framework in Frameworks */,
@@ -221,6 +228,7 @@
 		8E5EB9D715964C3E00C4E185 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8E595F37169E76900047C39B /* AssetsLibrary.framework */,
 				8E5EBA1D1596918500C4E185 /* ImageIO.framework */,
 				8E5EBA171596754300C4E185 /* CoreImage.framework */,
 				8E5EBA151596753C00C4E185 /* CoreMedia.framework */,
@@ -299,6 +307,8 @@
 				8E1FD70A169D0F44007ABB40 /* FSNConnection.m */,
 				8E1FD70B169D0F44007ABB40 /* FSNData.h */,
 				8E1FD70C169D0F44007ABB40 /* FSNData.m */,
+				8E595F33169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.h */,
+				8E595F34169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m */,
 			);
 			name = "External Projects";
 			sourceTree = "<group>";
@@ -475,6 +485,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E595F39169E7AD90047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
 				8E1FD712169D113E007ABB40 /* FSNData.m in Sources */,
 				8E1FD711169D113B007ABB40 /* FSNConnection.m in Sources */,
 				8E1FD710169D1135007ABB40 /* FSN_categories.m in Sources */,
@@ -503,6 +514,7 @@
 				8E1FD70D169D0F44007ABB40 /* FSN_categories.m in Sources */,
 				8E1FD70E169D0F44007ABB40 /* FSNConnection.m in Sources */,
 				8E1FD70F169D0F44007ABB40 /* FSNData.m in Sources */,
+				8E595F35169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -609,6 +621,7 @@
 					"\"$(SRCROOT)/TestFlightSDK1-1\"",
 					"\"$(SRCROOT)/TestFlightSDK1\"",
 				);
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -627,6 +640,7 @@
 					"\"$(SRCROOT)/TestFlightSDK1-1\"",
 					"\"$(SRCROOT)/TestFlightSDK1\"",
 				);
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

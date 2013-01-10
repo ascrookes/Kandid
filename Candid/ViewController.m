@@ -724,6 +724,9 @@ typedef enum ClearAlertViewIndex {
     if(!_numPictures) {
         _numPictures = 0;
     }
+    if(_numPictures == 5) {
+        [self didReceiveMemoryWarning];
+    }
     self.numPixBarButton.title = [NSString stringWithFormat:@"# Pix: %i", _numPictures];
     return _numPictures;
 }

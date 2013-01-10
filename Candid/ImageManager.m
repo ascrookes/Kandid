@@ -7,6 +7,7 @@
 //
 
 #import "ImageManager.h"
+#import "ALAssetsLibrary+CustomPhotoAlbum.h"
 
 // images are square so this is the width and height
 const int IMAGE_SIZE = 200;
@@ -21,6 +22,7 @@ const int WATERMARK_HEIGHT  = 40;
 
 // The bigger this number the small the watermark
 const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
+
 
 @interface ImageManager ()
 
@@ -53,9 +55,12 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 - (UIImage*)getImageAtIndex:(NSInteger)index
 {
     id image = [self.thumbnails objectAtIndex:index];
-    if(!image) {
+    //when memory needs to be conserved the thumbnails are replaced with nsnull
+    // make sure to check before clearing them
+    if([image isMemberOfClass:[NSNull class]]) {
         image = [self thumbnailFromData:[self.imageData objectAtIndex:index]];
         [self.thumbnails replaceObjectAtIndex:index withObject:image];
+        NSLog(@"the image was not there, recreating");
     }
     return image;
 }
@@ -80,13 +85,14 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 
 - (void)saveImage:(NSData*)imageData watermark:(BOOL)watermark
 {
-    UIImage* saveImage;
+    UIImage* saveImage = nil;
     if(watermark) {
         saveImage = [self addWatermarkToImageData:imageData];
     } else {
         saveImage = [UIImage imageWithData:imageData];
     }
-    UIImageWriteToSavedPhotosAlbum(saveImage, nil, nil, nil);
+    [ALAssetsLibrary saveImage:saveImage toAlbum:@"Candid" withCompletionBlock:nil];
+    //UIImageWriteToSavedPhotosAlbum(saveImage, nil, nil, nil);
     UIGraphicsEndImageContext();
 }
 
@@ -137,7 +143,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 {
     for(int i = 0; i < [self.thumbnails count]; i++)
     {
-        [self.thumbnails replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:NO]];
+        [self.thumbnails replaceObjectAtIndex:i withObject:[NSNull null]];
     }
 }
 
