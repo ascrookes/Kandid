@@ -20,18 +20,14 @@ const int IMAGES_PER_ROW = 2;
 
 @synthesize imageManager = _imageManager;
 @synthesize imagesToSave = _imagesToSave;
+@synthesize delegate = _delegate;
 
-+ (ImageSelectionViewController*)imageSelectionWithManager:(ImageManager *)manager
++ (ImageSelectionViewController*)imageSelectionWithManager:(ImageManager *)manager AndDelegate:(id)delegate
 {
     ImageSelectionViewController* imageSelection = [[ImageSelectionViewController alloc] init];
     imageSelection.imageManager = manager;
+    imageSelection.delegate = delegate;
     return imageSelection;
-}
-
-+ (void)presentModalImageSelectionWithManager:(ImageManager*)manager
-{
-    ImageSelectionViewController* isvc = [ImageSelectionViewController imageSelectionWithManager:manager];
-    [isvc presentModalViewController:isvc animated:YES];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -45,14 +41,12 @@ const int IMAGES_PER_ROW = 2;
 
 - (void)viewDidLoad
 {
-    NSLog(@"VIEW DID Load");
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    NSLog(@"VIEW APPEARED");
     [self.collectionView reloadData];
 }
 
@@ -69,11 +63,12 @@ const int IMAGES_PER_ROW = 2;
 
 - (IBAction)saveImages:(id)sender
 {
-    NSLog(@"save images");
     // sort images to save them in the order they were takenz
     for(NSNumber* index in self.imagesToSave) {
-        [self.imageManager saveImageAtIndex:[index integerValue]];
+        [self.imageManager saveImageAtIndex:[index intValue] Watermark:NO];
     }
+    [self.imageManager removeImagesAtIndices:[self.imagesToSave allObjects]];
+    [self.delegate didFinishSelection];
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -113,7 +108,6 @@ const int IMAGES_PER_ROW = 2;
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    NSLog(@"COLLECTION SIZE: %f", ceil([self.imageManager count]/(double)IMAGES_PER_ROW));
     return ceil([self.imageManager count]/(double)IMAGES_PER_ROW);
 }
 

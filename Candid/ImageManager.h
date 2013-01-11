@@ -17,8 +17,10 @@
 - (NSInteger)count;
 - (UIImage*)lastImage;
 - (void)saveImage:(NSData*)imageData watermark:(BOOL)watermark;
-- (void)saveImageAtIndex:(NSInteger)index;
+- (void)saveImageAtIndex:(NSInteger)index Watermark:(BOOL)watermark;
 - (void)clearImageData;
+- (void)removeImagesAtIndices:(NSArray*)indices;
+
 
 
 @end

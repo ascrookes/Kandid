@@ -127,8 +127,19 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     return saveImage;
 }
 
-- (void)saveImageAtIndex:(NSInteger)index {
-    [self saveImage:[self.imageData objectAtIndex:index] watermark:NO];
+- (void)saveImageAtIndex:(NSInteger)index Watermark:(BOOL)watermark {
+    [self saveImage:[self.imageData objectAtIndex:index] watermark:watermark];
+}
+
+- (void)removeImagesAtIndices:(NSArray*)indices
+{
+    // sort the array in descending order and remove the objects in that order to avoid removing the wrong objects
+    NSArray* sortedIndices = [indices sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:NO]]];
+    for(int i = 0; i < [sortedIndices count]; i++) {
+        int index = [[sortedIndices objectAtIndex:i] intValue];
+        [self.imageData  removeObjectAtIndex:index];
+        [self.thumbnails removeObjectAtIndex:index];        
+    }
 }
 
 //*********************************************************
@@ -140,8 +151,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 // Fill the entire thumbnail array with a NULL, since thumbnails can be recreated
 - (void)conserveMemory
 {
-    for(int i = 0; i < [self.thumbnails count]; i++)
-    {
+    for(int i = 0; i < [self.thumbnails count]; i++) {
         [self.thumbnails replaceObjectAtIndex:i withObject:[NSNull null]];
     }
 }

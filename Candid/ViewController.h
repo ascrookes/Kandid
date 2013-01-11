@@ -37,6 +37,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *flashButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *numPixBarButton;
 @property (weak, nonatomic) IBOutlet UIImageView *cameraImage;
+@property (nonatomic, strong) NSDate* sessionTime;
+@property (nonatomic) NSTimeInterval sessionTimeInterval;
 
 
 // The hidden view stuff

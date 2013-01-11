@@ -12,6 +12,8 @@
 @implementation DatabaseManager
 
 
+// the image basically just keeps count of number of images taken
+// when that changes also give more information
 + (void)addImageToDB
 {
     FSNConnection* connection =
@@ -29,23 +31,22 @@
     [connection start];
 }
 
-+ (void)addImageSessionToDBWithSessionCount:(unsigned int)sessionCount
++ (void)addImageSessionToDBWithSessionCount:(unsigned int)sessionCount length:(unsigned int)length
 {
-    if(sessionCount == 0) {
-        FSNConnection* connection =
-        [FSNConnection withUrl:[NSURL URLWithString:@"http://ascrookes.webfactional.com/candid/imageSession"]
-                        method:FSNRequestMethodPOST
-                       headers:[NSDictionary dictionary]
-                    parameters:[NSDictionary dictionaryWithObject:@(sessionCount) forKey:@"sessionCount"]
-                    parseBlock:nil
-               completionBlock:^(FSNConnection *c) {
-                   //NSLog(@"\n  Response: %@\n  ResponseData: %@\n", c.response, [NSString stringWithUTF8String:[c.responseData bytes]]);
-               }
-                 progressBlock:nil
-         ];
-        
-        [connection start];
-    }
+    FSNConnection* connection =
+    [FSNConnection withUrl:[NSURL URLWithString:@"http://ascrookes.webfactional.com/candid/imageSession"]
+                    method:FSNRequestMethodPOST
+                   headers:[NSDictionary dictionary]
+                parameters:[NSDictionary dictionaryWithObjectsAndKeys:@(sessionCount), @"sessionCount",
+                                                                      @(length), @"sessionLength", nil]
+                parseBlock:nil
+           completionBlock:^(FSNConnection *c) {
+               //NSLog(@"\n  Response: %@\n  ResponseData: %@\n", c.response, [NSString stringWithUTF8String:[c.responseData bytes]]);
+           }
+             progressBlock:nil
+     ];
+    
+    [connection start];
 }
 
 @end

@@ -26,7 +26,7 @@ const int MAIN_TIMER_REPEAT_TIME = 0.1;
 // The cushion above the max to monitor where the max should be
 const int VOLUME_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
-const int TOO_LOUD_TIMED_SHOT = 10;
+const int TOO_LOUD_TIMED_SHOT = 25;
 const double TIMED_SHOT_LEVEL = -7.5;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
@@ -52,7 +52,7 @@ typedef enum ClearAlertViewIndex {
 } ClearAlertViewIndex;
 
 
-@interface ViewController () <UIAlertViewDelegate>
+@interface ViewController () <UIAlertViewDelegate, ImageSelectionDelegate>
 
 //*********************************************************
 //*********************************************************
@@ -111,6 +111,8 @@ typedef enum ClearAlertViewIndex {
 @synthesize numPixHiddenLabel = _numPixHiddenLabel;
 @synthesize volumeHideLabel = _volumeHideLabel;
 @synthesize hideTimer = _hideTimer;
+@synthesize sessionTime = _sessionTime;
+@synthesize sessionTimeInterval;
 
 
 //*********************************************************
@@ -126,20 +128,33 @@ typedef enum ClearAlertViewIndex {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
     }
-    
+    self.sessionTimeInterval = 0;
     self.volumeMax = -5.0;
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
     self.flashMode = FLASH_MODE_OFF;
     self.isRunning = NO;
     self.shouldResumeAfterInterruption = NO;
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    self.view.backgroundColor = [UIColor lightGrayColor];//[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    [ViewController setViewController:self Title:@"Kandid" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUI) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopEverything) name:@"stopEverything" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginInterruption) name:@"beginInterruption" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endInterruption) name:@"endInterruption" object:nil];
 }
+
++ (void)setViewController:(UIViewController*)vc Title:(NSString*)title Font:(UIFont*)font
+{
+    UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [titleButton setFrame:CGRectMake(0, 0, 170, 35)];
+    [titleButton setTitle:title forState:UIControlStateNormal];
+    titleButton.titleLabel.font = font;
+    titleButton.titleLabel.textColor = [UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1];
+    [titleButton addTarget:self action:@selector(ClickbtnChaperselection:)forControlEvents:UIControlEventTouchUpInside];
+    vc.navigationItem.titleView = titleButton;
+}
+
 
 // since the UI does not rotate show something to indicate
 // that the camera can face any direction
@@ -250,7 +265,7 @@ typedef enum ClearAlertViewIndex {
 
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
         
-        [self.imageManager addImageData:imageData save:YES];
+        [self.imageManager addImageData:imageData save:NO];
         self.numPictures++;
         self.picturesTakenThisMinute++;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -316,11 +331,7 @@ typedef enum ClearAlertViewIndex {
     }
     
     double peakDiff = self.averageUpdatePeak - avgPeak;
-    if(self.averageUpdatePeak > self.volumeMax) {
-        NSLog(@"THE average IS greater THAN the volume MAX!\nShould adjust that here");
-    }
     [self monitorThreshold:peakDiff];
-    
 }
 
 // the difference in the current average peak and the current peak for the past
@@ -411,13 +422,12 @@ typedef enum ClearAlertViewIndex {
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    int count = [self.imageManager count];
-    return (count < MAX_IMAGES_IN_TABLE) ? count : MAX_IMAGES_IN_TABLE;
+    return [self.imageManager count];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // DONT DO SHIT
+    // DONT DO SHIT!
 }
 
 //*********************************************************
@@ -447,6 +457,8 @@ typedef enum ClearAlertViewIndex {
 
 - (IBAction)stopEverything
 {
+    // using time interval since now will return negative since self.sessionTime is earlier than the current time
+    self.sessionTimeInterval += ([self.sessionTime timeIntervalSinceNow] * -1);
     [self.timer invalidate];
     [self.updateTimer invalidate];
     [self.recorder stop];
@@ -474,13 +486,14 @@ typedef enum ClearAlertViewIndex {
     overlay.animation = MTStatusBarOverlayAnimationFallDown;
     overlay.detailViewMode = MTDetailViewModeHistory;
     [overlay postMessage:@"Running..."];
+    self.sessionTime = [NSDate date];
 }
 
 - (IBAction)toggleHide:(id)sender
 {
     if(self.hideView.hidden) {
         [self navigationController].navigationBar.alpha = 0;
-        self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
+        self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
         self.hideView.hidden = NO;
         
         // fade the labels on the view
@@ -495,7 +508,7 @@ typedef enum ClearAlertViewIndex {
 
 - (void)hideLabels
 {
-    [UIView animateWithDuration:1.25 animations:^{
+    [UIView animateWithDuration:0.75 animations:^{
         self.hideLabel.alpha = 0;
         // TODO -- change these to ZERO
         self.numPixHiddenLabel.alpha = 0.25;
@@ -521,7 +534,7 @@ typedef enum ClearAlertViewIndex {
 
 - (IBAction)clearFilmRoll:(id)sender
 {
-    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Images will disappear but have already been saved" delegate:self cancelButtonTitle:@"Nevermind" otherButtonTitles:@"Clear!", nil];
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Images have not been saved and this cannot be undone" delegate:self cancelButtonTitle:@"Nevermind" otherButtonTitles:@"Clear!", nil];
     [alert show];
 }
 
@@ -548,7 +561,8 @@ typedef enum ClearAlertViewIndex {
     [alert show];
 }
 
-- (IBAction)showSelction:(id)sender
+// show selection of the images for the user to choose from
+- (IBAction)saveImages:(id)sender
 {
     if([self.imageManager count] == 0) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No images" message:@"Please try again once there are images" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -556,10 +570,11 @@ typedef enum ClearAlertViewIndex {
     } else {
         ImageSelectionViewController* isvc = [self.storyboard instantiateViewControllerWithIdentifier:@"selectionView"];
         isvc.imageManager = self.imageManager;
+        isvc.delegate = self;
         [self presentModalViewController:isvc animated:YES];
     }
-    
 }
+
 
 
 //*********************************************************
@@ -602,7 +617,7 @@ typedef enum ClearAlertViewIndex {
 
 //*********************************************************
 //*********************************************************
-#pragma mark - AVAudioSessionDelegate
+#pragma mark - Interruption Handling
 //*********************************************************
 //*********************************************************
 
@@ -634,19 +649,25 @@ typedef enum ClearAlertViewIndex {
 
 //*********************************************************
 //*********************************************************
-#pragma mark - Alert View Delegate
+#pragma mark - Misc Delegate
 //*********************************************************
 //*********************************************************
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if(buttonIndex == ClearAlertViewIndexClear) {
-        [DatabaseManager addImageSessionToDBWithSessionCount:self.numPictures];
+        //add 0.5 and floor to roiund it correctly
+        [DatabaseManager addImageSessionToDBWithSessionCount:self.numPictures length:floor(self.sessionTimeInterval + 0.5)];
+        self.sessionTimeInterval = 0;
         [self.imageManager clearImageData];
         [self.table reloadData];
         self.numPictures = 0;
         self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
     }
+}
+
+- (void)didFinishSelection {
+    [self.table reloadData];
 }
 
 

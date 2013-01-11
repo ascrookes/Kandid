@@ -11,6 +11,6 @@
 @interface DatabaseManager : NSObject
 
 + (void)addImageToDB;
-+ (void)addImageSessionToDBWithSessionCount:(unsigned int)sessionCount;
++ (void)addImageSessionToDBWithSessionCount:(unsigned int)sessionCount length:(unsigned int)length;
 
 @end

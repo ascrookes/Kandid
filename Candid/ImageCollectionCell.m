@@ -15,11 +15,9 @@
 
 + (ImageCollectionCell*)imageCellWithDelegate:(id<ImageCollectionCellDelegate>)delegateObject
 {
-    NSLog(@"predelegate: %@", delegateObject);
     ImageCollectionCell* cell = [[ImageCollectionCell alloc] init];
     cell.delegate = delegateObject;
     cell.saveToPhotoAlbum = NO;
-    NSLog(@"POST: %@", cell.delegate);
     return cell;
 }
 
@@ -33,17 +31,18 @@
 
 - (void)setupViewWithImageData:(NSData*)imgData
 {
+    self.saveButton.titleLabel.textColor = [UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1];
     self.imageView.image = [UIImage imageWithData:imgData];
 }
 
 - (void)setupViewWithImage:(UIImage*)image
 {
+    self.saveButton.titleLabel.textColor = [UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1];
     self.imageView.image = image;
 }
 
 - (IBAction)saveButtonAction:(id)sender
 {
-    NSLog(@"save button action: %@", self.delegate);
     self.saveToPhotoAlbum = !self.saveToPhotoAlbum;
     [self.delegate didSelectCell:self forLocation:SaveLocationPhotoAlbum];
 }
@@ -55,6 +54,7 @@
     } else {
         [self.saveButton setTitle:@"Save" forState:UIControlStateNormal];
     }
+    self.saveButton.titleLabel.textColor = [UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1];
 }
 
 

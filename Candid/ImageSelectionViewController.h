@@ -10,12 +10,18 @@
 #import "ImageManager.h"
 #import "ImageCollectionCell.h"
 
+@protocol ImageSelectionDelegate <NSObject>
+
+- (void)didFinishSelection;
+
+@end
+
 @interface ImageSelectionViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, ImageCollectionCellDelegate>
 
 @property (nonatomic, strong) ImageManager* imageManager;
 @property (nonatomic, strong) IBOutlet UICollectionView* collectionView;
+@property (nonatomic, strong) id <ImageSelectionDelegate> delegate;
 
-+ (ImageSelectionViewController*)imageSelectionWithManager:(ImageManager*)manager;
-+ (void)presentModalImageSelectionWithManager:(ImageManager*)manager;
++ (ImageSelectionViewController*)imageSelectionWithManager:(ImageManager *)manager AndDelegate:(id)delegate;
 
 @end

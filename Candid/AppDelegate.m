@@ -15,7 +15,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch
     [self customizeAppearance];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         UIStoryboard *storyBoard;
@@ -25,7 +24,7 @@
         result = CGSizeMake(result.width * scale, result.height * scale);
         // this is the height of the iPhone 5 Screen
         // change the storyboard to use the entire screen
-        if(result.height == 1136){
+        if(result.height == 1136) {
             storyBoard = [UIStoryboard storyboardWithName:@"iPhone5Storyboard" bundle:nil];
             UIViewController *initViewController = [storyBoard instantiateInitialViewController];
             [self.window setRootViewController:initViewController];
@@ -37,8 +36,9 @@
 - (void)customizeAppearance
 {
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
-    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"navBar.png"] forBarMetrics:UIBarMetricsDefault];
-    [[UIBarButtonItem appearance] setTintColor:[UIColor darkGrayColor]];
+    //[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"navBar.png"] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setTintColor:[UIColor lightGrayColor]];
+    [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1]];
 }
 
 							
