@@ -128,20 +128,22 @@ typedef enum ClearAlertViewIndex {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
     }
-    self.sessionTimeInterval = 0;
-    self.volumeMax = -5.0;
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor lightGrayColor];//[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    self.sessionTimeInterval = 0;
+    self.volumeMax = -5.0;
     self.flashMode = FLASH_MODE_OFF;
     self.isRunning = NO;
     self.shouldResumeAfterInterruption = NO;
-    self.view.backgroundColor = [UIColor lightGrayColor];//[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     [ViewController setViewController:self Title:@"Kandid" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUI) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopEverything) name:@"stopEverything" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginInterruption) name:@"beginInterruption" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endInterruption) name:@"endInterruption" object:nil];
+
+
 }
 
 + (void)setViewController:(UIViewController*)vc Title:(NSString*)title Font:(UIFont*)font

@@ -68,6 +68,8 @@
 		8EA87674169FD0730004826F /* saveButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EA87670169FD0730004826F /* saveButton@2x.png */; };
 		8EA87675169FD0730004826F /* hideButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EA87671169FD0730004826F /* hideButton.png */; };
 		8EA87676169FD0730004826F /* hideButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EA87672169FD0730004826F /* hideButton@2x.png */; };
+		8EABFEAA16A002790051C247 /* K-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EABFEA916A002790051C247 /* K-icon.png */; };
+		8EABFEAC16A0027B0051C247 /* K-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EABFEAB16A0027B0051C247 /* K-icon@2x.png */; };
 		8ECFE8EA15DB6A0D00E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
 		8ECFE8EB15DB6A3400E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
 		8EF7AD6B1668725F00D08EF0 /* iPhone5Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */; };
@@ -152,6 +154,8 @@
 		8EA87670169FD0730004826F /* saveButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saveButton@2x.png"; sourceTree = "<group>"; };
 		8EA87671169FD0730004826F /* hideButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hideButton.png; sourceTree = "<group>"; };
 		8EA87672169FD0730004826F /* hideButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hideButton@2x.png"; sourceTree = "<group>"; };
+		8EABFEA916A002790051C247 /* K-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "K-icon.png"; sourceTree = "<group>"; };
+		8EABFEAB16A0027B0051C247 /* K-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "K-icon@2x.png"; sourceTree = "<group>"; };
 		8ECFE8E815DB6A0D00E86971 /* ImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCell.h; sourceTree = "<group>"; };
 		8ECFE8E915DB6A0D00E86971 /* ImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCell.m; sourceTree = "<group>"; };
 		8EF7AD6A1668725E00D08EF0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone5Storyboard.storyboard; sourceTree = "<group>"; };
@@ -190,6 +194,8 @@
 		8E5EB9C915964C3D00C4E185 = {
 			isa = PBXGroup;
 			children = (
+				8EABFEAB16A0027B0051C247 /* K-icon@2x.png */,
+				8EABFEA916A002790051C247 /* K-icon.png */,
 				8EA8766D169FCD120004826F /* icon@2x.png */,
 				8EA8766B169FCD0F0004826F /* icon.png */,
 				8EA87659169FBF900004826F /* Default-568h@2x.png */,
@@ -427,6 +433,8 @@
 				8EA87674169FD0730004826F /* saveButton@2x.png in Resources */,
 				8EA87675169FD0730004826F /* hideButton.png in Resources */,
 				8EA87676169FD0730004826F /* hideButton@2x.png in Resources */,
+				8EABFEAA16A002790051C247 /* K-icon.png in Resources */,
+				8EABFEAC16A0027B0051C247 /* K-icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
