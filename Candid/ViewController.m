@@ -153,7 +153,6 @@ typedef enum ClearAlertViewIndex {
     [titleButton setTitle:title forState:UIControlStateNormal];
     titleButton.titleLabel.font = font;
     titleButton.titleLabel.textColor = [UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1];
-    [titleButton addTarget:self action:@selector(ClickbtnChaperselection:)forControlEvents:UIControlEventTouchUpInside];
     vc.navigationItem.titleView = titleButton;
 }
 
