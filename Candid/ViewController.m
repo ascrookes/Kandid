@@ -31,6 +31,12 @@ const double TIMED_SHOT_LEVEL = -7.5;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
 const int MAX_IMAGES_IN_TABLE = 25;
+const int NUMBER_OF_IMAGES_TO_REVIEW = 25;
+static NSString* CLEAR_ALERT_TITLE = @"Are You Sure?";
+static NSString* REVIEW_ALERT_TITLE = @"Enjoying Kandid?";
+static NSString* HAS_SHOWN_REVIEW_KEY = @"hasShownReviewAlert";
+// TODO -- change this when 
+static NSString* KANDID_ITUNES_URL = @"http://itunes.com/apps/ijumbo";
 
 //*********************************************************
 //*********************************************************
@@ -50,6 +56,11 @@ typedef enum ClearAlertViewIndex {
     ClearAlertViewIndexNevermind,
     ClearAlertViewIndexClear
 } ClearAlertViewIndex;
+
+typedef enum ReviewAppAlertIndex {
+    ReviewAlertIndexNo,
+    ReviewAlertIndexYes,
+} ReviewAppAlertIndex;
 
 
 @interface ViewController () <UIAlertViewDelegate, ImageSelectionDelegate>
@@ -160,6 +171,17 @@ typedef enum ClearAlertViewIndex {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginInterruption) name:@"kandid.beginInterruption" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endInterruption) name:@"kandid.endInterruption" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate) name:@"kandid.appWillTerminate" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkForNumberOfImagesSaved) name:@"kandid.appBecameActive" object:nil];
+}
+
+- (void)checkForNumberOfImagesSaved {
+    NSLog(@"in method");
+    BOOL hasShownAlert = [[NSUserDefaults standardUserDefaults] boolForKey:HAS_SHOWN_REVIEW_KEY];
+    if(!hasShownAlert && [ImageManager getSavedCount] >= NUMBER_OF_IMAGES_TO_REVIEW) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HAS_SHOWN_REVIEW_KEY];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:REVIEW_ALERT_TITLE message:@"Would you review the app?" delegate:self cancelButtonTitle:@"Not Now" otherButtonTitles:@"OK!", nil];
+        [alert show];
+    }
 }
 
 - (void)didEnterBackground {
@@ -560,7 +582,7 @@ typedef enum ClearAlertViewIndex {
 
 - (IBAction)clearFilmRoll:(id)sender
 {
-    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Images have not been saved and this cannot be undone" delegate:self cancelButtonTitle:@"Nevermind" otherButtonTitles:@"Clear!", nil];
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:CLEAR_ALERT_TITLE message:@"Images have not been saved and this cannot be undone" delegate:self cancelButtonTitle:@"Nevermind" otherButtonTitles:@"Clear!", nil];
     [alert show];
 }
 
@@ -688,13 +710,16 @@ typedef enum ClearAlertViewIndex {
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex == ClearAlertViewIndexClear) {
+    if([alertView.title isEqualToString:CLEAR_ALERT_TITLE] && buttonIndex == ClearAlertViewIndexClear) {
         //add 0.5 and floor to roiund it correctly
         [DatabaseManager addImageSessionToDBWithSessionCount:self.numPictures length:floor(self.sessionTimeInterval + 0.5)];
         self.sessionTimeInterval = 0;
         [self.imageManager clearImageData];
         [self.table reloadData];
         self.numPictures = 0;
+    } else if([alertView.title isEqualToString:REVIEW_ALERT_TITLE] && buttonIndex == ReviewAlertIndexYes) {
+        NSURL *url = [NSURL URLWithString:KANDID_ITUNES_URL];
+        [[UIApplication sharedApplication] openURL:url];
     }
 }
 

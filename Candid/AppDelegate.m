@@ -66,6 +66,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kandid.appBecameActive" object:nil];
     if(self.didResign) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kandid.endInterruption" object:nil];
     }

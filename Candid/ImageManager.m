@@ -124,18 +124,33 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 {
     UIImage* saveImage = nil;
     if(watermark) {
-        saveImage = [self addWatermarkToImageData:imageData];
+        saveImage = [ImageManager addWatermarkToImageData:imageData];
     } else {
         saveImage = [UIImage imageWithData:imageData];
     }
     [ALAssetsLibrary saveImage:saveImage toAlbum:@"Kandid" withCompletionBlock:nil];
-    //UIImageWriteToSavedPhotosAlbum(saveImage, nil, nil, nil);
     UIGraphicsEndImageContext();
+    [ImageManager increaseSavedImagesCount];
+}
+
++ (void)increaseSavedImagesCount
+{
+    NSString* key = [ImageManager savedCountKey];
+    NSInteger savedCount = [[NSUserDefaults standardUserDefaults] integerForKey:key];
+    [[NSUserDefaults standardUserDefaults] setInteger:savedCount + 1 forKey:key];
+}
+
++ (NSInteger)getSavedCount {
+    return [[NSUserDefaults standardUserDefaults] integerForKey:[ImageManager savedCountKey]];
+}
+
++ (NSString*)savedCountKey {
+    return @"numberOfSavedImages";
 }
 
 // Draws the image in a context and then creates a label
 // and draws that label on top of the image and returns that one
-- (UIImage*)addWatermarkToImageData:(NSData*)imageData
++ (UIImage*)addWatermarkToImageData:(NSData*)imageData
 {
     UIImage* img = [UIImage imageWithData:imageData];
     UIGraphicsBeginImageContext(img.size);
@@ -153,7 +168,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     watermark.textAlignment = UITextAlignmentRight;
     watermark.backgroundColor = [UIColor clearColor];
     watermark.textColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.6];
-    watermark.text = @"Candid ";
+    watermark.text = @"Kandid ";
     watermark.font = [UIFont fontWithName:@"Didot-Italic" size:imgWidth/WATER_MARK_FONT_REDUCE_FACTOR];
     watermark.shadowColor = [UIColor blackColor];
     watermark.shadowOffset = CGSizeMake(0, -1.5);

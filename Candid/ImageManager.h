@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface ImageManager : NSObject
 
 + (ImageManager*)imageManagerWithFileName:(NSString*)fileName;
@@ -21,6 +22,8 @@
 - (void)clearImageData;
 - (void)removeImagesAtIndices:(NSArray*)indices;
 - (void)writeInfoToFileName:(NSString*)fileName;
++ (NSString*)savedCountKey;
++ (NSInteger)getSavedCount;
 
 
 
