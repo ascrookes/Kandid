@@ -10,7 +10,7 @@
 
 @interface ImageManager : NSObject
 
-
++ (ImageManager*)imageManagerWithFileName:(NSString*)fileName;
 - (void)addImageData:(NSData*)imageData save:(BOOL)saveImage;
 - (UIImage*)getImageAtIndex:(NSInteger)index;
 - (void)conserveMemory;
@@ -20,6 +20,7 @@
 - (void)saveImageAtIndex:(NSInteger)index Watermark:(BOOL)watermark;
 - (void)clearImageData;
 - (void)removeImagesAtIndices:(NSArray*)indices;
+- (void)writeInfoToFileName:(NSString*)fileName;
 
 
 

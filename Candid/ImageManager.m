@@ -38,6 +38,44 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 
 //*********************************************************
 //*********************************************************
+#pragma mark - File I/O
+//*********************************************************
+//*********************************************************
+
+// creates an image manager with the data from the file name
+// if the file does not exist it just returns an empty image manager
++ (ImageManager*)imageManagerWithFileName:(NSString*)fileName
+{
+    ImageManager* manager = [[ImageManager alloc] init];
+
+    manager.imageData = [NSMutableArray arrayWithContentsOfFile:[ImageManager getImageDataFilePath:fileName]];
+    if(manager.imageData != nil || manager.imageData.count > 0) {
+        //NSLog(@"Manager Image: %@", manager.imageData);
+        // the thumbnails come from the image data so there is no need to save those seperatly
+        manager.thumbnails = [NSMutableArray arrayWithCapacity:manager.imageData.count];
+        for(int i = 0; i < manager.imageData.count; i++) {
+            [manager.thumbnails addObject:[NSNull null]];
+        }
+    } else {
+        manager.imageData = nil;
+    }
+    return manager;
+}
+
+- (void)writeInfoToFileName:(NSString*)fileName {
+    [self.imageData writeToFile:[ImageManager getImageDataFilePath:fileName] atomically:YES];
+}
+
++ (NSString*)getImageDataFilePath:(NSString*)fileName
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString* filePath = [documentsDirectory stringByAppendingPathComponent:[fileName stringByAppendingString:@".imageData"]];
+    return filePath;
+}
+
+//*********************************************************
+//*********************************************************
 #pragma mark - Images
 //*********************************************************
 //*********************************************************
@@ -90,7 +128,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     } else {
         saveImage = [UIImage imageWithData:imageData];
     }
-    [ALAssetsLibrary saveImage:saveImage toAlbum:@"Candid" withCompletionBlock:nil];
+    [ALAssetsLibrary saveImage:saveImage toAlbum:@"Kandid" withCompletionBlock:nil];
     //UIImageWriteToSavedPhotosAlbum(saveImage, nil, nil, nil);
     UIGraphicsEndImageContext();
 }

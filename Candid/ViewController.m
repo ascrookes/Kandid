@@ -91,7 +91,6 @@ typedef enum ClearAlertViewIndex {
 
 @synthesize volumeMax = _volumeMax;
 @synthesize volumeMin = _volumeMin;
-@synthesize picturesTaken = _picturesTaken;
 
 @synthesize lastTakenTime = _lastTakenTime;
 @synthesize numPictures = _numPictures;
@@ -104,7 +103,6 @@ typedef enum ClearAlertViewIndex {
 @synthesize table = _table;
 @synthesize updateTimerActionCount;
 @synthesize hideView = _hideView;
-@synthesize picturesTakenThisMinute;
 @synthesize startButton = _startButton;
 @synthesize hideButton = _hideButton;
 @synthesize hideLabel = _hideLabel;
@@ -124,6 +122,7 @@ typedef enum ClearAlertViewIndex {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self addNotificationObservers];
     if(!self.recorder.recording) {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
@@ -137,13 +136,7 @@ typedef enum ClearAlertViewIndex {
     self.isRunning = NO;
     self.shouldResumeAfterInterruption = NO;
     [ViewController setViewController:self Title:@"Kandid" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUI) name:UIDeviceOrientationDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopEverything) name:@"stopEverything" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginInterruption) name:@"beginInterruption" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endInterruption) name:@"endInterruption" object:nil];
-
-
+    [self updateUI];
 }
 
 + (void)setViewController:(UIViewController*)vc Title:(NSString*)title Font:(UIFont*)font
@@ -153,7 +146,25 @@ typedef enum ClearAlertViewIndex {
     [titleButton setTitle:title forState:UIControlStateNormal];
     titleButton.titleLabel.font = font;
     titleButton.titleLabel.textColor = [UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1];
+    titleButton.userInteractionEnabled = NO;
+    // make interactions possible and add an action here if wanted
     vc.navigationItem.titleView = titleButton;
+}
+
+// adds the functions to be called by specific notifications
+- (void)addNotificationObservers
+{
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUI) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:@"kandid.didEnterBackground" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginInterruption) name:@"kandid.beginInterruption" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endInterruption) name:@"kandid.endInterruption" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate) name:@"kandid.appWillTerminate" object:nil];
+}
+
+- (void)didEnterBackground {
+    [self stopEverything];
+    [self.imageManager writeInfoToFileName:@"kandid"];
 }
 
 
@@ -164,6 +175,7 @@ typedef enum ClearAlertViewIndex {
     NSString* imgName = (self.isRunning) ? @"cameraStop.png" : @"cameraStart.png";
     CGAffineTransform rotation;
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    BOOL shouldRotateImage = YES;
     switch (orientation) {
         case UIDeviceOrientationPortrait:
             rotation = CGAffineTransformMakeRotation(0.0);
@@ -178,12 +190,16 @@ typedef enum ClearAlertViewIndex {
             rotation = CGAffineTransformMakeRotation(M_PI + M_PI_2);
             break;
         default:
-            return;
+            shouldRotateImage = NO;
+            break;
     }
     [self.cameraImage setImage:[UIImage imageNamed:imgName]];
-    [UIView animateWithDuration:0.25 animations:^{
-        self.cameraImage.transform = rotation;
-    }];
+    
+    if(shouldRotateImage) {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.cameraImage.transform = rotation;
+        }];
+    }
     [self.table reloadData];
     // the data in the image manager changes so set it to that count
     self.numPictures = [self.imageManager count];
@@ -192,7 +208,6 @@ typedef enum ClearAlertViewIndex {
 
 - (void)viewDidUnload
 {
-    [self setPicturesTaken:nil];
     [self setCameraButton:nil];
     [self setTable:nil];
     [self setLevelLabel:nil];
@@ -271,11 +286,9 @@ typedef enum ClearAlertViewIndex {
         
         [self.imageManager addImageData:imageData save:NO];
         self.numPictures++;
-        self.picturesTakenThisMinute++;
         dispatch_async(dispatch_get_main_queue(), ^{
             //[self.table reloadRowsAtIndexPaths:[self.table visibleCells] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self.table reloadData];
-            self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
             [self changeTorchMode:AVCaptureTorchModeOff];
         });
         NSLog(@"CAPTURING: %i",self.numPictures);
@@ -318,7 +331,6 @@ typedef enum ClearAlertViewIndex {
             && ![self.timedPicture isValid]
             && self.session.running
             && self.recorder.recording;
-            //&& self.picturesTakenThisMinute <= MAX_PICTURES_PER_MINUTE;
 }
 
 - (void)monitorVolumeCallback {
@@ -376,7 +388,6 @@ typedef enum ClearAlertViewIndex {
     // used to monitor images taken per minute
     self.updateTimerActionCount++;
     if(self.updateTimerActionCount >= MINUTE) {
-        self.picturesTakenThisMinute = 0;
         self.updateTimerActionCount = 0;
     }
 
@@ -631,6 +642,12 @@ typedef enum ClearAlertViewIndex {
     [self.session commitConfiguration];
 }
 
+// called when the app is going to terminate to save necessary information
+- (void)appWillTerminate
+{
+    [self.imageManager writeInfoToFileName:@"kandid"];
+}
+
 //*********************************************************
 //*********************************************************
 #pragma mark - Interruption Handling
@@ -678,14 +695,12 @@ typedef enum ClearAlertViewIndex {
         [self.imageManager clearImageData];
         [self.table reloadData];
         self.numPictures = 0;
-        self.picturesTaken.text = [NSString stringWithFormat:@"%i", self.numPictures];
     }
 }
 
 - (void)didFinishSelection {
     [self updateUI];
 }
-
 
 
 //*********************************************************
@@ -821,7 +836,7 @@ typedef enum ClearAlertViewIndex {
 - (ImageManager*)imageManager
 {
     if(!_imageManager) {
-        _imageManager = [[ImageManager alloc] init];
+        _imageManager = [ImageManager imageManagerWithFileName:@"kandid"];
     }
     return _imageManager;
 }

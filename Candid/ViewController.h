@@ -31,7 +31,6 @@
 @property (strong,nonatomic) ImageManager* imageManager;
 @property (nonatomic) int updateTimerActionCount;
 @property (weak, nonatomic) IBOutlet UIView *hideView;
-@property (nonatomic) int picturesTakenThisMinute;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UIButton *hideButton;
 @property (weak, nonatomic) IBOutlet UIButton *flashButton;
@@ -58,7 +57,6 @@
 #pragma mark - DELME (DEBUG PURPOSES)
 
 @property (weak, nonatomic) IBOutlet UILabel  *levelLabel;
-@property (weak, nonatomic) IBOutlet UILabel *picturesTaken; // maybe keep this, but make it blend with the polaroid
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
 
 

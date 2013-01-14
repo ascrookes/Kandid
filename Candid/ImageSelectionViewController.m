@@ -90,7 +90,7 @@ const int IMAGES_PER_ROW = 2;
     cell.delegate = self;
     NSInteger location = (indexPath.section * IMAGES_PER_ROW) + indexPath.row;
     [cell setupViewWithImage:[self.imageManager getImageAtIndex:location]];
-    
+    cell.saveToPhotoAlbum = [self.imagesToSave containsObject:@(location)];
     return cell;
 }
 
