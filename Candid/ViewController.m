@@ -67,7 +67,7 @@ typedef enum ClearAlertViewIndex {
 @property (nonatomic, strong) NSDate* lastTakenTime;
 @property (nonatomic, strong) AVCaptureConnection *videoConnection;
 @property (nonatomic) int numPictures;
-@property (nonatomic) FLASH_MODE /*change this to the enum*/ flashMode;
+@property (nonatomic) FLASH_MODE flashMode;
 @property (nonatomic) BOOL isRunning;
 @property (nonatomic) BOOL shouldResumeAfterInterruption;
 
@@ -184,6 +184,9 @@ typedef enum ClearAlertViewIndex {
     [UIView animateWithDuration:0.25 animations:^{
         self.cameraImage.transform = rotation;
     }];
+    [self.table reloadData];
+    // the data in the image manager changes so set it to that count
+    self.numPictures = [self.imageManager count];
 }
 
 
@@ -290,13 +293,18 @@ typedef enum ClearAlertViewIndex {
 
 // Called by self.timer and checks if it is loud enough for a picture to be taken
 // Takes the function to take a picture if that is the case
-- (void)levelTimerCallback:(NSTimer *)timer
-{
-	[self.recorder updateMeters];
+- (void)levelTimerCallback:(NSTimer *)timer {
+    [self performSelectorInBackground:@selector(volumeUpdater) withObject:nil];
+}
+
+- (void)volumeUpdater {
+    [self.recorder updateMeters];
     float peak = [self.recorder peakPowerForChannel:0];
     self.totalPeak += peak;
     self.timeIntervals++;
-    self.levelLabel.text = [NSString stringWithFormat:@"Level: %f Max: %i", peak, self.volumeMax];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.levelLabel.text = [NSString stringWithFormat:@"Level: %f Max: %i", peak, self.volumeMax];
+    });
     if([self allowedToCapturePeak:peak]) {
         [self captureNow];
     }
@@ -313,6 +321,10 @@ typedef enum ClearAlertViewIndex {
             //&& self.picturesTakenThisMinute <= MAX_PICTURES_PER_MINUTE;
 }
 
+- (void)monitorVolumeCallback {
+    [self performSelectorInBackground:@selector(monitorVolume) withObject:nil];
+}
+
 // Action for self.updateTimer
 // Updates the max and cushion based on the average peak
 // And starts the appropriate timer if it is not running
@@ -324,7 +336,9 @@ typedef enum ClearAlertViewIndex {
     // If the average volume is very close to 0 set up a timer for a timed shot and stop the regular timer
     if(avgPeak > TIMED_SHOT_LEVEL) {
         if(![self.timedPicture isValid]) {
-            self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:TOO_LOUD_TIMED_SHOT target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:TOO_LOUD_TIMED_SHOT target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
+            });
         }
     // Else stop the timed shot timer
     } else {
@@ -566,12 +580,13 @@ typedef enum ClearAlertViewIndex {
 - (IBAction)saveImages:(id)sender
 {
     if([self.imageManager count] == 0) {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No images" message:@"Please try again once there are images" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Nothing to save" message:@"Please try again once there are images" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     } else {
         ImageSelectionViewController* isvc = [self.storyboard instantiateViewControllerWithIdentifier:@"selectionView"];
         isvc.imageManager = self.imageManager;
         isvc.delegate = self;
+        [ViewController setViewController:isvc Title:@"Images" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
         [self presentModalViewController:isvc animated:YES];
     }
 }
@@ -668,7 +683,7 @@ typedef enum ClearAlertViewIndex {
 }
 
 - (void)didFinishSelection {
-    [self.table reloadData];
+    [self updateUI];
 }
 
 
@@ -695,7 +710,6 @@ typedef enum ClearAlertViewIndex {
         [_session addInput:self.camInput];
         [_session addOutput:self.imageCapture];
     }
-    
     return _session;
 }
 
@@ -706,7 +720,6 @@ typedef enum ClearAlertViewIndex {
         NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys:AVVideoCodecJPEG,AVVideoCodecKey,nil];
         [_imageCapture setOutputSettings:outputSettings];
     }
-    
     return _imageCapture;
 }
 
@@ -715,7 +728,6 @@ typedef enum ClearAlertViewIndex {
     if(!_camInput) {
         _camInput = [AVCaptureDeviceInput deviceInputWithDevice:self.camDevice error:nil];
     }
-    
     return _camInput;
 }
 
@@ -727,7 +739,6 @@ typedef enum ClearAlertViewIndex {
         [_camDevice setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
         [_camDevice unlockForConfiguration];
     }
-    
     return _camDevice;
 }
 
@@ -736,7 +747,6 @@ typedef enum ClearAlertViewIndex {
     if(!_recorder) {
         [self setupRecorder];
     }
-    
     return _recorder;
 }
 
@@ -745,11 +755,13 @@ typedef enum ClearAlertViewIndex {
     if(!_numPictures) {
         _numPictures = 0;
     }
-    if(_numPictures == 5) {
-        [self didReceiveMemoryWarning];
-    }
-    self.numPixBarButton.title = [NSString stringWithFormat:@"# Pix: %i", _numPictures];
     return _numPictures;
+}
+
+- (void)setNumPictures:(int)numPictures
+{
+    _numPictures = numPictures;
+    self.numPixBarButton.title = [NSString stringWithFormat:@"# Pix: %i", _numPictures];
 }
 
 - (double)totalPeak
