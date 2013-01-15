@@ -7,6 +7,7 @@
 //
 
 #import "ImageManager.h"
+#import "KandidUtils.h"
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
 
 // images are square so this is the width and height
@@ -130,23 +131,10 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     }
     [ALAssetsLibrary saveImage:saveImage toAlbum:@"Kandid" withCompletionBlock:nil];
     UIGraphicsEndImageContext();
-    [ImageManager increaseSavedImagesCount];
+    [KandidUtils increaseSavedImagesCount];
 }
 
-+ (void)increaseSavedImagesCount
-{
-    NSString* key = [ImageManager savedCountKey];
-    NSInteger savedCount = [[NSUserDefaults standardUserDefaults] integerForKey:key];
-    [[NSUserDefaults standardUserDefaults] setInteger:savedCount + 1 forKey:key];
-}
 
-+ (NSInteger)getSavedCount {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:[ImageManager savedCountKey]];
-}
-
-+ (NSString*)savedCountKey {
-    return @"numberOfSavedImages";
-}
 
 // Draws the image in a context and then creates a label
 // and draws that label on top of the image and returns that one

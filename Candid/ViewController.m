@@ -10,6 +10,7 @@
 #import "ImageSelectionViewController.h"
 #import "MTStatusBarOverlay.h"
 #import "DatabaseManager.h"
+#import "KandidUtils.h"
 
 //*********************************************************
 //*********************************************************
@@ -156,10 +157,14 @@ typedef enum ReviewAppAlertIndex {
     [titleButton setFrame:CGRectMake(0, 0, 170, 35)];
     [titleButton setTitle:title forState:UIControlStateNormal];
     titleButton.titleLabel.font = font;
-    titleButton.titleLabel.textColor = [UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1];
+    titleButton.titleLabel.textColor = [KandidUtils kandidPurple];
     titleButton.userInteractionEnabled = NO;
     // make interactions possible and add an action here if wanted
     vc.navigationItem.titleView = titleButton;
+}
+
++ (UIColor*)kandidPurple {
+    return [UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1];
 }
 
 // adds the functions to be called by specific notifications
@@ -175,9 +180,8 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (void)checkForNumberOfImagesSaved {
-    NSLog(@"in method");
     BOOL hasShownAlert = [[NSUserDefaults standardUserDefaults] boolForKey:HAS_SHOWN_REVIEW_KEY];
-    if(!hasShownAlert && [ImageManager getSavedCount] >= NUMBER_OF_IMAGES_TO_REVIEW) {
+    if(!hasShownAlert && [KandidUtils getSavedCount] >= NUMBER_OF_IMAGES_TO_REVIEW) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HAS_SHOWN_REVIEW_KEY];
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:REVIEW_ALERT_TITLE message:@"Would you review the app?" delegate:self cancelButtonTitle:@"Not Now" otherButtonTitles:@"OK!", nil];
         [alert show];
@@ -638,7 +642,6 @@ typedef enum ReviewAppAlertIndex {
 //will recreate deleted images from the data
 - (void)didReceiveMemoryWarning
 {
-    NSLog(@"Memory warning :(");
     self.table.userInteractionEnabled = NO;
     [self.imageManager conserveMemory];
     [self.table reloadData];
@@ -801,7 +804,9 @@ typedef enum ReviewAppAlertIndex {
 - (void)setNumPictures:(int)numPictures
 {
     _numPictures = numPictures;
-    self.numPixBarButton.title = [NSString stringWithFormat:@"# Pix: %i", _numPictures];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.numPixBarButton.title = [NSString stringWithFormat:@"# Pix: %i", _numPictures];
+    });
 }
 
 - (double)totalPeak

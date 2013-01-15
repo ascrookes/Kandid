@@ -22,9 +22,6 @@
 - (void)clearImageData;
 - (void)removeImagesAtIndices:(NSArray*)indices;
 - (void)writeInfoToFileName:(NSString*)fileName;
-+ (NSString*)savedCountKey;
-+ (NSInteger)getSavedCount;
-
 
 
 @end

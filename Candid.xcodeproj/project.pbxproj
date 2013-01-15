@@ -26,6 +26,7 @@
 		8E2E897515E9902F002D4DA1 /* ImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E9AC53315DCA4940085B344 /* ImageManager.m */; };
 		8E2E897F15E991EA002D4DA1 /* FilmRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E897D15E991EA002D4DA1 /* FilmRoll.png */; };
 		8E2E898015E991EA002D4DA1 /* FilmRoll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E897E15E991EA002D4DA1 /* FilmRoll@2x.png */; };
+		8E3B1F6116A4DF8B004E7D24 /* KandidUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3B1F6016A4DF8B004E7D24 /* KandidUtils.m */; };
 		8E595F2B169E49850047C39B /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E595F2A169E49850047C39B /* DatabaseManager.m */; };
 		8E595F35169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E595F34169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
 		8E595F38169E76900047C39B /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E595F37169E76900047C39B /* AssetsLibrary.framework */; };
@@ -104,6 +105,8 @@
 		8E24D3B516A3EEE900572818 /* hideButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hideButton@2x.png"; sourceTree = "<group>"; };
 		8E2E897D15E991EA002D4DA1 /* FilmRoll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FilmRoll.png; sourceTree = "<group>"; };
 		8E2E897E15E991EA002D4DA1 /* FilmRoll@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FilmRoll@2x.png"; sourceTree = "<group>"; };
+		8E3B1F5F16A4DF8B004E7D24 /* KandidUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KandidUtils.h; sourceTree = "<group>"; };
+		8E3B1F6016A4DF8B004E7D24 /* KandidUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KandidUtils.m; sourceTree = "<group>"; };
 		8E595F29169E49850047C39B /* DatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
 		8E595F2A169E49850047C39B /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
 		8E595F33169E75120047C39B /* ALAssetsLibrary+CustomPhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAssetsLibrary+CustomPhotoAlbum.h"; path = "CandidTests/ALAssetsLibrary+CustomPhotoAlbum.h"; sourceTree = "<group>"; };
@@ -245,6 +248,8 @@
 				8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */,
 				8E5EB9ED15964C3E00C4E185 /* ViewController.h */,
 				8E5EB9EE15964C3E00C4E185 /* ViewController.m */,
+				8E3B1F5F16A4DF8B004E7D24 /* KandidUtils.h */,
+				8E3B1F6016A4DF8B004E7D24 /* KandidUtils.m */,
 				8E595F29169E49850047C39B /* DatabaseManager.h */,
 				8E595F2A169E49850047C39B /* DatabaseManager.m */,
 				8E1CA7891699419F00C32142 /* ImageSelectionViewController.h */,
@@ -482,6 +487,7 @@
 				8E9AC53415DCA4940085B344 /* ImageManager.m in Sources */,
 				8E1CA78B1699419F00C32142 /* ImageSelectionViewController.m in Sources */,
 				8E595F2B169E49850047C39B /* DatabaseManager.m in Sources */,
+				8E3B1F6116A4DF8B004E7D24 /* KandidUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
