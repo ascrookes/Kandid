@@ -143,7 +143,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <connections>
-                                    <outletCollection property="gestureRecognizers" destination="RUL-Va-CoB" appends="YES" id="v3W-5P-qIR"/>
+                                    <outletCollection property="gestureRecognizers" destination="zaU-bY-sFt" appends="YES" id="e5D-zR-tFh"/>
                                 </connections>
                             </view>
                         </subviews>
@@ -172,11 +172,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="RUL-Va-CoB">
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="zaU-bY-sFt">
                     <connections>
-                        <action selector="toggleHide:" destination="2" id="SOv-LE-XVR"/>
+                        <action selector="showHiddenLabels" destination="2" id="zi2-ME-e8T"/>
                     </connections>
-                </tapGestureRecognizer>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="185" y="6"/>
         </scene>

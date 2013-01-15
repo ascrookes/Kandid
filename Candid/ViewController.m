@@ -547,12 +547,8 @@ typedef enum ReviewAppAlertIndex {
         [self navigationController].navigationBar.alpha = 0;
         self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
         self.hideView.hidden = NO;
-        
         // fade the labels on the view
     } else {
-        [self navigationController].navigationBar.alpha = 1;
-        [self.hideTimer invalidate];
-        self.hideView.hidden = YES;
         [self showHiddenLabels];
         // put the labels back on. no animation since it happens in the background
     }
@@ -573,8 +569,11 @@ typedef enum ReviewAppAlertIndex {
     }];
 }
 
-- (void)showHiddenLabels
+- (IBAction)showHiddenLabels
 {
+    [self navigationController].navigationBar.alpha = 1;
+    [self.hideTimer invalidate];
+    self.hideView.hidden = YES;
     self.hideView.alpha = 0.9;
     self.numPixHiddenLabel.alpha = 1;
     self.volumeHideLabel.alpha = 1;
