@@ -38,6 +38,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *cameraImage;
 @property (nonatomic, strong) NSDate* sessionTime;
 @property (nonatomic) NSTimeInterval sessionTimeInterval;
+@property (weak, nonatomic) IBOutlet UILabel *saveButtonLabel;
+@property (weak, nonatomic) IBOutlet UILabel *hideButtonLabel;
 
 
 // The hidden view stuff

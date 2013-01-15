@@ -54,12 +54,12 @@ typedef enum FLASH_MODE {
 } FLASH_MODE;
 
 typedef enum ClearAlertViewIndex {
-    ClearAlertViewIndexNevermind,
+    ClearAlertViewIndexNevermind = 0,
     ClearAlertViewIndexClear
 } ClearAlertViewIndex;
 
 typedef enum ReviewAppAlertIndex {
-    ReviewAlertIndexNo,
+    ReviewAlertIndexNo = 0,
     ReviewAlertIndexYes,
 } ReviewAppAlertIndex;
 
@@ -139,6 +139,8 @@ typedef enum ReviewAppAlertIndex {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
     }
+    self.saveButtonLabel.textColor = [KandidUtils kandidPurple];
+    self.hideButtonLabel.textColor = [KandidUtils kandidPurple];
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
     self.view.backgroundColor = [UIColor lightGrayColor];//[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
@@ -246,6 +248,8 @@ typedef enum ReviewAppAlertIndex {
     [self setVolumeHideLabel:nil];
     [self setNumPixBarButton:nil];
     [self setCameraImage:nil];
+    [self setSaveButtonLabel:nil];
+    [self setHideButtonLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
