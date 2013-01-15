@@ -292,9 +292,11 @@ typedef enum ReviewAppAlertIndex {
 {
     BOOL useFlash = (self.flashMode == FLASH_MODE_ON);
     if(useFlash) {
-        [self changeTorchMode:AVCaptureTorchModeOn];
-        sleep(1.0); // TODO -- get rid of this somehow, it delays the taking of the picture
-                    // which is not wanted
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self changeTorchMode:AVCaptureTorchModeOn];
+            sleep(1.0); // TODO -- get rid of this somehow, it delays the taking of the picture
+            // which is not wanted
+        });
     }
     self.lastTakenTime = [NSDate date];
     
