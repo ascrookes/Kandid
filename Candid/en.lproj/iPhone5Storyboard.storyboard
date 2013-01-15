@@ -177,7 +177,7 @@
                         <outlet property="flashButton" destination="WRa-Tz-X2Z" id="MFg-W5-KpS"/>
                         <outlet property="hideButton" destination="xq1-si-S2z" id="AwB-76-bbG"/>
                         <outlet property="hideButtonLabel" destination="91D-dr-vJf" id="e51-A7-N4m"/>
-                        <outlet property="hideLabel" destination="91D-dr-vJf" id="Lgh-4V-Rla"/>
+                        <outlet property="hideLabel" destination="DOE-vO-UDq" id="a2L-GO-a6R"/>
                         <outlet property="hideView" destination="uvR-e8-GfZ" id="msg-m4-46O"/>
                         <outlet property="levelLabel" destination="dRu-ju-R5u" id="9Xn-bP-Gvx"/>
                         <outlet property="numPixBarButton" destination="g8z-bP-ico" id="D7Q-O4-ECd"/>
