@@ -65,7 +65,7 @@ const int IMAGES_PER_ROW = 2;
 {
     // sort images to save them in the order they were takenz
     for(NSNumber* index in self.imagesToSave) {
-        [self.imageManager saveImageAtIndex:[index intValue] Watermark:NO];
+        [self.imageManager saveImageAtIndex:[index intValue] Watermark:![[NSUserDefaults standardUserDefaults] boolForKey:@"premiumUser"]];
     }
     [self.imageManager removeImagesAtIndices:[self.imagesToSave allObjects]];
     [self.delegate didFinishSelection];

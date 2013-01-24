@@ -49,4 +49,21 @@
     [connection start];
 }
 
++ (void)addSavedImageToDB
+{
+    FSNConnection* connection =
+    [FSNConnection withUrl:[NSURL URLWithString:@"http://ascrookes.webfactional.com/candid/savedImage"]
+                    method:FSNRequestMethodPOST
+                   headers:[NSDictionary dictionary]
+                parameters:[NSDictionary dictionary]
+                parseBlock:nil
+           completionBlock:^(FSNConnection *c) {
+               //NSLog(@"\n  Response: %@\n  ResponseData: %@\n", c.response, [NSString stringWithUTF8String:[c.responseData bytes]]);
+           }
+             progressBlock:nil
+     ];
+    
+    [connection start];
+}
+
 @end

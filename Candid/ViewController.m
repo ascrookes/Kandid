@@ -49,13 +49,13 @@ static NSString* KANDID_ITUNES_URL = @"http://itunes.com/apps/ijumbo";
 // so that it bounds check correctly
 typedef enum FLASH_MODE {
     FLASH_MODE_ON   = 0,
-    FLASH_MODE_OFF  = 1, 
+    FLASH_MODE_OFF,
     /*FLASH_MODE_AUTO = 2*/
 } FLASH_MODE;
 
 typedef enum ClearAlertViewIndex {
     ClearAlertViewIndexNevermind = 0,
-    ClearAlertViewIndexClear
+    ClearAlertViewIndexClear,
 } ClearAlertViewIndex;
 
 typedef enum ReviewAppAlertIndex {
@@ -123,6 +123,7 @@ typedef enum ReviewAppAlertIndex {
 @synthesize hideTimer = _hideTimer;
 @synthesize sessionTime = _sessionTime;
 @synthesize sessionTimeInterval;
+@synthesize previousBrightness;
 
 
 //*********************************************************
@@ -185,8 +186,9 @@ typedef enum ReviewAppAlertIndex {
     BOOL hasShownAlert = [[NSUserDefaults standardUserDefaults] boolForKey:HAS_SHOWN_REVIEW_KEY];
     if(!hasShownAlert && [KandidUtils getSavedCount] >= NUMBER_OF_IMAGES_TO_REVIEW) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HAS_SHOWN_REVIEW_KEY];
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:REVIEW_ALERT_TITLE message:@"Would you review the app?" delegate:self cancelButtonTitle:@"Not Now" otherButtonTitles:@"OK!", nil];
-        [alert show];
+        //UIAlertView* alert = [[UIAlertView alloc] initWithTitle:REVIEW_ALERT_TITLE message:@"Would you review the app?" delegate:self cancelButtonTitle:@"Not Now" otherButtonTitles:@"OK!", nil];
+        //[alert show];
+        // TODO -- add this back in after beta testing
     }
 }
 
@@ -339,10 +341,7 @@ typedef enum ReviewAppAlertIndex {
 // Called by self.timer and checks if it is loud enough for a picture to be taken
 // Takes the function to take a picture if that is the case
 - (void)levelTimerCallback:(NSTimer *)timer {
-    [self performSelectorInBackground:@selector(volumeUpdater) withObject:nil];
-}
-
-- (void)volumeUpdater {
+    
     [self.recorder updateMeters];
     float peak = [self.recorder peakPowerForChannel:0];
     self.totalPeak += peak;
@@ -363,10 +362,6 @@ typedef enum ReviewAppAlertIndex {
             && ![self.timedPicture isValid]
             && self.session.running
             && self.recorder.recording;
-}
-
-- (void)monitorVolumeCallback {
-    [self performSelectorInBackground:@selector(monitorVolume) withObject:nil];
 }
 
 // Action for self.updateTimer
@@ -515,6 +510,7 @@ typedef enum ReviewAppAlertIndex {
 
 - (IBAction)stopEverything
 {
+    [[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
     // using time interval since now will return negative since self.sessionTime is earlier than the current time
     self.sessionTimeInterval += ([self.sessionTime timeIntervalSinceNow] * -1);
     [self.timer invalidate];
@@ -526,6 +522,7 @@ typedef enum ReviewAppAlertIndex {
     self.levelLabel.text = @"Not Running";
     self.isRunning = NO;
     [self updateUI];
+    
 }
 
 - (IBAction)startEverything
@@ -539,6 +536,7 @@ typedef enum ReviewAppAlertIndex {
     [self.session startRunning];
     self.isRunning = YES;
     [self updateUI];
+    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
     overlay.hidesActivity = YES;
     overlay.animation = MTStatusBarOverlayAnimationFallDown;
@@ -562,6 +560,7 @@ typedef enum ReviewAppAlertIndex {
 
 - (void)hideLabels
 {
+    self.previousBrightness = [[UIScreen mainScreen] brightness];
     [UIView animateWithDuration:0.75 animations:^{
         self.hideLabel.alpha = 0;
         // TODO -- change these to ZERO
@@ -570,6 +569,7 @@ typedef enum ReviewAppAlertIndex {
         self.hideView.alpha = 1;
     } completion:^(BOOL finished) {
         self.hideLabel.hidden = YES;
+        [[UIScreen mainScreen] setBrightness:0];
         //self.numPixHiddenLabel.hidden = YES;
         //self.volumeHideLabel.hidden = YES;
     }];
@@ -580,6 +580,7 @@ typedef enum ReviewAppAlertIndex {
     [self navigationController].navigationBar.alpha = 1;
     [self.hideTimer invalidate];
     self.hideView.hidden = YES;
+    [[UIScreen mainScreen] setBrightness:self.previousBrightness];
     self.hideView.alpha = 0.9;
     self.numPixHiddenLabel.alpha = 1;
     self.volumeHideLabel.alpha = 1;

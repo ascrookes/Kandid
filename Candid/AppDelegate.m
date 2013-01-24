@@ -16,7 +16,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self customizeAppearance];
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         UIStoryboard *storyBoard;
         
         CGSize result = [[UIScreen mainScreen] bounds].size;
@@ -30,6 +30,8 @@
             [self.window setRootViewController:initViewController];
         }
     }
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"premiumUser"];
+    
     return YES;
 }
 

@@ -9,6 +9,7 @@
 //  throughout thos project
 
 #import "KandidUtils.h"
+#import "DatabaseManager.h"
 
 @implementation KandidUtils
 
@@ -28,10 +29,14 @@
     return [UIColor colorWithRed:122/255.0 green:0 blue:1 alpha:1];
 }
 
+// increase the count of images taken on this device for asking users to rate
+// once they hit a certain number they will be asked to rate
+// also increases amount of images saved for all users to keep stats on the app
 + (void)increaseSavedImagesCount {
     NSString* key = [KandidUtils savedCountKey];
     NSInteger savedCount = [[NSUserDefaults standardUserDefaults] integerForKey:key];
     [[NSUserDefaults standardUserDefaults] setInteger:savedCount + 1 forKey:key];
+    [DatabaseManager addSavedImageToDB];
 }
 
 + (NSInteger)getSavedCount {

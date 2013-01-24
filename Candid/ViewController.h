@@ -40,6 +40,7 @@
 @property (nonatomic) NSTimeInterval sessionTimeInterval;
 @property (weak, nonatomic) IBOutlet UILabel *saveButtonLabel;
 @property (weak, nonatomic) IBOutlet UILabel *hideButtonLabel;
+@property (nonatomic) CGFloat previousBrightness;
 
 
 // The hidden view stuff

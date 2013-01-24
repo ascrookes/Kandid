@@ -12,5 +12,6 @@
 
 + (void)addImageToDB;
 + (void)addImageSessionToDBWithSessionCount:(unsigned int)sessionCount length:(unsigned int)length;
++ (void)addSavedImageToDB;
 
 @end
