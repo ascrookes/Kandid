@@ -15,9 +15,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [TestFlight takeOff:@"486bc2144e1258a6096557a2792a3082_MTc3ODc2MjAxMy0wMS0yMiAwMDoyNzozMi4yOTYyNDc"];
+    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
     [self customizeAppearance];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        UIStoryboard *storyBoard;
         
         CGSize result = [[UIScreen mainScreen] bounds].size;
         CGFloat scale = [UIScreen mainScreen].scale;
@@ -25,7 +26,7 @@
         // this is the height of the iPhone 5 Screen
         // change the storyboard to use the entire screen
         if(result.height == 1136) {
-            storyBoard = [UIStoryboard storyboardWithName:@"iPhone5Storyboard" bundle:nil];
+            UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"iPhone5Storyboard" bundle:nil];
             UIViewController *initViewController = [storyBoard instantiateInitialViewController];
             [self.window setRootViewController:initViewController];
         }

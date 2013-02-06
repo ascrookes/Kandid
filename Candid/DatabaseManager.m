@@ -29,6 +29,7 @@
      ];
     
     [connection start];
+    [TestFlight passCheckpoint:@"CAPTURE_IMAGE"];
 }
 
 + (void)addImageSessionToDBWithSessionCount:(unsigned int)sessionCount length:(unsigned int)length
@@ -64,6 +65,7 @@
      ];
     
     [connection start];
+    [TestFlight passCheckpoint:@"SAVED_IMAGE"];
 }
 
 @end

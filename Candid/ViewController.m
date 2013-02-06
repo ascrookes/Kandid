@@ -561,6 +561,7 @@ typedef enum ReviewAppAlertIndex {
 - (void)hideLabels
 {
     self.previousBrightness = [[UIScreen mainScreen] brightness];
+    self.hideView.userInteractionEnabled = NO;
     [UIView animateWithDuration:0.75 animations:^{
         self.hideLabel.alpha = 0;
         // TODO -- change these to ZERO
@@ -570,6 +571,7 @@ typedef enum ReviewAppAlertIndex {
     } completion:^(BOOL finished) {
         self.hideLabel.hidden = YES;
         [[UIScreen mainScreen] setBrightness:0];
+        self.hideView.userInteractionEnabled = YES;
         //self.numPixHiddenLabel.hidden = YES;
         //self.volumeHideLabel.hidden = YES;
     }];
