@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Cfl-Ny-wks">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Cfl-Ny-wks">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -57,7 +57,7 @@
                                     <outlet property="delegate" destination="2" id="0f7-Xs-dph"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hhb-qY-NRF" userLabel="Save">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hhb-qY-NRF" userLabel="Clear">
                                 <rect key="frame" x="224" y="450" width="96" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -69,7 +69,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="saveImages:" destination="2" eventType="touchUpInside" id="ai4-1d-mob"/>
+                                    <action selector="clearFilmRoll:" destination="2" eventType="touchUpInside" id="Mtc-Xy-RFD"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xq1-si-S2z" userLabel="Hide">
@@ -124,7 +124,7 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Save" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9Jj-Af-aQO" userLabel="Save Label">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Clear" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9Jj-Af-aQO" userLabel="Clear Label">
                                 <rect key="frame" x="224" y="460" width="96" height="48"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Didot" family="Didot" pointSize="30"/>
@@ -166,22 +166,16 @@
                     </view>
                     <navigationItem key="navigationItem" title="Kandid" id="pNR-CD-Oxf">
                         <barButtonItem key="leftBarButtonItem" title="# Pix: 0" id="g8z-bP-ico"/>
-                        <barButtonItem key="rightBarButtonItem" title="Clear" id="Kne-as-cvL">
-                            <connections>
-                                <action selector="clearFilmRoll:" destination="2" id="xK6-uo-Nkm"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="cameraImage" destination="36f-NB-Y8Y" id="eQD-89-sJq"/>
+                        <outlet property="clearButtonLabel" destination="9Jj-Af-aQO" id="X7K-Gx-Ree"/>
                         <outlet property="flashButton" destination="WRa-Tz-X2Z" id="MFg-W5-KpS"/>
-                        <outlet property="hideButton" destination="xq1-si-S2z" id="AwB-76-bbG"/>
                         <outlet property="hideButtonLabel" destination="91D-dr-vJf" id="e51-A7-N4m"/>
                         <outlet property="hideLabel" destination="DOE-vO-UDq" id="a2L-GO-a6R"/>
                         <outlet property="hideView" destination="uvR-e8-GfZ" id="msg-m4-46O"/>
                         <outlet property="levelLabel" destination="dRu-ju-R5u" id="9Xn-bP-Gvx"/>
                         <outlet property="numPixBarButton" destination="g8z-bP-ico" id="D7Q-O4-ECd"/>
-                        <outlet property="saveButtonLabel" destination="9Jj-Af-aQO" id="xhP-x7-DaB"/>
                         <outlet property="startButton" destination="cw7-Is-qNJ" id="Lxt-WG-yzK"/>
                         <outlet property="table" destination="4uH-cK-5J5" id="XkF-3Y-jQF"/>
                         <outlet property="volumeHideLabel" destination="dRu-ju-R5u" id="1Ga-dx-0To"/>
@@ -299,6 +293,68 @@
         <image name="rightButton.png" width="96" height="59"/>
         <image name="startButtonBackground.png" width="128" height="80"/>
     </resources>
+    <classes>
+        <class className="ImageCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="ImageCollectionCell" superclassName="UICollectionViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageCollectionCell.h"/>
+            <relationships>
+                <relationship kind="action" name="saveButtonAction:"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="saveButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="ImageSelectionViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageSelectionViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="dismissModal:"/>
+                <relationship kind="action" name="saveImages:"/>
+                <relationship kind="outlet" name="collectionView" candidateClass="UICollectionView"/>
+            </relationships>
+        </class>
+        <class className="UICollectionReusableView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionReusableView.h"/>
+        </class>
+        <class className="UICollectionViewCell" superclassName="UICollectionReusableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewCell.h"/>
+        </class>
+        <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+        <class className="UICollectionViewLayout" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewLayout.h"/>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="clearFilmRoll:"/>
+                <relationship kind="action" name="saveImages:"/>
+                <relationship kind="action" name="showSettings:"/>
+                <relationship kind="action" name="stopEverythingWithStatusAnimation:" candidateClass="BOOL"/>
+                <relationship kind="action" name="toggleFlashMode:"/>
+                <relationship kind="action" name="toggleHide:"/>
+                <relationship kind="action" name="toggleRecording:"/>
+                <relationship kind="outlet" name="cameraButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="cameraImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="clearButtonLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="flashButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="hideButtonLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="hideLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="hideView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="imgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="levelLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="numPixBarButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="numPixHiddenLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="startButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="table" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="volumeHideLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

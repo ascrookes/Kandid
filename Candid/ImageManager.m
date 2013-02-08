@@ -131,7 +131,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     }
     [ALAssetsLibrary saveImage:saveImage toAlbum:@"Kandid" withCompletionBlock:nil];
     UIGraphicsEndImageContext();
-    [KandidUtils increaseSavedImagesCount];
+    //[KandidUtils increaseSavedImagesCount];
 }
 
 

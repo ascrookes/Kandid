@@ -33,6 +33,7 @@ const int MAX_PICTURES_PER_MINUTE = 8;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
 const int MAX_IMAGES_IN_TABLE = 25;
 const int NUMBER_OF_IMAGES_TO_REVIEW = 25;
+// TODO -- move static variables to kandid utils
 static NSString* CLEAR_ALERT_TITLE = @"Are You Sure?";
 static NSString* REVIEW_ALERT_TITLE = @"Enjoying Kandid?";
 static NSString* HAS_SHOWN_REVIEW_KEY = @"hasShownReviewAlert";
@@ -116,7 +117,6 @@ typedef enum ReviewAppAlertIndex {
 @synthesize updateTimerActionCount;
 @synthesize hideView = _hideView;
 @synthesize startButton = _startButton;
-@synthesize hideButton = _hideButton;
 @synthesize hideLabel = _hideLabel;
 @synthesize numPixHiddenLabel = _numPixHiddenLabel;
 @synthesize volumeHideLabel = _volumeHideLabel;
@@ -140,7 +140,7 @@ typedef enum ReviewAppAlertIndex {
         [self.recorder prepareToRecord];
         self.recorder.meteringEnabled = YES;
     }
-    self.saveButtonLabel.textColor = [KandidUtils kandidPurple];
+    self.clearButtonLabel.textColor = [KandidUtils kandidPurple];
     self.hideButtonLabel.textColor = [KandidUtils kandidPurple];
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
     self.table.separatorColor  = [UIColor blackColor];
@@ -228,6 +228,7 @@ typedef enum ReviewAppAlertIndex {
     if(shouldRotateImage) {
         [UIView animateWithDuration:0.25 animations:^{
             self.cameraImage.transform = rotation;
+            self.flashButton.transform = rotation;
         }];
     }
     [self.table reloadData];
@@ -243,14 +244,13 @@ typedef enum ReviewAppAlertIndex {
     [self setLevelLabel:nil];
     [self setHideView:nil];
     [self setStartButton:nil];
-    [self setHideButton:nil];
     [self setFlashButton:nil];
     [self setHideLabel:nil];
     [self setNumPixHiddenLabel:nil];
     [self setVolumeHideLabel:nil];
     [self setNumPixBarButton:nil];
     [self setCameraImage:nil];
-    [self setSaveButtonLabel:nil];
+    [self setClearButtonLabel:nil];
     [self setHideButtonLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -317,7 +317,7 @@ typedef enum ReviewAppAlertIndex {
         }
 
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
-        
+        UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
         [self.imageManager addImageData:imageData save:NO];
         self.numPictures++;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -549,7 +549,7 @@ typedef enum ReviewAppAlertIndex {
 {
     if(self.hideView.hidden) {
         [self navigationController].navigationBar.alpha = 0;
-        self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
+        self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
         self.hideView.hidden = NO;
         // fade the labels on the view
     } else {
@@ -562,7 +562,7 @@ typedef enum ReviewAppAlertIndex {
 {
     self.previousBrightness = [[UIScreen mainScreen] brightness];
     self.hideView.userInteractionEnabled = NO;
-    [UIView animateWithDuration:0.75 animations:^{
+    [UIView animateWithDuration:0.6 animations:^{
         self.hideLabel.alpha = 0;
         // TODO -- change these to ZERO
         self.numPixHiddenLabel.alpha = 0.25;
@@ -570,7 +570,7 @@ typedef enum ReviewAppAlertIndex {
         self.hideView.alpha = 1;
     } completion:^(BOOL finished) {
         self.hideLabel.hidden = YES;
-        [[UIScreen mainScreen] setBrightness:0];
+        //[[UIScreen mainScreen] setBrightness:0];
         self.hideView.userInteractionEnabled = YES;
         //self.numPixHiddenLabel.hidden = YES;
         //self.volumeHideLabel.hidden = YES;
@@ -582,7 +582,7 @@ typedef enum ReviewAppAlertIndex {
     [self navigationController].navigationBar.alpha = 1;
     [self.hideTimer invalidate];
     self.hideView.hidden = YES;
-    [[UIScreen mainScreen] setBrightness:self.previousBrightness];
+    //[[UIScreen mainScreen] setBrightness:self.previousBrightness];
     self.hideView.alpha = 0.9;
     self.numPixHiddenLabel.alpha = 1;
     self.volumeHideLabel.alpha = 1;
@@ -594,7 +594,7 @@ typedef enum ReviewAppAlertIndex {
 
 - (IBAction)clearFilmRoll:(id)sender
 {
-    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:CLEAR_ALERT_TITLE message:@"Images have not been saved and this cannot be undone" delegate:self cancelButtonTitle:@"Nevermind" otherButtonTitles:@"Clear!", nil];
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:CLEAR_ALERT_TITLE message:@"The image roll will be cleared" delegate:self cancelButtonTitle:@"Nevermind" otherButtonTitles:@"Clear!", nil];
     [alert show];
 }
 
