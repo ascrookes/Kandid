@@ -24,7 +24,7 @@
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>NR3QK94585.Amadou.Crookes.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>Amadou.Crookes.Candid</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

@@ -28,7 +28,7 @@ const int MAIN_TIMER_REPEAT_TIME = 0.1;
 const int VOLUME_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
 const int TOO_LOUD_TIMED_SHOT = 25;
-const double TIMED_SHOT_LEVEL = -7.5;
+const double TIMED_SHOT_LEVEL = -6;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
 const int MAX_IMAGES_IN_TABLE = 25;
@@ -37,7 +37,7 @@ const int NUMBER_OF_IMAGES_TO_REVIEW = 25;
 static NSString* CLEAR_ALERT_TITLE = @"Are You Sure?";
 static NSString* REVIEW_ALERT_TITLE = @"Enjoying Kandid?";
 static NSString* HAS_SHOWN_REVIEW_KEY = @"hasShownReviewAlert";
-// TODO -- change this when 
+// TODO -- change this when the app name is final and has been submitted to apple
 static NSString* KANDID_ITUNES_URL = @"http://itunes.com/apps/ijumbo";
 
 //*********************************************************
@@ -154,6 +154,7 @@ typedef enum ReviewAppAlertIndex {
     [self updateUI];
 }
 
+
 + (void)setViewController:(UIViewController*)vc Title:(NSString*)title Font:(UIFont*)font
 {
     UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -193,6 +194,7 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (void)didEnterBackground {
+    NSLog(@"did enter background");
     [self stopEverything];
     [self.imageManager writeInfoToFileName:@"kandid"];
 }
@@ -231,9 +233,24 @@ typedef enum ReviewAppAlertIndex {
             self.flashButton.transform = rotation;
         }];
     }
+    [self overlayStatusBar];
     [self.table reloadData];
     // the data in the image manager changes so set it to that count
     self.numPictures = [self.imageManager count];
+}
+
+- (void)overlayStatusBar
+{
+    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+    if(self.isRunning) {
+        overlay.hidesActivity = YES;
+        overlay.animation = MTStatusBarOverlayAnimationNone;
+        overlay.detailViewMode = MTDetailViewModeHistory;
+        [overlay postMessage:@"Running..."];
+    } else {
+        [overlay postImmediateFinishMessage:@"" duration:0 animated:NO];
+        overlay.progress = 1.0;
+    }
 }
 
 
@@ -296,12 +313,11 @@ typedef enum ReviewAppAlertIndex {
 // Captures an image, adds that image to the table in view, and saves it to the library
 - (void)captureNow
 {
-    BOOL useFlash = (self.flashMode == FLASH_MODE_ON);
-    if(useFlash) {
+    if(self.flashMode == FLASH_MODE_ON) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self changeTorchMode:AVCaptureTorchModeOn];
             sleep(1.0); // TODO -- get rid of this somehow, it delays the taking of the picture
-            // which is not wanted
+            // which is not wanted since it throws off the image taking exactly at the peak
         });
     }
     self.lastTakenTime = [NSDate date];
@@ -347,7 +363,7 @@ typedef enum ReviewAppAlertIndex {
     self.totalPeak += peak;
     self.timeIntervals++;
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.levelLabel.text = [NSString stringWithFormat:@"Level: %f Max: %i", peak, self.volumeMax];
+        self.levelLabel.text = @"";//[NSString stringWithFormat:@"Level: %f Max: %i", peak, self.volumeMax];
     });
     if([self allowedToCapturePeak:peak]) {
         [self captureNow];
@@ -570,7 +586,7 @@ typedef enum ReviewAppAlertIndex {
         self.hideView.alpha = 1;
     } completion:^(BOOL finished) {
         self.hideLabel.hidden = YES;
-        //[[UIScreen mainScreen] setBrightness:0];
+        [[UIScreen mainScreen] setBrightness:0];
         self.hideView.userInteractionEnabled = YES;
         //self.numPixHiddenLabel.hidden = YES;
         //self.volumeHideLabel.hidden = YES;
@@ -579,10 +595,10 @@ typedef enum ReviewAppAlertIndex {
 
 - (IBAction)showHiddenLabels
 {
+    [[UIScreen mainScreen] setBrightness:self.previousBrightness];
     [self navigationController].navigationBar.alpha = 1;
     [self.hideTimer invalidate];
     self.hideView.hidden = YES;
-    //[[UIScreen mainScreen] setBrightness:self.previousBrightness];
     self.hideView.alpha = 0.9;
     self.numPixHiddenLabel.alpha = 1;
     self.volumeHideLabel.alpha = 1;
@@ -689,9 +705,10 @@ typedef enum ReviewAppAlertIndex {
 
 - (void)beginInterruption
 {
+    NSLog(@"beginInterruption");
     self.shouldResumeAfterInterruption = self.isRunning;
     if(self.isRunning) {
-        [self stopEverythingWithStatusAnimation:NO];
+        //[self stopEverythingWithStatusAnimation:NO];
     }
 }
 
@@ -711,6 +728,7 @@ typedef enum ReviewAppAlertIndex {
         [self startEverything];
         self.shouldResumeAfterInterruption = NO;
     }
+    [self updateUI];
 }
 
 //*********************************************************
@@ -741,9 +759,15 @@ typedef enum ReviewAppAlertIndex {
 
 //*********************************************************
 //*********************************************************
-#pragma mark - Setters
+#pragma mark - Setters/Getters
 //*********************************************************
 //*********************************************************
+
+- (BOOL)isRunning {
+    NSLog(@"recorder: %i", self.recorder.isRecording);
+    NSLog(@"session: %i", self.session.isRunning);
+    return [self.recorder isRecording] && [self.session isRunning];
+}
 
 - (NSDate*)lastTakenTime
 {
