@@ -79,6 +79,7 @@
 		8EABFEAC16A0027B0051C247 /* K-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EABFEAB16A0027B0051C247 /* K-icon@2x.png */; };
 		8ECFE8EA15DB6A0D00E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
 		8ECFE8EB15DB6A3400E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
+		8EDBA7DF16C8C08000180E40 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EDBA7DE16C8C08000180E40 /* TutorialViewController.m */; };
 		8EF7AD6B1668725F00D08EF0 /* iPhone5Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -174,6 +175,8 @@
 		8EABFEAB16A0027B0051C247 /* K-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "K-icon@2x.png"; sourceTree = "<group>"; };
 		8ECFE8E815DB6A0D00E86971 /* ImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCell.h; sourceTree = "<group>"; };
 		8ECFE8E915DB6A0D00E86971 /* ImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCell.m; sourceTree = "<group>"; };
+		8EDBA7DD16C8C08000180E40 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
+		8EDBA7DE16C8C08000180E40 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		8EF7AD6A1668725E00D08EF0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone5Storyboard.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -274,6 +277,8 @@
 				8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */,
 				8E5EB9ED15964C3E00C4E185 /* ViewController.h */,
 				8E5EB9EE15964C3E00C4E185 /* ViewController.m */,
+				8EDBA7DD16C8C08000180E40 /* TutorialViewController.h */,
+				8EDBA7DE16C8C08000180E40 /* TutorialViewController.m */,
 				8E3B1F5F16A4DF8B004E7D24 /* KandidUtils.h */,
 				8E3B1F6016A4DF8B004E7D24 /* KandidUtils.m */,
 				8E595F29169E49850047C39B /* DatabaseManager.h */,
@@ -523,6 +528,7 @@
 				8E1CA78B1699419F00C32142 /* ImageSelectionViewController.m in Sources */,
 				8E595F2B169E49850047C39B /* DatabaseManager.m in Sources */,
 				8E3B1F6116A4DF8B004E7D24 /* KandidUtils.m in Sources */,
+				8EDBA7DF16C8C08000180E40 /* TutorialViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,8 +605,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Amadou Crookes";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Amadou Crookes";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Amadou Crookes (V23VPS752M)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Amadou Crookes (V23VPS752M)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -615,8 +621,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				PROVISIONING_PROFILE = "719B9C66-C14B-48ED-A9FF-966A1A0F8945";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "719B9C66-C14B-48ED-A9FF-966A1A0F8945";
+				PROVISIONING_PROFILE = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -631,8 +637,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Amadou Crookes";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Amadou Crookes";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Amadou Crookes (V23VPS752M)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Amadou Crookes (V23VPS752M)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -641,8 +647,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "719B9C66-C14B-48ED-A9FF-966A1A0F8945";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "719B9C66-C14B-48ED-A9FF-966A1A0F8945";
+				PROVISIONING_PROFILE = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

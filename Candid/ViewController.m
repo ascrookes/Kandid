@@ -40,6 +40,8 @@ static NSString* HAS_SHOWN_REVIEW_KEY = @"hasShownReviewAlert";
 // TODO -- change this when the app name is final and has been submitted to apple
 static NSString* KANDID_ITUNES_URL = @"http://itunes.com/apps/ijumbo";
 
+const int TOP_BAR_HEIGHT = 64;
+
 //*********************************************************
 //*********************************************************
 #pragma mark - Enums
@@ -152,6 +154,7 @@ typedef enum ReviewAppAlertIndex {
     self.shouldResumeAfterInterruption = NO;
     [ViewController setViewController:self Title:@"Kandid" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
     [self updateUI];
+    [self presentModalViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"TutorialVC"] animated:YES];
 }
 
 
