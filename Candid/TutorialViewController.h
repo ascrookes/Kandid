@@ -10,9 +10,9 @@
 
 @interface TutorialViewController : ViewController
 
-@property(nonatomic) int pageNum;
+@property (nonatomic) int pageNum;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageCounter;
 @property (weak, nonatomic) IBOutlet UILabel *pageTitle;
-@property (weak, nonatomic) IBOutlet UITextView *description;
+@property (weak, nonatomic) IBOutlet UITextView *pageDescription;
 
 @end

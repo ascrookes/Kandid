@@ -767,8 +767,6 @@ typedef enum ReviewAppAlertIndex {
 //*********************************************************
 
 - (BOOL)isRunning {
-    NSLog(@"recorder: %i", self.recorder.isRecording);
-    NSLog(@"session: %i", self.session.isRunning);
     return [self.recorder isRecording] && [self.session isRunning];
 }
 

@@ -223,7 +223,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" id="83g-Va-gPP">
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="4" id="83g-Va-gPP">
                                 <rect key="frame" x="111" y="452" width="98" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </pageControl>
@@ -239,6 +239,7 @@
                     </view>
                     <connections>
                         <outlet property="pageCounter" destination="83g-Va-gPP" id="Uqj-8s-dCZ"/>
+                        <outlet property="pageDescription" destination="qFl-3j-h0T" id="hKi-Z6-Abn"/>
                         <outlet property="pageTitle" destination="2HV-UT-17e" id="Ep0-ZZ-Oxj"/>
                     </connections>
                 </viewController>
@@ -367,8 +368,6 @@
         <class className="ImageSelectionViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageSelectionViewController.h"/>
             <relationships>
-                <relationship kind="action" name="dismissModal:"/>
-                <relationship kind="action" name="saveImages:"/>
                 <relationship kind="outlet" name="collectionView" candidateClass="UICollectionView"/>
             </relationships>
         </class>
@@ -377,8 +376,8 @@
             <relationships>
                 <relationship kind="action" name="dismissTutorial:"/>
                 <relationship kind="action" name="nextPage:"/>
-                <relationship kind="outlet" name="description" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="pageCounter" candidateClass="UIPageControl"/>
+                <relationship kind="outlet" name="pageDescription" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="pageTitle" candidateClass="UILabel"/>
             </relationships>
         </class>
@@ -390,9 +389,6 @@
         </class>
         <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
-        </class>
-        <class className="UICollectionViewLayout" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewLayout.h"/>
         </class>
         <class className="ViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
