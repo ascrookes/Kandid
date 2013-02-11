@@ -14,5 +14,6 @@
 @property (weak, nonatomic) IBOutlet UIPageControl *pageCounter;
 @property (weak, nonatomic) IBOutlet UILabel *pageTitle;
 @property (weak, nonatomic) IBOutlet UITextView *pageDescription;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @end

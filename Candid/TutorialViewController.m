@@ -56,6 +56,7 @@ typedef enum PageNum {
     [self setPageCounter:nil];
     [self setTitle:nil];
     [self setPageDescription:nil];
+    [self setImageView:nil];
     [super viewDidUnload];
 }
 
@@ -64,6 +65,7 @@ typedef enum PageNum {
     self.pageCounter.currentPage = pageNum;
     self.pageTitle.text   = [TutorialViewController getTitleForPage:pageNum];
     self.pageDescription.text = [TutorialViewController getDescriptionForPage:pageNum];
+    self.imageView.image = [TutorialViewController getImageForPage:pageNum];
     switch (pageNum) {
         case PageNumStartStop:
             //
@@ -124,6 +126,17 @@ typedef enum PageNum {
             break;
     }
     return desc;
+}
+
++ (UIImage*)getImageForPage:(PageNum)pageNumber {
+    UIImage* image;
+    switch (pageNumber) {
+        case PageNumStartStop:
+            image = [UIImage imageNamed:[NSString stringWithFormat:@"tutorialImage-%i", pageNumber]];
+        default:
+            image = [UIImage imageNamed:@"tutorialImage-0"];
+    }
+    return image;
 }
 
 
