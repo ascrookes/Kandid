@@ -10,11 +10,14 @@
 #import "KandidUtils.h"
 
 typedef enum PageNum {
-    PageNumStartStop = 0,
+    PageNumWelcome = 0,
+    PageNumStartStop,
     PageNumHide,
     PageNumClear,
     PageNumSave,
 } PageNum;
+
+const int NumPages = 5;
 
 @interface TutorialViewController ()
 
@@ -29,6 +32,8 @@ typedef enum PageNum {
 {
     [super viewDidLoad];
     self.pageNum = 0;
+    self.pageCounter.numberOfPages = NumPages;
+    self.pageCounter.userInteractionEnabled = NO;
     [self customizeAppearance];
 }
 
@@ -67,6 +72,8 @@ typedef enum PageNum {
     self.pageDescription.text = [TutorialViewController getDescriptionForPage:pageNum];
     self.imageView.image = [TutorialViewController getImageForPage:pageNum];
     switch (pageNum) {
+        case PageNumWelcome:
+            break;
         case PageNumStartStop:
             //
             break;
@@ -89,6 +96,9 @@ typedef enum PageNum {
 + (NSString*)getTitleForPage:(PageNum)pageNumber {
     NSString* title = @"N/A";
     switch (pageNumber) {
+        case PageNumWelcome:
+            title = @"Welcome To Kandid!";
+            break;
         case PageNumStartStop:
             title = @"Starting and Stopping";
             break;
@@ -99,7 +109,7 @@ typedef enum PageNum {
             title = @"Hiding";
             break;
         case PageNumSave:
-            title = @"Saving Images";
+            title = @"How do I get the images?";
             break;
         default:
             break;
@@ -110,17 +120,20 @@ typedef enum PageNum {
 + (NSString*)getDescriptionForPage:(PageNum)pageNumber {
     NSString* desc = @"N/A";
     switch (pageNumber) {
+        case PageNumWelcome:
+            desc = @"Kandid aims to capture photos of exciting moments without someone being excluded from the image because they had to take it.";
+            break;
         case PageNumStartStop:
-            desc = @"Click this button to start. Then put the phone where the camera has the best view of what is going on. When the button is red click it to stop and look at all the pictures :).";
+            desc = @"Click the camera with green to start. Then position the phone so the camera has the best view of what is going on. It will take photos when appropriate then click the red camera to stop.";
             break;
         case PageNumClear:
-            desc = @"This will delete all images currently on the film roll.";
+            desc = @"Clear gives you a fresh camera roll by removing those currently on the film roll.";
             break;
         case PageNumHide:
-            desc = @"Makes the screen black and dims the screen to save battery, and so others do not know what is going on 😜.";
+            desc = @"Hide makes the screen black and dims the screen to save battery, and so others do not know what is going on, and you can get truly Kandid images 😜.";
             break;
         case PageNumSave:
-            desc = @"Click this button to select the images you want to be saved.";
+            desc = @"Everytime Kandid takes a picture it is shown on the film roll and it is also saved to your photo album, so after clearing a film roll you still have all of the photos 😄.";
             break;
         default:
             break;
@@ -129,6 +142,8 @@ typedef enum PageNum {
 }
 
 + (UIImage*)getImageForPage:(PageNum)pageNumber {
+    return [UIImage imageNamed:@"tutorialImage-0"];
+    /*
     UIImage* image;
     switch (pageNumber) {
         case PageNumStartStop:
@@ -137,6 +152,7 @@ typedef enum PageNum {
             image = [UIImage imageNamed:@"tutorialImage-0"];
     }
     return image;
+     */
 }
 
 

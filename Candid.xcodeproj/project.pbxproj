@@ -77,11 +77,12 @@
 		8EA87674169FD0730004826F /* saveButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EA87670169FD0730004826F /* saveButton@2x.png */; };
 		8EABFEAA16A002790051C247 /* K-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EABFEA916A002790051C247 /* K-icon.png */; };
 		8EABFEAC16A0027B0051C247 /* K-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EABFEAB16A0027B0051C247 /* K-icon@2x.png */; };
-		8ECEEEEC16C9690A009CC111 /* tutorialImage-0.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ECEEEEB16C9690A009CC111 /* tutorialImage-0.png */; };
+		8ECEEEEC16C9690A009CC111 /* tutorialImage-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ECEEEEB16C9690A009CC111 /* tutorialImage-1.png */; };
 		8ECFE8EA15DB6A0D00E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
 		8ECFE8EB15DB6A3400E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
 		8EDBA7DF16C8C08000180E40 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EDBA7DE16C8C08000180E40 /* TutorialViewController.m */; };
 		8EF7AD6B1668725F00D08EF0 /* iPhone5Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */; };
+		8EFD631316C988F5000D4B81 /* tutorialImage-0.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EFD631216C988F5000D4B81 /* tutorialImage-0.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -174,12 +175,13 @@
 		8EA87670169FD0730004826F /* saveButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saveButton@2x.png"; sourceTree = "<group>"; };
 		8EABFEA916A002790051C247 /* K-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "K-icon.png"; sourceTree = "<group>"; };
 		8EABFEAB16A0027B0051C247 /* K-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "K-icon@2x.png"; sourceTree = "<group>"; };
-		8ECEEEEB16C9690A009CC111 /* tutorialImage-0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorialImage-0.png"; sourceTree = "<group>"; };
+		8ECEEEEB16C9690A009CC111 /* tutorialImage-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorialImage-1.png"; sourceTree = "<group>"; };
 		8ECFE8E815DB6A0D00E86971 /* ImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCell.h; sourceTree = "<group>"; };
 		8ECFE8E915DB6A0D00E86971 /* ImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCell.m; sourceTree = "<group>"; };
 		8EDBA7DD16C8C08000180E40 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
-		8EDBA7DE16C8C08000180E40 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
+		8EDBA7DE16C8C08000180E40 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; wrapsLines = 1; };
 		8EF7AD6A1668725E00D08EF0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone5Storyboard.storyboard; sourceTree = "<group>"; };
+		8EFD631216C988F5000D4B81 /* tutorialImage-0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorialImage-0.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -349,7 +351,8 @@
 		8E916BFF15DF2353004C65AB /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				8ECEEEEB16C9690A009CC111 /* tutorialImage-0.png */,
+				8EFD631216C988F5000D4B81 /* tutorialImage-0.png */,
+				8ECEEEEB16C9690A009CC111 /* tutorialImage-1.png */,
 				8E8BFCF416A5115A00815331 /* leftButton@2x.png */,
 				8E8BFCF516A5115A00815331 /* leftButton.png */,
 				8E8BFCF616A5115A00815331 /* rightButton@2x.png */,
@@ -483,7 +486,8 @@
 				8E8BFCFB16A5115A00815331 /* rightButton.png in Resources */,
 				8E3F641A16C2295600473343 /* README.md in Resources */,
 				8E3F641B16C2295600473343 /* release_notes.md in Resources */,
-				8ECEEEEC16C9690A009CC111 /* tutorialImage-0.png in Resources */,
+				8ECEEEEC16C9690A009CC111 /* tutorialImage-1.png in Resources */,
+				8EFD631316C988F5000D4B81 /* tutorialImage-0.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
