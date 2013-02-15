@@ -251,7 +251,7 @@ typedef enum ReviewAppAlertIndex {
         overlay.detailViewMode = MTDetailViewModeHistory;
         [overlay postMessage:@"Running..."];
     } else {
-        [overlay postImmediateFinishMessage:@"" duration:0 animated:NO];
+        [overlay postImmediateFinishMessage:@" " duration:0.25 animated:YES];
         overlay.progress = 1.0;
     }
 }
@@ -556,11 +556,7 @@ typedef enum ReviewAppAlertIndex {
     self.isRunning = YES;
     [self updateUI];
     [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
-    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-    overlay.hidesActivity = YES;
-    overlay.animation = MTStatusBarOverlayAnimationFallDown;
-    overlay.detailViewMode = MTDetailViewModeHistory;
-    [overlay postMessage:@"Running..."];
+    [self overlayStatusBar];
     self.sessionTime = [NSDate date];
 }
 
@@ -570,7 +566,6 @@ typedef enum ReviewAppAlertIndex {
         [self navigationController].navigationBar.alpha = 0;
         self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
         self.hideView.hidden = NO;
-        // fade the labels on the view
     } else {
         [self showHiddenLabels];
         // put the labels back on. no animation since it happens in the background
@@ -581,6 +576,13 @@ typedef enum ReviewAppAlertIndex {
 {
     self.previousBrightness = [[UIScreen mainScreen] brightness];
     self.hideView.userInteractionEnabled = NO;
+    
+    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+    overlay.hidesActivity = YES;
+    overlay.animation = MTStatusBarOverlayAnimationNone;
+    overlay.detailViewMode = MTDetailViewModeHistory;
+    [overlay postMessage:@"   "];
+    
     [UIView animateWithDuration:0.6 animations:^{
         self.hideLabel.alpha = 0;
         // TODO -- change these to ZERO
@@ -598,6 +600,7 @@ typedef enum ReviewAppAlertIndex {
 
 - (IBAction)showHiddenLabels
 {
+    [self overlayStatusBar];
     [[UIScreen mainScreen] setBrightness:self.previousBrightness];
     [self navigationController].navigationBar.alpha = 1;
     [self.hideTimer invalidate];
@@ -882,8 +885,7 @@ typedef enum ReviewAppAlertIndex {
 
 // if the max is VOLUME_CUSHION LESS THAN THE AVERAGE
 // than the min should be max - 2*VOLUME_CUSHION
-- (int)volumeMin
-{
+- (int)volumeMin {
     return self.volumeMax - (2 * VOLUME_CUSHION) - 5;
 }
 

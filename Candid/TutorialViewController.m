@@ -121,7 +121,7 @@ const int NumPages = 5;
     NSString* desc = @"N/A";
     switch (pageNumber) {
         case PageNumWelcome:
-            desc = @"Kandid aims to capture photos of exciting moments without someone being excluded from the image because they had to take it.";
+            desc = @"Kandid aims to capture photos of exciting moments without someone have to stand behind the camera.";
             break;
         case PageNumStartStop:
             desc = @"Click the camera with green to start. Then position the phone so the camera has the best view of what is going on. It will take photos when appropriate then click the red camera to stop.";
@@ -133,7 +133,7 @@ const int NumPages = 5;
             desc = @"Hide makes the screen black and dims the screen to save battery, and so others do not know what is going on, and you can get truly Kandid images 😜.";
             break;
         case PageNumSave:
-            desc = @"Everytime Kandid takes a picture it is shown on the film roll and it is also saved to your photo album, so after clearing a film roll you still have all of the photos 😄.";
+            desc = @"Everytime Kandid takes a picture it is shown on the film roll and it is also saved to your photo album, so after clearing a film roll you still have all of the photos 😄. Have fun!";
             break;
         default:
             break;
