@@ -17,6 +17,8 @@
 
 @interface ViewController : UIViewController <AVAudioRecorderDelegate, UITableViewDataSource, UITableViewDelegate>
 
+
+// seperate UI and controller stuff
 @property (nonatomic,strong) AVAudioRecorder* recorder;
 @property (nonatomic,strong) NSTimer* timer;
 @property (nonatomic) int volumeMax;

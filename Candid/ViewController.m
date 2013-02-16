@@ -151,11 +151,14 @@ typedef enum ReviewAppAlertIndex {
     self.volumeMax = -5.0;
     self.flashMode = FLASH_MODE_OFF;
     self.isRunning = NO;
+    self.levelLabel.text = @"";
     self.shouldResumeAfterInterruption = NO;
     [ViewController setViewController:self Title:@"Kandid" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
     [self updateUI];
-    [self presentModalViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"TutorialVC"] animated:YES];
+    [self presentTutorial];
+    
 }
+
 
 
 + (void)setViewController:(UIViewController*)vc Title:(NSString*)title Font:(UIFont*)font
@@ -538,7 +541,7 @@ typedef enum ReviewAppAlertIndex {
     [self.session stopRunning];
     self.camDevice = nil;
     self.camInput  = nil;
-    self.levelLabel.text = @"Not Running";
+    //self.levelLabel.text = @"Not Running";
     self.isRunning = NO;
     [self updateUI];
     
@@ -701,6 +704,13 @@ typedef enum ReviewAppAlertIndex {
 - (void)appWillTerminate
 {
     [self.imageManager writeInfoToFileName:@"kandid"];
+}
+
+- (void)presentTutorial {
+    if(YES || ![[NSUserDefaults standardUserDefaults] boolForKey:@"hasSeenTutorial"]) {
+        [self presentModalViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"TutorialVC"] animated:YES];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"hasSeenTutorial"];
+    }
 }
 
 //*********************************************************

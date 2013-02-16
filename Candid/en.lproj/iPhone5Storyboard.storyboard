@@ -380,8 +380,6 @@
         <class className="TutorialViewController" superclassName="ViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TutorialViewController.h"/>
             <relationships>
-                <relationship kind="action" name="dismissTutorial:"/>
-                <relationship kind="action" name="nextPage:"/>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="pageCounter" candidateClass="UIPageControl"/>
                 <relationship kind="outlet" name="pageDescription" candidateClass="UITextView"/>
