@@ -86,6 +86,7 @@ const int NumPages = 6;
         case PageNumProximitySensor:
             break;
         default:
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"hasSeenTutorial"];
             [self dismissTutorial:nil];
             break;
     }

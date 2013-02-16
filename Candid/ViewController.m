@@ -707,9 +707,8 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (void)presentTutorial {
-    if(YES || ![[NSUserDefaults standardUserDefaults] boolForKey:@"hasSeenTutorial"]) {
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"hasSeenTutorial"]) {
         [self presentModalViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"TutorialVC"] animated:YES];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"hasSeenTutorial"];
     }
 }
 
