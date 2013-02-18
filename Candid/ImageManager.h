@@ -14,6 +14,7 @@
 + (ImageManager*)imageManagerWithFileName:(NSString*)fileName;
 - (void)addImageData:(NSData*)imageData save:(BOOL)saveImage;
 - (UIImage*)getImageAtIndex:(NSInteger)index;
+- (NSData*)getImageDataAtIndex:(NSInteger)index;
 - (void)conserveMemory;
 - (NSInteger)count;
 - (UIImage*)lastImage;
@@ -22,6 +23,7 @@
 - (void)clearImageData;
 - (void)removeImagesAtIndices:(NSArray*)indices;
 - (void)writeInfoToFileName:(NSString*)fileName;
+- (void)saveImages:(NSArray*)images;
 
 
 @end

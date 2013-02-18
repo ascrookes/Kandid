@@ -56,6 +56,7 @@
 - (void)captureNow;
 - (IBAction)toggleRecording:(id)sender;
 - (void)monitorVolume;
++ (void)setViewController:(UIViewController*)vc Title:(NSString*)title Font:(UIFont*)font;
 
 
 #pragma mark - DELME (DEBUG PURPOSES)

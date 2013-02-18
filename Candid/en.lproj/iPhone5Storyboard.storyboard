@@ -166,6 +166,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="Kandid" id="pNR-CD-Oxf">
                         <barButtonItem key="leftBarButtonItem" title="# Pix: 0" id="g8z-bP-ico"/>
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="Vf1-qH-fmw">
+                            <connections>
+                                <action selector="saveImages:" destination="2" id="bAY-dZ-O9b"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="cameraImage" destination="36f-NB-Y8Y" id="eQD-89-sJq"/>
@@ -380,6 +385,8 @@
         <class className="TutorialViewController" superclassName="ViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TutorialViewController.h"/>
             <relationships>
+                <relationship kind="action" name="dismissTutorial:"/>
+                <relationship kind="action" name="nextPage:"/>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="pageCounter" candidateClass="UIPageControl"/>
                 <relationship kind="outlet" name="pageDescription" candidateClass="UITextView"/>

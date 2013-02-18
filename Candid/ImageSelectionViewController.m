@@ -63,13 +63,14 @@ const int IMAGES_PER_ROW = 2;
 
 - (IBAction)saveImages:(id)sender
 {
-    // sort images to save them in the order they were takenz
+    // sort images to save them in the order they were taken
+    NSMutableArray* saveImages = [NSMutableArray arrayWithCapacity:[self.imagesToSave count]];
     for(NSNumber* index in self.imagesToSave) {
-        [self.imageManager saveImageAtIndex:[index intValue] Watermark:![[NSUserDefaults standardUserDefaults] boolForKey:@"premiumUser"]];
+        [saveImages addObject:[[self.imageManager getImageDataAtIndex:[index intValue]] copy]];
     }
+    [self.imageManager saveImages:saveImages];
     [self.imageManager removeImagesAtIndices:[self.imagesToSave allObjects]];
     [self.delegate didFinishSelection];
-    [self dismissModalViewControllerAnimated:YES];
 }
 
 

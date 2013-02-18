@@ -27,8 +27,9 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 
 @interface ImageManager ()
 
-@property (nonatomic,strong) NSMutableArray* imageData;
-@property (nonatomic,strong) NSMutableArray* thumbnails;
+@property (nonatomic, strong) NSMutableArray* imageData;
+@property (nonatomic, strong) NSMutableArray* thumbnails;
+@property (nonatomic, strong) NSMutableArray* imagesToSave;
 
 @end
 
@@ -36,6 +37,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 
 @synthesize imageData = _imageData;
 @synthesize thumbnails = _thumbnails;
+@synthesize imagesToSave = _imagesToSave;
 
 //*********************************************************
 //*********************************************************
@@ -101,6 +103,11 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
         [self.thumbnails replaceObjectAtIndex:index withObject:image];
     }
     return image;
+}
+
+- (NSData*)getImageDataAtIndex:(NSInteger)index
+{
+    return [self.imageData objectAtIndex:index];
 }
 
 - (UIImage*)thumbnailFromData:(NSData*)data
@@ -183,6 +190,39 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     }
 }
 
+
+//*********************************************************
+//*********************************************************
+#pragma mark - Saving Images
+//*********************************************************
+//*********************************************************
+
+// this should be an array of NSData representing UIImage data
+- (void)saveImages:(NSArray*)images
+{
+    [self.imagesToSave addObjectsFromArray:[images mutableCopy]];
+    [self saveImagesInArray];
+}
+
+- (void)saveImagesInArray {
+    if(self.imagesToSave != nil && [self.imagesToSave count] > 0) {
+        NSData* imgData = [self.imagesToSave objectAtIndex:0];
+        UIImage* saveImage = (YES /*watermark*/) ? [UIImage imageWithData:imgData] : [ImageManager addWatermarkToImageData:imgData];
+        UIImageWriteToSavedPhotosAlbum(saveImage, self, @selector(savedImage:didFinishSavingWithError:contextInfo:), nil);
+    } else {
+        self.imagesToSave = nil;
+    }
+}
+
+- (void)savedImage:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if(error != nil) {
+        NSLog(@"SAVED IMAGE ERROR: %@", error);
+    }
+    [self.imagesToSave removeObjectAtIndex:0];
+    [self saveImagesInArray];
+}
+
+
 //*********************************************************
 //*********************************************************
 #pragma mark - Memory & Misc
@@ -231,6 +271,14 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
         _thumbnails = [NSMutableArray array];
     }
     return _thumbnails;
+}
+
+- (NSMutableArray*)imagesToSave
+{
+    if(!_imagesToSave) {
+        _imagesToSave = [NSMutableArray array];
+    }
+    return _imagesToSave;
 }
 
 

@@ -239,7 +239,7 @@ typedef enum ReviewAppAlertIndex {
             self.flashButton.transform = rotation;
         }];
     }
-    [self overlayStatusBar];
+    //[self overlayStatusBar];
     [self.table reloadData];
     // the data in the image manager changes so set it to that count
     self.numPictures = [self.imageManager count];
@@ -248,13 +248,13 @@ typedef enum ReviewAppAlertIndex {
 - (void)overlayStatusBar
 {
     MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+    overlay.hidesActivity = YES;
+    overlay.animation = MTStatusBarOverlayAnimationNone;
+    overlay.detailViewMode = MTDetailViewModeHistory;
     if(self.isRunning) {
-        overlay.hidesActivity = YES;
-        overlay.animation = MTStatusBarOverlayAnimationNone;
-        overlay.detailViewMode = MTDetailViewModeHistory;
         [overlay postMessage:@"Running..."];
     } else {
-        [overlay postImmediateFinishMessage:@" " duration:0.25 animated:YES];
+        [overlay postImmediateFinishMessage:@" " duration:0.20 animated:YES];
         overlay.progress = 1.0;
     }
 }
@@ -339,7 +339,7 @@ typedef enum ReviewAppAlertIndex {
         }
 
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
-        UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
+        //UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
         [self.imageManager addImageData:imageData save:NO];
         self.numPictures++;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -656,6 +656,8 @@ typedef enum ReviewAppAlertIndex {
         ImageSelectionViewController* isvc = [self.storyboard instantiateViewControllerWithIdentifier:@"selectionView"];
         isvc.imageManager = self.imageManager;
         isvc.delegate = self;
+        [isvc loadView];
+        [isvc viewDidLoad];
         [ViewController setViewController:isvc Title:@"Images" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
         [self presentModalViewController:isvc animated:YES];
     }
@@ -768,6 +770,7 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (void)didFinishSelection {
+    [self dismissModalViewControllerAnimated:YES];
     [self updateUI];
 }
 
