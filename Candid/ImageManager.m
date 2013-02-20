@@ -9,6 +9,8 @@
 #import "ImageManager.h"
 #import "KandidUtils.h"
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
+#import "MTStatusBarOverlay.h"
+
 
 // images are square so this is the width and height
 const int IMAGE_SIZE = 200;
@@ -30,6 +32,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 @property (nonatomic, strong) NSMutableArray* imageData;
 @property (nonatomic, strong) NSMutableArray* thumbnails;
 @property (nonatomic, strong) NSMutableArray* imagesToSave;
+@property (nonatomic) unsigned int saveCount;
 
 @end
 
@@ -38,7 +41,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 @synthesize imageData = _imageData;
 @synthesize thumbnails = _thumbnails;
 @synthesize imagesToSave = _imagesToSave;
-
+@synthesize delegate;
 //*********************************************************
 //*********************************************************
 #pragma mark - File I/O
@@ -51,7 +54,8 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 {
     ImageManager* manager = [[ImageManager alloc] init];
 
-    manager.imageData = [NSMutableArray arrayWithContentsOfFile:[ImageManager getImageDataFilePath:fileName]];
+    manager.imageData = [NSMutableArray arrayWithContentsOfFile:[ImageManager getFilePathForPropertyName:@"imageData" andFileName:fileName]];
+    manager.imagesToSave = [NSMutableArray arrayWithContentsOfFile:[ImageManager getFilePathForPropertyName:@"imagesToSave" andFileName:fileName]];
     if(manager.imageData != nil || manager.imageData.count > 0) {
         //NSLog(@"Manager Image: %@", manager.imageData);
         // the thumbnails come from the image data so there is no need to save those seperatly
@@ -62,19 +66,23 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     } else {
         manager.imageData = nil;
     }
+    [manager saveImagesInArray];
     return manager;
 }
 
 - (void)writeInfoToFileName:(NSString*)fileName {
-    [self.imageData writeToFile:[ImageManager getImageDataFilePath:fileName] atomically:YES];
+    [self.imageData writeToFile:[ImageManager getFilePathForPropertyName:@"imageData" andFileName:fileName] atomically:YES];
+    [self.imagesToSave writeToFile:[ImageManager getFilePathForPropertyName:@"imagesToSave" andFileName:fileName] atomically:YES];
 }
 
-+ (NSString*)getImageDataFilePath:(NSString*)fileName
++ (NSString*)getFilePathForPropertyName:(NSString*)propName andFileName:(NSString*)fileName
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString* filePath = [documentsDirectory stringByAppendingPathComponent:[fileName stringByAppendingString:@".imageData"]];
+    NSString* pathComponent = [[fileName stringByAppendingString:@"."] stringByAppendingString:propName];
+    NSString* filePath = [documentsDirectory stringByAppendingPathComponent:pathComponent];
     return filePath;
+
 }
 
 //*********************************************************
@@ -200,6 +208,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 // this should be an array of NSData representing UIImage data
 - (void)saveImages:(NSArray*)images
 {
+    self.saveCount += [images count];
     [self.imagesToSave addObjectsFromArray:[images mutableCopy]];
     [self saveImagesInArray];
 }
@@ -211,6 +220,12 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
         UIImageWriteToSavedPhotosAlbum(saveImage, self, @selector(savedImage:didFinishSavingWithError:contextInfo:), nil);
     } else {
         self.imagesToSave = nil;
+        self.saveCount = 0;
+        MTStatusBarOverlay* overlay = [MTStatusBarOverlay sharedInstance];
+        overlay.progress = 1.0;
+        if(self.delegate != nil)
+            [self.delegate didFinishSavingImages];
+        
     }
 }
 
@@ -218,8 +233,15 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     if(error != nil) {
         NSLog(@"SAVED IMAGE ERROR: %@", error);
     }
+    MTStatusBarOverlay* overlay = [MTStatusBarOverlay sharedInstance];
+    overlay.progress = (self.saveCount - [self.imagesToSave count]) /(double) self.saveCount;
+    NSLog(@"image progress: %f", (self.saveCount - [self.imagesToSave count]) /(double) self.saveCount);
     [self.imagesToSave removeObjectAtIndex:0];
     [self saveImagesInArray];
+}
+
+- (BOOL)isSavingImages {
+    return ([self.imagesToSave count] > 0 &&  self.saveCount > 0);
 }
 
 

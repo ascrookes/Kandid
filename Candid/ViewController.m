@@ -28,7 +28,7 @@ const int MAIN_TIMER_REPEAT_TIME = 0.1;
 const int VOLUME_CUSHION = 15;
 // if the max average is greater than -5 set it too take images on a timer
 const int TOO_LOUD_TIMED_SHOT = 25;
-const double TIMED_SHOT_LEVEL = -6;
+const double TIMED_SHOT_LEVEL = -4.8;
 const int MAX_PICTURES_PER_MINUTE = 8;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
 const int MAX_IMAGES_IN_TABLE = 25;
@@ -67,7 +67,7 @@ typedef enum ReviewAppAlertIndex {
 } ReviewAppAlertIndex;
 
 
-@interface ViewController () <UIAlertViewDelegate, ImageSelectionDelegate>
+@interface ViewController () <UIAlertViewDelegate, ImageSelectionDelegate, ImageManagerDelegate>
 
 //*********************************************************
 //*********************************************************
@@ -156,7 +156,6 @@ typedef enum ReviewAppAlertIndex {
     [ViewController setViewController:self Title:@"Kandid" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
     [self updateUI];
     [self presentTutorial];
-    
 }
 
 
@@ -251,8 +250,9 @@ typedef enum ReviewAppAlertIndex {
     overlay.hidesActivity = YES;
     overlay.animation = MTStatusBarOverlayAnimationNone;
     overlay.detailViewMode = MTDetailViewModeHistory;
-    if(self.isRunning) {
-        [overlay postMessage:@"Running..."];
+    NSString* msg = [self getStatusBarMessage];
+    if(msg != nil) {
+        [overlay postMessage:msg];
     } else {
         [overlay postImmediateFinishMessage:@" " duration:0.20 animated:YES];
         overlay.progress = 1.0;
@@ -327,7 +327,6 @@ typedef enum ReviewAppAlertIndex {
         });
     }
     self.lastTakenTime = [NSDate date];
-    
     [self.imageCapture captureStillImageAsynchronouslyFromConnection:self.videoConnection
                                                    completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
         
@@ -526,7 +525,7 @@ typedef enum ReviewAppAlertIndex {
     [self stopEverything];
     NSString* finishMsg = (statusAnimation) ? @"Stopping..." : @" ";
     MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-    [overlay postImmediateFinishMessage:finishMsg duration:1.5 animated:YES];
+    [overlay postImmediateFinishMessage:finishMsg duration:1.0 animated:YES];
     overlay.progress = 1.0;
 }
 
@@ -714,6 +713,22 @@ typedef enum ReviewAppAlertIndex {
     }
 }
 
+
+// the message that the overlay should show
+// either returns a string that should be passed as the overlay's message
+// or nil is returned in which case an empty finish message message should
+// be posted and return to the regular status bar
+- (NSString*)getStatusBarMessage {
+    NSString* msg = nil;
+    if(!self.hideView.hidden)
+        msg = @"   ";
+    if([self.imageManager isSavingImages])
+        msg = @"Saving Images...";
+    else if(self.isRunning)
+        msg = @"Running...";
+    return msg;
+}
+
 //*********************************************************
 //*********************************************************
 #pragma mark - Interruption Handling
@@ -771,7 +786,13 @@ typedef enum ReviewAppAlertIndex {
 
 - (void)didFinishSelection {
     [self dismissModalViewControllerAnimated:YES];
+    [self overlayStatusBar];
     [self updateUI];
+}
+
+- (void)didFinishSavingImages {
+    NSLog(@"image manager did finish saving the images");
+    [self overlayStatusBar];
 }
 
 
@@ -914,6 +935,7 @@ typedef enum ReviewAppAlertIndex {
 {
     if(!_imageManager) {
         _imageManager = [ImageManager imageManagerWithFileName:@"kandid"];
+        [_imageManager setDelegate:self];
     }
     return _imageManager;
 }

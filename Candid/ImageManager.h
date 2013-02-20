@@ -8,8 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol ImageManagerDelegate <NSObject>
+
+- (void)didFinishSavingImages;
+
+@end
 
 @interface ImageManager : NSObject
+
+@property (nonatomic, strong) id <ImageManagerDelegate> delegate;
 
 + (ImageManager*)imageManagerWithFileName:(NSString*)fileName;
 - (void)addImageData:(NSData*)imageData save:(BOOL)saveImage;
@@ -24,6 +31,7 @@
 - (void)removeImagesAtIndices:(NSArray*)indices;
 - (void)writeInfoToFileName:(NSString*)fileName;
 - (void)saveImages:(NSArray*)images;
+- (BOOL)isSavingImages;
 
 
 @end
