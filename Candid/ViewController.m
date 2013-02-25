@@ -11,6 +11,7 @@
 #import "MTStatusBarOverlay.h"
 #import "DatabaseManager.h"
 #import "KandidUtils.h"
+#import "ImageCell.h"
 
 //*********************************************************
 //*********************************************************
@@ -67,7 +68,7 @@ typedef enum ReviewAppAlertIndex {
 } ReviewAppAlertIndex;
 
 
-@interface ViewController () <UIAlertViewDelegate, ImageSelectionDelegate, ImageManagerDelegate>
+@interface ViewController () <UIAlertViewDelegate, ImageSelectionDelegate, ImageManagerDelegate, ImageCellDelegate>
 
 //*********************************************************
 //*********************************************************
@@ -85,6 +86,7 @@ typedef enum ReviewAppAlertIndex {
 @property (nonatomic) FLASH_MODE flashMode;
 @property (nonatomic) BOOL isRunning;
 @property (nonatomic) BOOL shouldResumeAfterInterruption;
+
 
 @end
 
@@ -145,6 +147,8 @@ typedef enum ReviewAppAlertIndex {
     self.clearButtonLabel.textColor = [KandidUtils kandidPurple];
     self.hideButtonLabel.textColor = [KandidUtils kandidPurple];
     self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
+    //self.table.backgroundColor = [UIColor clearColor];
+    
     self.table.separatorColor  = [UIColor blackColor];
     self.view.backgroundColor = [UIColor lightGrayColor];//[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     self.sessionTimeInterval = 0;
@@ -477,11 +481,13 @@ typedef enum ReviewAppAlertIndex {
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* cellID = @"Image Cell Polaroid";
+    static NSString* cellID = @"imageCellPolaroid";
     ImageCell* cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if(cell == nil) {
-        cell = [[ImageCell alloc] init];
+        cell = [ImageCell createImageCellWithTable:self.table];
+        cell.delegate = self;
     }
+        
     // add the images to the table in reverse order and limit to 10
     // hopefully that will stop the app from crashing as much
     [cell addImage:[self.imageManager getImageAtIndex:[self.imageManager count] - indexPath.row - 1]];
@@ -503,6 +509,40 @@ typedef enum ReviewAppAlertIndex {
 {
     // DONT DO SHIT!
 }
+
+//*********************************************************
+//*********************************************************
+#pragma mark - Image Cell Delegate
+//*********************************************************
+//*********************************************************
+
+- (void)shouldSaveImageFromCell:(ImageCell*)imgCell {
+    [self removeImageFromCell:imgCell shouldSave:YES];
+}
+
+- (void)shouldDeleteImageFromCell:(ImageCell*)imgCell {
+    [self removeImageFromCell:imgCell shouldSave:NO];
+}
+
+- (void)removeImageFromCell:(ImageCell*)imgCell shouldSave:(BOOL)save {
+    NSIndexPath* path = [self.table indexPathForCell:imgCell];
+    unsigned int imgIndex = [self.imageManager count] - path.row - 1;
+    
+    if(save) {
+        [self.imageManager saveImages:[NSArray arrayWithObject:[[self.imageManager getImageDataAtIndex:imgIndex] copy]]];
+    }
+    [self.imageManager removeImagesAtIndices:[NSArray arrayWithObject:@(imgIndex)]];
+    
+    [self.table deleteRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationAutomatic];
+    self.numPictures = [self.imageManager count];
+}
+
+- (void)deleteImageFromAlertView {
+    // the delete swipe should show a button or open an alert view
+    // before they delete the image
+}
+
+
 
 //*********************************************************
 //*********************************************************
@@ -565,6 +605,10 @@ typedef enum ReviewAppAlertIndex {
 - (IBAction)toggleHide:(id)sender
 {
     if(self.hideView.hidden) {
+        if(self.isRunning) {
+            NSLog(@"Turing proximity monitor back on");
+            [[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
+        }
         [self navigationController].navigationBar.alpha = 0;
         self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
         self.hideView.hidden = NO;
@@ -602,6 +646,10 @@ typedef enum ReviewAppAlertIndex {
 
 - (IBAction)showHiddenLabels
 {
+    if(self.isRunning) {
+        NSLog(@"Turing proximity monitor back on");
+        [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
+    }
     [self overlayStatusBar];
     [[UIScreen mainScreen] setBrightness:self.previousBrightness];
     [self navigationController].navigationBar.alpha = 1;

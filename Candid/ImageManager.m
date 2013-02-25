@@ -214,9 +214,10 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 }
 
 - (void)saveImagesInArray {
+    NSLog(@"SaveImages: %i", [self.imagesToSave count]);
     if(self.imagesToSave != nil && [self.imagesToSave count] > 0) {
         NSData* imgData = [self.imagesToSave objectAtIndex:0];
-        UIImage* saveImage = (YES /*watermark*/) ? [UIImage imageWithData:imgData] : [ImageManager addWatermarkToImageData:imgData];
+        UIImage* saveImage = (YES/*premium user*/) ? [UIImage imageWithData:imgData] : [ImageManager addWatermarkToImageData:imgData];
         UIImageWriteToSavedPhotosAlbum(saveImage, self, @selector(savedImage:didFinishSavingWithError:contextInfo:), nil);
     } else {
         self.imagesToSave = nil;
@@ -230,13 +231,15 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 }
 
 - (void)savedImage:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
-    if(error != nil) {
-        NSLog(@"SAVED IMAGE ERROR: %@", error);
-    }
+    if(error != nil) { /*consider doing something here*/ }
+    
     MTStatusBarOverlay* overlay = [MTStatusBarOverlay sharedInstance];
     overlay.progress = (self.saveCount - [self.imagesToSave count]) /(double) self.saveCount;
-    NSLog(@"image progress: %f", (self.saveCount - [self.imagesToSave count]) /(double) self.saveCount);
-    [self.imagesToSave removeObjectAtIndex:0];
+
+    if([self.imagesToSave count] > 0) {
+        [self.imagesToSave removeObjectAtIndex:0];
+    }
+    
     [self saveImagesInArray];
 }
 

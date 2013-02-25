@@ -129,7 +129,7 @@ const int NumPages = 6;
             desc = @"Click the camera with green to start. Then position the phone so the camera has the best view of what is going on. It will take photos when appropriate. Click the red camera to stop.";
             break;
         case PageNumClear:
-            desc = @"Clear gives you a fresh camera roll by removing those currently on the film roll.";
+            desc = @"Clear gives you a fresh camera roll by deleting those currently on the film roll. These images are permanently deleted.";
             break;
         case PageNumHide:
             desc = @"Hide makes the screen black and dims the screen to save battery, so others do not know what is going on, and so you can get truly Kandid images 😜.";
@@ -138,7 +138,7 @@ const int NumPages = 6;
             desc = @"When Kandid is running if you cover the proximity sensor (right above the screen) the screen will turn off which saves a lot of battery. Place your finger there now.";
             break;
         case PageNumSave:
-            desc = @"Everytime Kandid takes a picture it is shown at the top of film roll and it is also saved to your photo album, so after clearing a film roll you still have all of the photos 😄. Have fun!";
+            desc = @"Everytime Kandid takes a picture it is shown at the top of film roll. To save it swipe the image to the right. If you would like to delete it, swipe it to the left.";
             break;
         default:
             break;

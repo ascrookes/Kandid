@@ -166,11 +166,6 @@
                     </view>
                     <navigationItem key="navigationItem" title="Kandid" id="pNR-CD-Oxf">
                         <barButtonItem key="leftBarButtonItem" title="# Pix: 0" id="g8z-bP-ico"/>
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="Vf1-qH-fmw">
-                            <connections>
-                                <action selector="saveImages:" destination="2" id="bAY-dZ-O9b"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="cameraImage" destination="36f-NB-Y8Y" id="eQD-89-sJq"/>
@@ -189,7 +184,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="zaU-bY-sFt">
                     <connections>
-                        <action selector="showHiddenLabels" destination="2" id="zi2-ME-e8T"/>
+                        <action selector="showHiddenLabels" destination="2" id="hmg-iI-OE6"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
@@ -364,9 +359,6 @@
     <classes>
         <class className="ImageCell" superclassName="UITableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
-            </relationships>
         </class>
         <class className="ImageCollectionCell" superclassName="UICollectionViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageCollectionCell.h"/>

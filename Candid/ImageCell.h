@@ -8,11 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+@class ImageCell;
+@protocol ImageCellDelegate <NSObject>
+
+- (void)shouldSaveImageFromCell:(ImageCell*)imgCell;
+- (void)shouldDeleteImageFromCell:(ImageCell*)imgCell;
+
+@end
+
 @interface ImageCell : UITableViewCell
 
 
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (strong, nonatomic) UIImageView *imageView;
+@property (strong, nonatomic) id <ImageCellDelegate> delegate;
 
++ (ImageCell*)createImageCellWithTable:(UITableView*)table;
 - (void)addImage:(UIImage*)image;
 
 @end
