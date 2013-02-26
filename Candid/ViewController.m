@@ -149,9 +149,7 @@ typedef enum ReviewAppAlertIndex {
     
     self.table.backgroundColor = [UIColor clearColor];//cc
     //self.table.backgroundColor = [UIColor clearColor];
-    
     self.table.separatorColor  = [UIColor clearColor];
-    self.view.backgroundColor = [UIColor lightGrayColor];//[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     self.sessionTimeInterval = 0;
     self.volumeMax = -5.0;
     self.flashMode = FLASH_MODE_OFF;
@@ -350,7 +348,6 @@ typedef enum ReviewAppAlertIndex {
         dispatch_async(dispatch_get_main_queue(), ^{
             //[self.table reloadRowsAtIndexPaths:[self.table visibleCells] withRowAnimation:UITableViewRowAnimationAutomatic];
             NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:0];
-            NSLog(@"Path: %@", path);
             [self.table insertRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self changeTorchMode:AVCaptureTorchModeOff];
         });

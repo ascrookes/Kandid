@@ -42,7 +42,7 @@
     
     ImageCell* cell = [[ImageCell alloc] initWithFrame:CGRectMake(0, 0, 320, 250)];
     UIImageView* filmRoll = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 300, 250)];
-    filmRoll.image = [UIImage imageNamed:@"FilmRoll.png"];
+    filmRoll.image = [UIImage imageNamed:@"roundedFilmRoll.png"];
     cell.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 25, 200, 200)];
     
     [filmRoll addSubview:cell.imageView];
