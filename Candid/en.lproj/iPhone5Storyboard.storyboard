@@ -27,16 +27,20 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Default-568h@2x.png" id="yVQ-qu-TBL">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="250" sectionHeaderHeight="22" sectionFooterHeight="22" id="4uH-cK-5J5">
-                                <rect key="frame" x="10" y="-4" width="300" height="470"/>
+                                <rect key="frame" x="0.0" y="-4" width="320" height="470"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="Image Cell Polaroid" rowHeight="250" id="GWG-tQ-WdZ" customClass="ImageCell">
-                                        <rect key="frame" x="0.0" y="22" width="300" height="250"/>
+                                        <rect key="frame" x="0.0" y="22" width="320" height="250"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="300" height="249"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="249"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" id="osq-a5-Nmm">
@@ -350,6 +354,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Default-568h@2x.png" width="640" height="1136"/>
         <image name="cameraStart.png" width="78" height="50"/>
         <image name="flashOff.png" width="70" height="30"/>
         <image name="leftButton.png" width="96" height="59"/>
@@ -363,7 +368,6 @@
         <class className="ImageCollectionCell" superclassName="UICollectionViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageCollectionCell.h"/>
             <relationships>
-                <relationship kind="action" name="saveButtonAction:"/>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="saveButton" candidateClass="UIButton"/>
             </relationships>
@@ -377,8 +381,6 @@
         <class className="TutorialViewController" superclassName="ViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TutorialViewController.h"/>
             <relationships>
-                <relationship kind="action" name="dismissTutorial:"/>
-                <relationship kind="action" name="nextPage:"/>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="pageCounter" candidateClass="UIPageControl"/>
                 <relationship kind="outlet" name="pageDescription" candidateClass="UITextView"/>

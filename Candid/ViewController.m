@@ -19,7 +19,7 @@
 //*********************************************************
 //*********************************************************
 
-const int SECONDS_BETWEEN_IMAGES = -3;
+const int SECONDS_BETWEEN_IMAGES = -5;
 const int PEAK_DIFFERENCE = 5;
 const int ADJUST_NUM = 5;
 const int UPDATE_TIME = 5;
@@ -146,14 +146,16 @@ typedef enum ReviewAppAlertIndex {
     }
     self.clearButtonLabel.textColor = [KandidUtils kandidPurple];
     self.hideButtonLabel.textColor = [KandidUtils kandidPurple];
-    self.table.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"FilmRoll.png"]];
+    
+    self.table.backgroundColor = [UIColor clearColor];//cc
     //self.table.backgroundColor = [UIColor clearColor];
     
-    self.table.separatorColor  = [UIColor blackColor];
+    self.table.separatorColor  = [UIColor clearColor];
     self.view.backgroundColor = [UIColor lightGrayColor];//[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
     self.sessionTimeInterval = 0;
     self.volumeMax = -5.0;
     self.flashMode = FLASH_MODE_OFF;
+    self.flashButton.hidden = YES;
     self.isRunning = NO;
     self.levelLabel.text = @"";
     self.shouldResumeAfterInterruption = NO;
@@ -347,7 +349,9 @@ typedef enum ReviewAppAlertIndex {
         self.numPictures++;
         dispatch_async(dispatch_get_main_queue(), ^{
             //[self.table reloadRowsAtIndexPaths:[self.table visibleCells] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.table reloadData];
+            NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:0];
+            NSLog(@"Path: %@", path);
+            [self.table insertRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self changeTorchMode:AVCaptureTorchModeOff];
         });
         NSLog(@"CAPTURING: %i",self.numPictures);

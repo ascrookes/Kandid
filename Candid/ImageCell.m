@@ -39,9 +39,14 @@
 + (ImageCell*)createImageCellWithTable:(UITableView*)table
 {
     
-    ImageCell* cell = [[ImageCell alloc] initWithFrame:CGRectMake(0, 0, 300, 250)];
+    
+    ImageCell* cell = [[ImageCell alloc] initWithFrame:CGRectMake(0, 0, 320, 250)];
+    UIImageView* filmRoll = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 300, 250)];
+    filmRoll.image = [UIImage imageNamed:@"FilmRoll.png"];
     cell.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 25, 200, 200)];
-    [cell addSubview:cell.imageView];
+    
+    [filmRoll addSubview:cell.imageView];
+    [cell addSubview:filmRoll];
     cell.table = table;
     cell.shouldSave = NO;
     
@@ -52,9 +57,10 @@
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [touches anyObject];
-    CGPoint location = [touch locationInView:self];
-    int newX = 150 + (location.x - self.lastLocation.x);
-    self.imageView.center = CGPointMake(newX, self.imageView.center.y);
+    CGPoint location = [touch locationInView:self.table];
+    int middleX = self.frame.size.width / 2;
+    int newX = middleX + (location.x - self.lastLocation.x);
+    self.center = CGPointMake(newX, self.center.y);
 }
 
 
@@ -63,40 +69,43 @@
 {
     self.table.scrollEnabled = NO;
     UITouch* touch = [touches anyObject];
-    self.lastLocation = [touch locationInView:self];
+    self.lastLocation = [touch locationInView:self.table];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     self.table.scrollEnabled = YES;
-    if(self.imageView.center.x > 340) {
+    if(self.center.x > 340) {
         self.shouldSave = YES;
         self.userInteractionEnabled = NO;
         [UIView animateWithDuration:0.20 animations:^{
-            self.imageView.center = CGPointMake(570, self.imageView.center.y);
+            self.alpha = 0;
+            self.center = CGPointMake(570, self.center.y);
         } completion:^(BOOL finished) {
-            self.imageView.hidden = YES;
+            //self.imageView.hidden = YES;
+            
             [self.delegate shouldSaveImageFromCell:self];
         }];
-    } else if(self.imageView.center.x < -20) {
+    } else if(self.center.x < -20) {
         self.shouldSave = YES;
         self.userInteractionEnabled = NO;
         [UIView animateWithDuration:0.20 animations:^{
-            self.imageView.center = CGPointMake(-250, self.imageView.center.y);
+            self.alpha = 0;
+            self.center = CGPointMake(-250, self.center.y);
         } completion:^(BOOL finished) {
-            self.imageView.hidden = YES;
+            //self.imageView.hidden = YES;
             [self.delegate shouldDeleteImageFromCell:self];
         }];
     } else {
         // move the image back to the center when the touch ends unless it made it into the range where
         // it should be saved or deleted
+        NSLog(@"moving back to the middle");
         [UIView animateWithDuration:0.15 animations:^{
-            self.imageView.center = CGPointMake(150, 125);
+            self.center = CGPointMake(self.frame.size.width / 2, self.center.y);
         }];
     }
 }
 
-                                
 
 // Consider making the image fade in like a polaroid would
 - (void)addImage:(UIImage*)image
