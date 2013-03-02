@@ -16,10 +16,11 @@
 
 @end
 
-@implementation ImageCell 
+@implementation ImageCell
 @synthesize imageView;
 @synthesize lastLocation = _lastLocation;
 @synthesize table = _table;
+@synthesize filmRoll = _filmRoll;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -38,15 +39,13 @@
 
 + (ImageCell*)createImageCellWithTable:(UITableView*)table
 {
-    
-    
     ImageCell* cell = [[ImageCell alloc] initWithFrame:CGRectMake(0, 0, 320, 250)];
-    UIImageView* filmRoll = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 300, 250)];
-    filmRoll.image = [UIImage imageNamed:@"roundedFilmRoll.png"];
+    cell.filmRoll = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 300, 250)];
+    cell.filmRoll.image = [UIImage imageNamed:@"roundedFilmRoll.png"];
     cell.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 25, 200, 200)];
     
-    [filmRoll addSubview:cell.imageView];
-    [cell addSubview:filmRoll];
+    [cell.filmRoll addSubview:cell.imageView];
+    [cell addSubview:cell.filmRoll];
     cell.table = table;
     cell.shouldSave = NO;
     
@@ -60,7 +59,7 @@
     CGPoint location = [touch locationInView:self.table];
     int middleX = self.frame.size.width / 2;
     int newX = middleX + (location.x - self.lastLocation.x);
-    self.center = CGPointMake(newX, self.center.y);
+    self.filmRoll.center = CGPointMake(newX, self.filmRoll.center.y);
 }
 
 
@@ -75,25 +74,28 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     self.table.scrollEnabled = YES;
-    if(self.center.x > 340) {
+    if(self.filmRoll.center.x > 340) {
         self.shouldSave = YES;
         self.userInteractionEnabled = NO;
         [UIView animateWithDuration:0.20 animations:^{
-            self.alpha = 0;
-            self.center = CGPointMake(570, self.center.y);
+            self.filmRoll.center = CGPointMake(570, self.filmRoll.center.y);
         } completion:^(BOOL finished) {
             //self.imageView.hidden = YES;
             
             [self.delegate shouldSaveImageFromCell:self];
         }];
-    } else if(self.center.x < -20) {
+    } else if(self.filmRoll.center.x < -20) {
         self.shouldSave = YES;
         self.userInteractionEnabled = NO;
+        UIButton* delete = [[UIButton alloc] initWithFrame:CGRectMake(350, 355, 100, 40)];
+        delete.titleLabel.text = @"DELETE";
+        delete.backgroundColor = [UIColor purpleColor];
+        delete.alpha = 0;
+        [self addSubview:delete];
         [UIView animateWithDuration:0.20 animations:^{
-            self.alpha = 0;
-            self.center = CGPointMake(-250, self.center.y);
+            self.filmRoll.center = CGPointMake(-250, self.filmRoll.center.y);
+            delete.alpha = 1;
         } completion:^(BOOL finished) {
-            //self.imageView.hidden = YES;
             [self.delegate shouldDeleteImageFromCell:self];
         }];
     } else {
@@ -101,7 +103,7 @@
         // it should be saved or deleted
         NSLog(@"moving back to the middle");
         [UIView animateWithDuration:0.15 animations:^{
-            self.center = CGPointMake(self.frame.size.width / 2, self.center.y);
+            self.filmRoll.center = CGPointMake(self.frame.size.width / 2, self.filmRoll.center.y);
         }];
     }
 }

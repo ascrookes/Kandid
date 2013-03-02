@@ -86,6 +86,7 @@ typedef enum ReviewAppAlertIndex {
 @property (nonatomic) FLASH_MODE flashMode;
 @property (nonatomic) BOOL isRunning;
 @property (nonatomic) BOOL shouldResumeAfterInterruption;
+@property (nonatomic) BOOL cameraIsReady;
 
 
 @end
@@ -128,6 +129,7 @@ typedef enum ReviewAppAlertIndex {
 @synthesize sessionTime = _sessionTime;
 @synthesize sessionTimeInterval;
 @synthesize previousBrightness;
+@synthesize cameraIsReady = _cameraIsReady;
 
 
 //*********************************************************
@@ -154,6 +156,7 @@ typedef enum ReviewAppAlertIndex {
     self.volumeMax = -5.0;
     self.flashMode = FLASH_MODE_OFF;
     self.flashButton.hidden = YES;
+    self.cameraIsReady = YES;
     self.isRunning = NO;
     self.levelLabel.text = @"";
     self.shouldResumeAfterInterruption = NO;
@@ -323,6 +326,7 @@ typedef enum ReviewAppAlertIndex {
 // Captures an image, adds that image to the table in view, and saves it to the library
 - (void)captureNow
 {
+    self.cameraIsReady = NO;
     if(self.flashMode == FLASH_MODE_ON) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self changeTorchMode:AVCaptureTorchModeOn];
@@ -333,13 +337,14 @@ typedef enum ReviewAppAlertIndex {
     self.lastTakenTime = [NSDate date];
     [self.imageCapture captureStillImageAsynchronouslyFromConnection:self.videoConnection
                                                    completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
-        
+        self.cameraIsReady = YES;
         if(!CMSampleBufferIsValid(imageSampleBuffer) || !CMSampleBufferDataIsReady(imageSampleBuffer)) {
             // the buffer is not ready to capture the image and would crash
             // Reset the time so it doesnt wait to take another picture
             self.lastTakenTime = [NSDate distantPast];
             return;
         }
+                                                       
 
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
         //UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
@@ -384,6 +389,7 @@ typedef enum ReviewAppAlertIndex {
 - (BOOL)allowedToCapturePeak:(float)peak
 {
     return     peak >= self.volumeMax /*|| peak <= self.volumeMin -- add this to capture images when the volume decresses a lot*/
+            && self.cameraIsReady
             && [self.lastTakenTime timeIntervalSinceNow] < SECONDS_BETWEEN_IMAGES
             && ![self.timedPicture isValid]
             && self.session.running

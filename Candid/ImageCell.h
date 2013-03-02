@@ -20,6 +20,7 @@
 
 
 @property (strong, nonatomic) UIImageView *imageView;
+@property (strong, nonatomic) UIImageView *filmRoll;
 @property (strong, nonatomic) id <ImageCellDelegate> delegate;
 
 + (ImageCell*)createImageCellWithTable:(UITableView*)table;
