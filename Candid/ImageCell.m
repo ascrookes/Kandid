@@ -87,14 +87,18 @@
     } else if(self.filmRoll.center.x < -20) {
         self.shouldSave = YES;
         self.userInteractionEnabled = NO;
-        UIButton* delete = [[UIButton alloc] initWithFrame:CGRectMake(350, 355, 100, 40)];
-        delete.titleLabel.text = @"DELETE";
+        /*
+        UIButton* delete = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/2 - 50, self.frame.size.height/2 - 20, 100, 40)];
+        delete.titleLabel.text = @"Delete?";
+        delete.titleLabel.textColor = [UIColor lightGrayColor];
         delete.backgroundColor = [UIColor purpleColor];
         delete.alpha = 0;
+        [delete addTarget:self action:@selector(deleteThisImage) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:delete];
+         */
         [UIView animateWithDuration:0.20 animations:^{
             self.filmRoll.center = CGPointMake(-250, self.filmRoll.center.y);
-            delete.alpha = 1;
+            //delete.alpha = 1;
         } completion:^(BOOL finished) {
             [self.delegate shouldDeleteImageFromCell:self];
         }];
@@ -107,6 +111,12 @@
         }];
     }
 }
+/*
+- (void)deleteThisImage {
+    [self.delegate shouldDeleteImageFromCell:self];
+}
+*/
+
 
 
 // Consider making the image fade in like a polaroid would
