@@ -13,12 +13,12 @@ typedef enum PageNum {
     PageNumWelcome = 0,
     PageNumStartStop,
     PageNumHide,
-    PageNumProximitySensor,
+    //PageNumProximitySensor,
     PageNumClear,
     PageNumSave,
 } PageNum;
 
-const int NumPages = 6;
+const int NumPages = 5;
 
 @interface TutorialViewController ()
 
@@ -83,8 +83,6 @@ const int NumPages = 6;
             break;
         case PageNumSave:
             break;
-        case PageNumProximitySensor:
-            break;
         default:
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"hasSeenTutorial"];
             [self dismissTutorial:nil];
@@ -110,9 +108,6 @@ const int NumPages = 6;
         case PageNumSave:
             title = @"How do I get the images?";
             break;
-        case PageNumProximitySensor:
-            title = @"Saving Battery";
-            break;
         default:
             break;
     }
@@ -134,31 +129,17 @@ const int NumPages = 6;
         case PageNumHide:
             desc = @"Hide makes the screen black and dims the screen to save battery, so others do not know what is going on, and so you can get truly Kandid images 😜.";
             break;
-        case PageNumProximitySensor:
-            desc = @"When Kandid is running if you cover the proximity sensor (right above the screen) the screen will turn off which saves a lot of battery. Place your finger there now.";
-            break;
         case PageNumSave:
             desc = @"Everytime Kandid takes a picture it is shown at the top of film roll. To save it swipe the image to the right. If you would like to delete it, swipe it to the left.";
             break;
         default:
             break;
     }
-    [[UIDevice currentDevice] setProximityMonitoringEnabled:(pageNumber == PageNumProximitySensor)];
     return desc;
 }
 
 + (UIImage*)getImageForPage:(PageNum)pageNumber {
     return [UIImage imageNamed:@"tutorialImage-0"];
-    /*
-    UIImage* image;
-    switch (pageNumber) {
-        case PageNumStartStop:
-            image = [UIImage imageNamed:[NSString stringWithFormat:@"tutorialImage-%i", pageNumber]];
-        default:
-            image = [UIImage imageNamed:@"tutorialImage-0"];
-    }
-    return image;
-     */
 }
 
 

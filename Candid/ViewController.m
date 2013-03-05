@@ -22,7 +22,7 @@
 const int SECONDS_BETWEEN_IMAGES = -5;
 const int PEAK_DIFFERENCE = 5;
 const int ADJUST_NUM = 5;
-const int UPDATE_TIME = 5;
+const int UPDATE_TIME = 10;
 const int MINUTE = 60/UPDATE_TIME;
 const int MAIN_TIMER_REPEAT_TIME = 0.1;
 // The cushion above the max to monitor where the max should be
@@ -162,9 +162,12 @@ typedef enum ReviewAppAlertIndex {
     self.shouldResumeAfterInterruption = NO;
     [ViewController setViewController:self Title:@"Kandid" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
     [self updateUI];
-    [self presentTutorial];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    NSLog(@"DFASDFS");
+    [self shouldPresentTutorial];
+}
 
 
 + (void)setViewController:(UIViewController*)vc Title:(NSString*)title Font:(UIFont*)font
@@ -578,7 +581,7 @@ typedef enum ReviewAppAlertIndex {
 
 - (IBAction)stopEverything
 {
-    [[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
+    //[[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
     // using time interval since now will return negative since self.sessionTime is earlier than the current time
     self.sessionTimeInterval += ([self.sessionTime timeIntervalSinceNow] * -1);
     [self.timer invalidate];
@@ -604,7 +607,7 @@ typedef enum ReviewAppAlertIndex {
     [self.session startRunning];
     self.isRunning = YES;
     [self updateUI];
-    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
+    //[[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     [self overlayStatusBar];
     self.sessionTime = [NSDate date];
 }
@@ -614,7 +617,7 @@ typedef enum ReviewAppAlertIndex {
     if(self.hideView.hidden) {
         if(self.isRunning) {
             NSLog(@"Turing proximity monitor back on");
-            [[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
+            //[[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
         }
         [self navigationController].navigationBar.alpha = 0;
         self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
@@ -655,7 +658,7 @@ typedef enum ReviewAppAlertIndex {
 {
     if(self.isRunning) {
         NSLog(@"Turing proximity monitor back on");
-        [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
+        //[[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     }
     [self overlayStatusBar];
     [[UIScreen mainScreen] setBrightness:self.previousBrightness];
@@ -762,12 +765,16 @@ typedef enum ReviewAppAlertIndex {
     [self.imageManager writeInfoToFileName:@"kandid"];
 }
 
-- (void)presentTutorial {
-    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"hasSeenTutorial"]) {
-        [self presentModalViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"TutorialVC"] animated:YES];
+- (void)shouldPresentTutorial {
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"hasSeenTutorialDev"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"hasSeenTutorialDev"];
+        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(showTutorial) userInfo:nil repeats:NO];
     }
 }
 
+- (void)showTutorial {
+    [self presentModalViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"TutorialVC"] animated:YES];
+}
 
 // the message that the overlay should show
 // either returns a string that should be passed as the overlay's message
