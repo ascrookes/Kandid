@@ -105,7 +105,7 @@
     } else {
         // move the image back to the center when the touch ends unless it made it into the range where
         // it should be saved or deleted
-        NSLog(@"moving back to the middle");
+        //NSLog(@"moving back to the middle");
         [UIView animateWithDuration:0.15 animations:^{
             self.filmRoll.center = CGPointMake(self.frame.size.width / 2, self.filmRoll.center.y);
         }];

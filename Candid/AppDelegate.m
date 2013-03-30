@@ -15,13 +15,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    @try {
-        [TestFlight takeOff:@"486bc2144e1258a6096557a2792a3082_MTc3ODc2MjAxMy0wMS0yMiAwMDoyNzozMi4yOTYyNDc"];
-        [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"TestFlightException: %@", exception);
-    } @finally {}
+//    [TestFlight takeOff:@"486bc2144e1258a6096557a2792a3082_MTc3ODc2MjAxMy0wMS0yMiAwMDoyNzozMi4yOTYyNDc"];
+//    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
     
     [self customizeAppearance];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {

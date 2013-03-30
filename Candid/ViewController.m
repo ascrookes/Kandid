@@ -150,8 +150,8 @@ typedef enum ReviewAppAlertIndex {
     self.hideButtonLabel.textColor = [KandidUtils kandidPurple];
     
     self.table.backgroundColor = [UIColor clearColor];//cc
-    //self.table.backgroundColor = [UIColor clearColor];
     self.table.separatorColor  = [UIColor clearColor];
+    self.table.showsHorizontalScrollIndicator = YES;
     self.sessionTimeInterval = 0;
     self.volumeMax = -5.0;
     self.flashMode = FLASH_MODE_OFF;
@@ -165,7 +165,6 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    NSLog(@"DFASDFS");
     [self shouldPresentTutorial];
 }
 
@@ -209,7 +208,6 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (void)didEnterBackground {
-    NSLog(@"did enter background");
     [self stopEverything];
     [self.imageManager writeInfoToFileName:@"kandid"];
 }
@@ -616,7 +614,7 @@ typedef enum ReviewAppAlertIndex {
 {
     if(self.hideView.hidden) {
         if(self.isRunning) {
-            NSLog(@"Turing proximity monitor back on");
+//            NSLog(@"Turing proximity monitor back on");
             //[[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
         }
         [self navigationController].navigationBar.alpha = 0;
@@ -657,7 +655,7 @@ typedef enum ReviewAppAlertIndex {
 - (IBAction)showHiddenLabels
 {
     if(self.isRunning) {
-        NSLog(@"Turing proximity monitor back on");
+//        NSLog(@"Turing proximity monitor back on");
         //[[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     }
     [self overlayStatusBar];
@@ -698,7 +696,6 @@ typedef enum ReviewAppAlertIndex {
 
 - (IBAction)showSettings:(id)sender
 {
-    NSLog(@"Should show the settings");
     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Uh Oh!" message:@"Got lazy and didn't do this part yet" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
 }
@@ -799,7 +796,7 @@ typedef enum ReviewAppAlertIndex {
 
 - (void)beginInterruption
 {
-    NSLog(@"beginInterruption");
+//    NSLog(@"beginInterruption");
     self.shouldResumeAfterInterruption = self.isRunning;
     if(self.isRunning) {
         //[self stopEverythingWithStatusAnimation:NO];
@@ -808,7 +805,6 @@ typedef enum ReviewAppAlertIndex {
 
 - (void)inputIsAvailableChanged:(BOOL)isInputAvailable
 {
-    NSLog(@"Input Is Available Changed: %d", isInputAvailable);
     if(!isInputAvailable) {
         [self stopEverythingWithStatusAnimation:YES];
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Not available" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -853,7 +849,6 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (void)didFinishSavingImages {
-    NSLog(@"image manager did finish saving the images");
     [self overlayStatusBar];
 }
 

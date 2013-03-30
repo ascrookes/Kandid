@@ -214,7 +214,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 }
 
 - (void)saveImagesInArray {
-    NSLog(@"SaveImages: %i", [self.imagesToSave count]);
+//    NSLog(@"SaveImages: %i", [self.imagesToSave count]);
     if(self.imagesToSave != nil && [self.imagesToSave count] > 0) {
         NSData* imgData = [self.imagesToSave objectAtIndex:0];
         UIImage* saveImage = (YES/*premium user*/) ? [UIImage imageWithData:imgData] : [ImageManager addWatermarkToImageData:imgData];
