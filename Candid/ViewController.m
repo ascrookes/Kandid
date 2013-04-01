@@ -22,7 +22,7 @@
 const int SECONDS_BETWEEN_IMAGES = -5;
 const int PEAK_DIFFERENCE = 5;
 const int ADJUST_NUM = 5;
-const int UPDATE_TIME = 10;
+const int UPDATE_TIME = 20; //the time that it takes before updating the threshold
 const int MINUTE = 60/UPDATE_TIME;
 const int MAIN_TIMER_REPEAT_TIME = 0.1;
 // The cushion above the max to monitor where the max should be

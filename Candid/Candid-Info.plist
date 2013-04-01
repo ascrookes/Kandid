@@ -18,6 +18,8 @@
 				<string>camIcon.png</string>
 				<string>K-icon.png</string>
 				<string>K-icon@2x.png</string>
+				<string>K.png</string>
+				<string>K@2x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>

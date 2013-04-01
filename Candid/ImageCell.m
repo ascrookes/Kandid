@@ -8,6 +8,13 @@
 
 #import "ImageCell.h"
 
+
+const int saveX   = 350;
+const int deleteX = -30;
+// the distance away from the save or delete point to animate the image to
+const int animateDistance = 220;
+
+
 @interface ImageCell ()
 
 @property (nonatomic) CGPoint lastLocation;
@@ -21,6 +28,8 @@
 @synthesize lastLocation = _lastLocation;
 @synthesize table = _table;
 @synthesize filmRoll = _filmRoll;
+@synthesize saveImage = _saveImage;
+@synthesize trashButton = _trashButton;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -44,10 +53,24 @@
     cell.filmRoll.image = [UIImage imageNamed:@"roundedFilmRoll.png"];
     cell.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 25, 200, 200)];
     
-    [cell.filmRoll addSubview:cell.imageView];
-    [cell addSubview:cell.filmRoll];
     cell.table = table;
     cell.shouldSave = NO;
+    
+    int distanceFromEdge = 10;
+    cell.saveImage = [[UIImageView alloc] initWithFrame:CGRectMake(distanceFromEdge, 50, 150, 150)];
+    cell.saveImage.image = [UIImage imageNamed:@"floppy.png"];
+    
+    cell.trashButton = [[UIButton alloc] initWithFrame:CGRectMake(320 - 150 - distanceFromEdge, 50, 150, 150)];
+    cell.trashButton.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"trash.png"]];
+    cell.trashButton.userInteractionEnabled = NO;
+    
+    [cell addSubview:cell.saveImage];
+    [cell addSubview:cell.trashButton];
+    [cell.filmRoll addSubview:cell.imageView];
+    [cell addSubview:cell.filmRoll];
+    
+    cell.trashButton.alpha = 0;
+    cell.saveImage.alpha = 0;
     
     return cell;
 }
@@ -60,6 +83,24 @@
     int middleX = self.frame.size.width / 2;
     int newX = middleX + (location.x - self.lastLocation.x);
     self.filmRoll.center = CGPointMake(newX, self.filmRoll.center.y);
+    
+    int filmCenterX = self.filmRoll.center.x;
+    int centerX = self.center.x;
+    
+    if(filmCenterX > centerX) {
+        self.saveImage.alpha   = (filmCenterX - centerX)/ (double)(saveX - centerX);
+        NSString* imageName = (filmCenterX >= saveX) ? @"floppyActive.png" : @"floppy.png";
+        self.saveImage.image = [UIImage imageNamed:imageName];
+    } else if(self.filmRoll.center.x < centerX) {
+        int dist = -deleteX + centerX; // the distance from the center to the delete location
+        int loc  = -(filmCenterX - centerX);
+        self.trashButton.alpha = loc/(double)dist;
+        NSString* imageName = (filmCenterX <= deleteX) ? @"trashActive.png" : @"trash.png";
+        self.trashButton.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:imageName]];
+    } else {
+        
+    }
+    
 }
 
 
@@ -73,33 +114,27 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    
+    int centerX = self.center.x;
+    
     self.table.scrollEnabled = YES;
-    if(self.filmRoll.center.x > 340) {
+    if(self.filmRoll.center.x > saveX) {
         self.shouldSave = YES;
         self.userInteractionEnabled = NO;
         [UIView animateWithDuration:0.20 animations:^{
-            self.filmRoll.center = CGPointMake(570, self.filmRoll.center.y);
+            self.filmRoll.center = CGPointMake(saveX + animateDistance, self.filmRoll.center.y);
         } completion:^(BOOL finished) {
             //self.imageView.hidden = YES;
-            
+            self.saveImage.hidden = YES;
             [self.delegate shouldSaveImageFromCell:self];
         }];
-    } else if(self.filmRoll.center.x < -20) {
+    } else if(self.filmRoll.center.x < deleteX) {
         self.shouldSave = YES;
         self.userInteractionEnabled = NO;
-        /*
-        UIButton* delete = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/2 - 50, self.frame.size.height/2 - 20, 100, 40)];
-        delete.titleLabel.text = @"Delete?";
-        delete.titleLabel.textColor = [UIColor lightGrayColor];
-        delete.backgroundColor = [UIColor purpleColor];
-        delete.alpha = 0;
-        [delete addTarget:self action:@selector(deleteThisImage) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:delete];
-         */
         [UIView animateWithDuration:0.20 animations:^{
-            self.filmRoll.center = CGPointMake(-250, self.filmRoll.center.y);
-            //delete.alpha = 1;
+            self.filmRoll.center = CGPointMake(deleteX - animateDistance, self.filmRoll.center.y);
         } completion:^(BOOL finished) {
+            self.trashButton.hidden = YES;
             [self.delegate shouldDeleteImageFromCell:self];
         }];
     } else {
@@ -107,16 +142,13 @@
         // it should be saved or deleted
         //NSLog(@"moving back to the middle");
         [UIView animateWithDuration:0.15 animations:^{
-            self.filmRoll.center = CGPointMake(self.frame.size.width / 2, self.filmRoll.center.y);
+            self.saveImage.alpha = 0;
+            self.trashButton.alpha = 0;
+            self.filmRoll.center = CGPointMake(centerX, self.filmRoll.center.y);
         }];
     }
+    
 }
-/*
-- (void)deleteThisImage {
-    [self.delegate shouldDeleteImageFromCell:self];
-}
-*/
-
 
 
 // Consider making the image fade in like a polaroid would
