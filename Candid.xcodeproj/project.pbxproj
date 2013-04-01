@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E1B93C41709DBCF007755C4 /* trashActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B93C01709DBCF007755C4 /* trashActive@2x.png */; };
+		8E1B93C51709DBCF007755C4 /* trashActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B93C11709DBCF007755C4 /* trashActive.png */; };
+		8E1B93C61709DBCF007755C4 /* floppyActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B93C21709DBCF007755C4 /* floppyActive.png */; };
+		8E1B93C71709DBCF007755C4 /* floppyActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B93C31709DBCF007755C4 /* floppyActive@2x.png */; };
 		8E1C0B05169F4FEF000369F0 /* cameraStart.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1C0AFF169F4FEF000369F0 /* cameraStart.png */; };
 		8E1C0B06169F4FEF000369F0 /* cameraStart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1C0B00169F4FEF000369F0 /* cameraStart@2x.png */; };
 		8E1C0B07169F4FEF000369F0 /* startButtonBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1C0B01169F4FEF000369F0 /* startButtonBackground.png */; };
@@ -84,14 +88,10 @@
 		8ECEEEEC16C9690A009CC111 /* tutorialImage-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ECEEEEB16C9690A009CC111 /* tutorialImage-1.png */; };
 		8ECFE8EA15DB6A0D00E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
 		8ECFE8EB15DB6A3400E86971 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECFE8E915DB6A0D00E86971 /* ImageCell.m */; };
-		8ED8E8AF17093E1600211F08 /* floppyActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ED8E8A717093E1600211F08 /* floppyActive@2x.png */; };
-		8ED8E8B017093E1600211F08 /* floppyActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ED8E8A817093E1600211F08 /* floppyActive.png */; };
 		8ED8E8B117093E1600211F08 /* floppy.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ED8E8A917093E1600211F08 /* floppy.png */; };
 		8ED8E8B217093E1600211F08 /* trash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ED8E8AA17093E1600211F08 /* trash@2x.png */; };
 		8ED8E8B317093E1600211F08 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ED8E8AB17093E1600211F08 /* trash.png */; };
 		8ED8E8B417093E1600211F08 /* floppy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ED8E8AC17093E1600211F08 /* floppy@2x.png */; };
-		8ED8E8B517093E1600211F08 /* trashActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ED8E8AD17093E1600211F08 /* trashActive@2x.png */; };
-		8ED8E8B617093E1600211F08 /* trashActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ED8E8AE17093E1600211F08 /* trashActive.png */; };
 		8EDBA7DF16C8C08000180E40 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EDBA7DE16C8C08000180E40 /* TutorialViewController.m */; };
 		8EF7AD6B1668725F00D08EF0 /* iPhone5Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */; };
 		8EFD631316C988F5000D4B81 /* tutorialImage-0.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EFD631216C988F5000D4B81 /* tutorialImage-0.png */; };
@@ -108,6 +108,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8E1B93C01709DBCF007755C4 /* trashActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trashActive@2x.png"; sourceTree = "<group>"; };
+		8E1B93C11709DBCF007755C4 /* trashActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trashActive.png; sourceTree = "<group>"; };
+		8E1B93C21709DBCF007755C4 /* floppyActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = floppyActive.png; sourceTree = "<group>"; };
+		8E1B93C31709DBCF007755C4 /* floppyActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "floppyActive@2x.png"; sourceTree = "<group>"; };
 		8E1C0AFF169F4FEF000369F0 /* cameraStart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cameraStart.png; sourceTree = "<group>"; };
 		8E1C0B00169F4FEF000369F0 /* cameraStart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cameraStart@2x.png"; sourceTree = "<group>"; };
 		8E1C0B01169F4FEF000369F0 /* startButtonBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startButtonBackground.png; sourceTree = "<group>"; };
@@ -194,14 +198,10 @@
 		8ECEEEEB16C9690A009CC111 /* tutorialImage-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorialImage-1.png"; sourceTree = "<group>"; };
 		8ECFE8E815DB6A0D00E86971 /* ImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCell.h; sourceTree = "<group>"; };
 		8ECFE8E915DB6A0D00E86971 /* ImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCell.m; sourceTree = "<group>"; };
-		8ED8E8A717093E1600211F08 /* floppyActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "floppyActive@2x.png"; sourceTree = "<group>"; };
-		8ED8E8A817093E1600211F08 /* floppyActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = floppyActive.png; sourceTree = "<group>"; };
 		8ED8E8A917093E1600211F08 /* floppy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = floppy.png; sourceTree = "<group>"; };
 		8ED8E8AA17093E1600211F08 /* trash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash@2x.png"; sourceTree = "<group>"; };
 		8ED8E8AB17093E1600211F08 /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trash.png; sourceTree = "<group>"; };
 		8ED8E8AC17093E1600211F08 /* floppy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "floppy@2x.png"; sourceTree = "<group>"; };
-		8ED8E8AD17093E1600211F08 /* trashActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trashActive@2x.png"; sourceTree = "<group>"; };
-		8ED8E8AE17093E1600211F08 /* trashActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trashActive.png; sourceTree = "<group>"; };
 		8EDBA7DD16C8C08000180E40 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		8EDBA7DE16C8C08000180E40 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; wrapsLines = 1; };
 		8EF7AD6A1668725E00D08EF0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone5Storyboard.storyboard; sourceTree = "<group>"; };
@@ -375,14 +375,14 @@
 		8E916BFF15DF2353004C65AB /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				8ED8E8A717093E1600211F08 /* floppyActive@2x.png */,
-				8ED8E8A817093E1600211F08 /* floppyActive.png */,
+				8E1B93C01709DBCF007755C4 /* trashActive@2x.png */,
+				8E1B93C11709DBCF007755C4 /* trashActive.png */,
+				8E1B93C21709DBCF007755C4 /* floppyActive.png */,
+				8E1B93C31709DBCF007755C4 /* floppyActive@2x.png */,
 				8ED8E8A917093E1600211F08 /* floppy.png */,
 				8ED8E8AA17093E1600211F08 /* trash@2x.png */,
 				8ED8E8AB17093E1600211F08 /* trash.png */,
 				8ED8E8AC17093E1600211F08 /* floppy@2x.png */,
-				8ED8E8AD17093E1600211F08 /* trashActive@2x.png */,
-				8ED8E8AE17093E1600211F08 /* trashActive.png */,
 				8EC3246416E7FFCF005EFB72 /* bg@2x.png */,
 				8EC3246516E7FFCF005EFB72 /* bg.png */,
 				8E550AE416DC8E9900125E62 /* roundedFilmRoll.png */,
@@ -528,14 +528,14 @@
 				8EC3246D16E7FFE6005EFB72 /* Default.png in Resources */,
 				8E7026CF1707C1120084C33F /* K.png in Resources */,
 				8E7026D11707C1150084C33F /* K@2x.png in Resources */,
-				8ED8E8AF17093E1600211F08 /* floppyActive@2x.png in Resources */,
-				8ED8E8B017093E1600211F08 /* floppyActive.png in Resources */,
 				8ED8E8B117093E1600211F08 /* floppy.png in Resources */,
 				8ED8E8B217093E1600211F08 /* trash@2x.png in Resources */,
 				8ED8E8B317093E1600211F08 /* trash.png in Resources */,
 				8ED8E8B417093E1600211F08 /* floppy@2x.png in Resources */,
-				8ED8E8B517093E1600211F08 /* trashActive@2x.png in Resources */,
-				8ED8E8B617093E1600211F08 /* trashActive.png in Resources */,
+				8E1B93C41709DBCF007755C4 /* trashActive@2x.png in Resources */,
+				8E1B93C51709DBCF007755C4 /* trashActive.png in Resources */,
+				8E1B93C61709DBCF007755C4 /* floppyActive.png in Resources */,
+				8E1B93C71709DBCF007755C4 /* floppyActive@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -709,8 +709,8 @@
 		8E5EBA0815964C3E00C4E185 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Amadou Crookes (V23VPS752M)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Amadou Crookes (V23VPS752M)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Amadou Crookes";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Amadou Crookes";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Candid/Candid-Prefix.pch";
 				INFOPLIST_FILE = "Candid/Candid-Info.plist";
@@ -723,8 +723,8 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
+				PROVISIONING_PROFILE = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -733,8 +733,8 @@
 		8E5EBA0915964C3E00C4E185 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Amadou Crookes (V23VPS752M)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Amadou Crookes (V23VPS752M)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Amadou Crookes";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Amadou Crookes";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Candid/Candid-Prefix.pch";
 				INFOPLIST_FILE = "Candid/Candid-Info.plist";
@@ -747,8 +747,8 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
+				PROVISIONING_PROFILE = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
