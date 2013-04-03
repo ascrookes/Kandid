@@ -12,6 +12,7 @@
 #import "DatabaseManager.h"
 #import "KandidUtils.h"
 #import "ImageCell.h"
+#import "ActionControlView.h"
 
 //*********************************************************
 //*********************************************************
@@ -121,7 +122,6 @@ typedef enum ReviewAppAlertIndex {
 @synthesize table = _table;
 @synthesize updateTimerActionCount;
 @synthesize hideView = _hideView;
-@synthesize startButton = _startButton;
 @synthesize hideLabel = _hideLabel;
 @synthesize numPixHiddenLabel = _numPixHiddenLabel;
 @synthesize volumeHideLabel = _volumeHideLabel;
@@ -130,6 +130,8 @@ typedef enum ReviewAppAlertIndex {
 @synthesize sessionTimeInterval;
 @synthesize previousBrightness;
 @synthesize cameraIsReady = _cameraIsReady;
+
+@synthesize actionControl = _actionControl;
 
 
 //*********************************************************
@@ -161,10 +163,23 @@ typedef enum ReviewAppAlertIndex {
     self.levelLabel.text = @"";
     self.shouldResumeAfterInterruption = NO;
     [ViewController setViewController:self Title:@"Kandid" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
+    
+    [self addActionControl];
+    
     [self updateUI];
 }
 
+
+
+- (void)addActionControl {
+    self.actionControl = [ActionControlView actionControl:self];
+    [self.view insertSubview:self.actionControl belowSubview:self.hideView];
+}
+
+
+
 - (void)viewDidAppear:(BOOL)animated {
+    self.previousBrightness = [[UIScreen mainScreen] brightness];
     [self shouldPresentTutorial];
 }
 
@@ -217,38 +232,8 @@ typedef enum ReviewAppAlertIndex {
 // that the camera can face any direction
 - (void)updateUI
 {
-    NSString* imgName = (self.isRunning) ? @"cameraStop.png" : @"cameraStart.png";
-    CGAffineTransform rotation;
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-    BOOL shouldRotateImage = YES;
-    switch (orientation) {
-        case UIDeviceOrientationPortrait:
-            rotation = CGAffineTransformMakeRotation(0.0);
-            break;
-        case UIDeviceOrientationPortraitUpsideDown:
-            rotation = CGAffineTransformMakeRotation(M_PI);
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            rotation = CGAffineTransformMakeRotation(M_PI_2);
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            rotation = CGAffineTransformMakeRotation(M_PI + M_PI_2);
-            break;
-        default:
-            shouldRotateImage = NO;
-            break;
-    }
-    [self.cameraImage setImage:[UIImage imageNamed:imgName]];
-    
-    if(shouldRotateImage) {
-        [UIView animateWithDuration:0.25 animations:^{
-            self.cameraImage.transform = rotation;
-            self.flashButton.transform = rotation;
-        }];
-    }
-    //[self overlayStatusBar];
+    [self.actionControl setRecording:(self.isRunning)];
     [self.table reloadData];
-    // the data in the image manager changes so set it to that count
     self.numPictures = [self.imageManager count];
 }
 
@@ -274,13 +259,11 @@ typedef enum ReviewAppAlertIndex {
     [self setTable:nil];
     [self setLevelLabel:nil];
     [self setHideView:nil];
-    [self setStartButton:nil];
     [self setFlashButton:nil];
     [self setHideLabel:nil];
     [self setNumPixHiddenLabel:nil];
     [self setVolumeHideLabel:nil];
     [self setNumPixBarButton:nil];
-    [self setCameraImage:nil];
     [self setClearButtonLabel:nil];
     [self setHideButtonLabel:nil];
     [super viewDidUnload];
@@ -550,6 +533,23 @@ typedef enum ReviewAppAlertIndex {
     // before they delete the image
 }
 
+//*********************************************************
+//*********************************************************
+#pragma mark - ActionControlDelegate
+//*********************************************************
+//*********************************************************
+
+- (void)toggleRecording {
+    [self toggleRecording:nil];
+}
+
+- (void)shouldHide {
+    [self toggleHide:nil];
+}
+
+- (void)shouldClear {
+    [self clearFilmRoll:nil];
+}
 
 
 //*********************************************************
@@ -590,6 +590,7 @@ typedef enum ReviewAppAlertIndex {
     self.camInput  = nil;
     //self.levelLabel.text = @"Not Running";
     self.isRunning = NO;
+    [self.actionControl setRecording:NO];
     [self updateUI];
     
 }
@@ -604,6 +605,7 @@ typedef enum ReviewAppAlertIndex {
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
     self.isRunning = YES;
+    [self.actionControl setRecording:YES];
     [self updateUI];
     //[[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     [self overlayStatusBar];
@@ -618,7 +620,8 @@ typedef enum ReviewAppAlertIndex {
             //[[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
         }
         [self navigationController].navigationBar.alpha = 0;
-        self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(hideLabels) userInfo:nil repeats:NO];
+        // make it repeat so it is still valid in the body of the selector
+        self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(hideLabels) userInfo:nil repeats:YES];
         self.hideView.hidden = NO;
     } else {
         [self showHiddenLabels];
@@ -628,7 +631,6 @@ typedef enum ReviewAppAlertIndex {
 
 - (void)hideLabels
 {
-    self.previousBrightness = [[UIScreen mainScreen] brightness];
     self.hideView.userInteractionEnabled = NO;
     
     MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
@@ -636,8 +638,7 @@ typedef enum ReviewAppAlertIndex {
     overlay.animation = MTStatusBarOverlayAnimationNone;
     overlay.detailViewMode = MTDetailViewModeHistory;
     [overlay postMessage:@"   "];
-    
-    [UIView animateWithDuration:0.6 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         self.hideLabel.alpha = 0;
         // TODO -- change these to ZERO
         self.numPixHiddenLabel.alpha = 0.25;
@@ -645,7 +646,10 @@ typedef enum ReviewAppAlertIndex {
         self.hideView.alpha = 1;
     } completion:^(BOOL finished) {
         self.hideLabel.hidden = YES;
-        [[UIScreen mainScreen] setBrightness:0];
+        if([self.hideTimer isValid]) {
+            [self.hideTimer invalidate];
+            [[UIScreen mainScreen] setBrightness:0];
+        }
         self.hideView.userInteractionEnabled = YES;
         //self.numPixHiddenLabel.hidden = YES;
         //self.volumeHideLabel.hidden = YES;
@@ -659,7 +663,6 @@ typedef enum ReviewAppAlertIndex {
         //[[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     }
     [self overlayStatusBar];
-    [[UIScreen mainScreen] setBrightness:self.previousBrightness];
     [self navigationController].navigationBar.alpha = 1;
     [self.hideTimer invalidate];
     self.hideView.hidden = YES;
@@ -670,6 +673,7 @@ typedef enum ReviewAppAlertIndex {
     self.hideLabel.hidden = NO;
     self.numPixHiddenLabel.hidden = NO;
     self.volumeHideLabel.hidden = NO;
+    [[UIScreen mainScreen] setBrightness:self.previousBrightness];
 }
 
 - (IBAction)clearFilmRoll:(id)sender

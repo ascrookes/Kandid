@@ -13,9 +13,9 @@
 #import "ImageCell.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ImageManager.h"
+#import "ActionControlView.h"
 
-
-@interface ViewController : UIViewController <AVAudioRecorderDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface ViewController : UIViewController <AVAudioRecorderDelegate, UITableViewDataSource, UITableViewDelegate, ActionControlDelegate>
 
 
 // seperate UI and controller stuff
@@ -33,15 +33,15 @@
 @property (strong,nonatomic) ImageManager* imageManager;
 @property (nonatomic) int updateTimerActionCount;
 @property (weak, nonatomic) IBOutlet UIView *hideView;
-@property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UIButton *flashButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *numPixBarButton;
-@property (weak, nonatomic) IBOutlet UIImageView *cameraImage;
 @property (nonatomic, strong) NSDate* sessionTime;
 @property (nonatomic) NSTimeInterval sessionTimeInterval;
 @property (weak, nonatomic) IBOutlet UILabel *clearButtonLabel;
 @property (weak, nonatomic) IBOutlet UILabel *hideButtonLabel;
 @property (nonatomic) CGFloat previousBrightness;
+
+@property (nonatomic, strong) ActionControlView* actionControl;
 
 
 // The hidden view stuff

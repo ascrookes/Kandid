@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E0784C31709E6C9006D05B2 /* ActionControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E0784C21709E6C9006D05B2 /* ActionControlView.m */; };
 		8E1B93C41709DBCF007755C4 /* trashActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B93C01709DBCF007755C4 /* trashActive@2x.png */; };
 		8E1B93C51709DBCF007755C4 /* trashActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B93C11709DBCF007755C4 /* trashActive.png */; };
 		8E1B93C61709DBCF007755C4 /* floppyActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B93C21709DBCF007755C4 /* floppyActive.png */; };
@@ -108,6 +109,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8E0784C11709E6C9006D05B2 /* ActionControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionControlView.h; sourceTree = "<group>"; };
+		8E0784C21709E6C9006D05B2 /* ActionControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionControlView.m; sourceTree = "<group>"; };
 		8E1B93C01709DBCF007755C4 /* trashActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trashActive@2x.png"; sourceTree = "<group>"; };
 		8E1B93C11709DBCF007755C4 /* trashActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trashActive.png; sourceTree = "<group>"; };
 		8E1B93C21709DBCF007755C4 /* floppyActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = floppyActive.png; sourceTree = "<group>"; };
@@ -305,6 +308,8 @@
 				8EF7AD691668725E00D08EF0 /* iPhone5Storyboard.storyboard */,
 				8E5EB9ED15964C3E00C4E185 /* ViewController.h */,
 				8E5EB9EE15964C3E00C4E185 /* ViewController.m */,
+				8E0784C11709E6C9006D05B2 /* ActionControlView.h */,
+				8E0784C21709E6C9006D05B2 /* ActionControlView.m */,
 				8EDBA7DD16C8C08000180E40 /* TutorialViewController.h */,
 				8EDBA7DE16C8C08000180E40 /* TutorialViewController.m */,
 				8E3B1F5F16A4DF8B004E7D24 /* KandidUtils.h */,
@@ -585,6 +590,7 @@
 				8E595F2B169E49850047C39B /* DatabaseManager.m in Sources */,
 				8E3B1F6116A4DF8B004E7D24 /* KandidUtils.m in Sources */,
 				8EDBA7DF16C8C08000180E40 /* TutorialViewController.m in Sources */,
+				8E0784C31709E6C9006D05B2 /* ActionControlView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -709,8 +715,8 @@
 		8E5EBA0815964C3E00C4E185 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Amadou Crookes";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Amadou Crookes";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Amadou Crookes (V23VPS752M)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Amadou Crookes (V23VPS752M)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Candid/Candid-Prefix.pch";
 				INFOPLIST_FILE = "Candid/Candid-Info.plist";
@@ -723,8 +729,8 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
+				PROVISIONING_PROFILE = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -733,8 +739,8 @@
 		8E5EBA0915964C3E00C4E185 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Amadou Crookes";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Amadou Crookes";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Amadou Crookes (V23VPS752M)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Amadou Crookes (V23VPS752M)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Candid/Candid-Prefix.pch";
 				INFOPLIST_FILE = "Candid/Candid-Info.plist";
@@ -747,8 +753,8 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
+				PROVISIONING_PROFILE = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
