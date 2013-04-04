@@ -7,7 +7,7 @@
 //
 
 const int CONTROL_VIEW_HEIGHT = 95;
-const int SIDE_BUTTON_HEIGHT = 60;
+const int BUTTON_HEIGHT = 60;
 const int START_BUTTON_WIDTH = 130;
 
 #import "ActionControlView.h"
@@ -21,8 +21,8 @@ const int START_BUTTON_WIDTH = 130;
 
 @implementation ActionControlView
 
-@synthesize camera = _camera;
-@synthesize delegate = _delegate;
+@synthesize camera     = _camera;
+@synthesize delegate   = _delegate;
 @synthesize origCenter = _origCenter;
 @synthesize beganPoint = _beganPoint;
 
@@ -47,30 +47,29 @@ const int START_BUTTON_WIDTH = 130;
     ActionControlView* acv = [[ActionControlView alloc] initWithFrame:CGRectMake(x, y, screenWidth, CONTROL_VIEW_HEIGHT)];
     acv.origCenter = acv.center;
     acv.delegate = del;
-    acv.backgroundColor = [UIColor purpleColor];
+    acv.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"controlImage.png"]];
     
     int sideButtonWidth = (screenWidth - START_BUTTON_WIDTH) / 2;
-    int sideButtonY = CONTROL_VIEW_HEIGHT - SIDE_BUTTON_HEIGHT;
+    int sideButtonY = CONTROL_VIEW_HEIGHT - BUTTON_HEIGHT;
     UIButton* hide  = [[UIButton alloc] initWithFrame:
-                       CGRectMake(0, sideButtonY, sideButtonWidth, SIDE_BUTTON_HEIGHT)];
+                       CGRectMake(0, sideButtonY, sideButtonWidth, BUTTON_HEIGHT)];
     UIButton* clear = [[UIButton alloc] initWithFrame:
-                       CGRectMake(sideButtonWidth + START_BUTTON_WIDTH, sideButtonY, sideButtonWidth, SIDE_BUTTON_HEIGHT)];
+                       CGRectMake(sideButtonWidth + START_BUTTON_WIDTH, sideButtonY, sideButtonWidth, BUTTON_HEIGHT)];
     UIButton* start = [[UIButton alloc] initWithFrame:
-                       CGRectMake(sideButtonWidth, sideButtonY, START_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT)];
+                       CGRectMake(sideButtonWidth, sideButtonY, START_BUTTON_WIDTH, BUTTON_HEIGHT)];
     int imageWidth  = 60;
     int imageHeight = 40;
     acv.camera      = [[UIImageView alloc] initWithFrame:
-                       CGRectMake((START_BUTTON_WIDTH/2) - (imageWidth/2), (SIDE_BUTTON_HEIGHT - imageHeight)/2 , imageWidth, imageHeight)];
-    /*
-    [hide  setBackgroundImage:[UIImage imageNamed:@"leftButton.png"]            forState:UIControlStateNormal];
-    [clear setBackgroundImage:[UIImage imageNamed:@"rightButton.png"]           forState:UIControlStateNormal];
-    [start setBackgroundImage:[UIImage imageNamed:@"startButtonBackground.png"] forState:UIControlStateNormal];
-     */
-    [hide setBackgroundColor:[UIColor darkGrayColor]];
-    [clear setBackgroundColor:[UIColor darkGrayColor]];
-    [start setBackgroundColor:[UIColor blackColor]];
+                       CGRectMake((START_BUTTON_WIDTH/2) - (imageWidth/2), (BUTTON_HEIGHT - imageHeight)/2 , imageWidth, imageHeight)];
+    
+    
+    [hide  setBackgroundImage:[UIImage imageNamed:@"sideButton.png"] forState:UIControlStateNormal];
+    [clear setBackgroundImage:[UIImage imageNamed:@"sideButton.png"] forState:UIControlStateNormal];
+    [start setBackgroundImage:[UIImage imageNamed:@"mainButton.png"] forState:UIControlStateNormal];
     [acv.camera setImage:     [UIImage imageNamed:@"cameraStart.png"]];
     
+    
+    // when a button is clicked tell the delegate
     [hide  addTarget:del action:@selector(shouldHide)      forControlEvents:UIControlEventTouchUpInside];
     [clear addTarget:del action:@selector(shouldClear)     forControlEvents:UIControlEventTouchUpInside];
     [start addTarget:del action:@selector(toggleRecording) forControlEvents:UIControlEventTouchUpInside];
@@ -114,6 +113,14 @@ const int START_BUTTON_WIDTH = 130;
         }];
     }
 }
+
+- (void)shouldBeHidden:(BOOL)hidden {
+    int newY  = hidden ? 562 : 505;
+    [UIView animateWithDuration:0.2 animations:^{
+        self.center = CGPointMake(self.center.x, newY);
+    }];
+}
+
 
 
 

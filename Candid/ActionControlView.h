@@ -23,5 +23,6 @@
 
 + (ActionControlView*)actionControl:(id <ActionControlDelegate>)del;
 - (void)setRecording:(BOOL)recording;
+- (void)shouldBeHidden:(BOOL)hidden;
 
 @end

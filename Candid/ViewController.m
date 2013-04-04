@@ -143,11 +143,12 @@ typedef enum ReviewAppAlertIndex {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     [self addNotificationObservers];
-    if(!self.recorder.recording) {
-        [self.recorder prepareToRecord];
-        self.recorder.meteringEnabled = YES;
-    }
+//    if(!self.recorder.recording) {
+//        [self.recorder prepareToRecord];
+//        self.recorder.meteringEnabled = YES;
+//    }
     self.clearButtonLabel.textColor = [KandidUtils kandidPurple];
     self.hideButtonLabel.textColor = [KandidUtils kandidPurple];
     
@@ -650,6 +651,7 @@ typedef enum ReviewAppAlertIndex {
             [self.hideTimer invalidate];
             [[UIScreen mainScreen] setBrightness:0];
         }
+        [self.actionControl shouldBeHidden:YES];
         self.hideView.userInteractionEnabled = YES;
         //self.numPixHiddenLabel.hidden = YES;
         //self.volumeHideLabel.hidden = YES;
