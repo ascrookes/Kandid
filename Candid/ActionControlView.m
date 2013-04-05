@@ -10,10 +10,11 @@ const int CONTROL_VIEW_HEIGHT = 95;
 const int BUTTON_HEIGHT = 60;
 const int START_BUTTON_WIDTH = 130;
 const int HIDDEN_CHANGE_Y = 6; // the difference between the screen size and where this view is hidden
-const int VISIBLE_CHANGE_Y = 63; // same as above but visible
+const int VISIBLE_CHANGE_Y = 65; // same as above but visible
 const int MIDDLE_CHANGE_Y = 28; // the place that decides if the view animates to hidden or visible
 
 #import "ActionControlView.h"
+#import "KandidUtils.h"
 
 @interface ActionControlView ()
 
@@ -71,6 +72,22 @@ const int MIDDLE_CHANGE_Y = 28; // the place that decides if the view animates t
     [start setBackgroundImage:[UIImage imageNamed:@"mainButton.png"] forState:UIControlStateNormal];
     [acv.camera setImage:     [UIImage imageNamed:@"cameraStart.png"]];
     
+    CGRect labelFrame   = CGRectMake(0, 12, sideButtonWidth, 35);
+    UILabel* hideLabel  = [[UILabel alloc] initWithFrame:labelFrame];
+    UILabel* clearLabel = [[UILabel alloc] initWithFrame:labelFrame];
+    UIFont* font = [UIFont fontWithName:@"Didot-Italic" size:28];
+    [hideLabel  setFont:font];
+    [clearLabel setFont:font];
+    [hideLabel  setTextColor:[KandidUtils kandidPurple]];
+    [clearLabel setTextColor:[KandidUtils kandidPurple]];
+    [hideLabel  setTextAlignment:NSTextAlignmentCenter];
+    [clearLabel setTextAlignment:NSTextAlignmentCenter];
+    [hideLabel  setBackgroundColor:[UIColor clearColor]];
+    [clearLabel setBackgroundColor:[UIColor clearColor]];
+    [hideLabel  setText:@"Hide"];
+    [clearLabel setText:@"Clear"];
+    [hide  addSubview:hideLabel];
+    [clear addSubview:clearLabel];
     
     // when a button is clicked tell the delegate
     [hide  addTarget:del action:@selector(shouldHide)      forControlEvents:UIControlEventTouchUpInside];
