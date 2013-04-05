@@ -23,18 +23,20 @@
 const int SECONDS_BETWEEN_IMAGES = -5;
 const int PEAK_DIFFERENCE = 5;
 const int ADJUST_NUM = 5;
-const int UPDATE_TIME = 20; //the time that it takes before updating the threshold
+const int UPDATE_TIME = 15; //the time that it takes before updating the threshold
 const int MINUTE = 60/UPDATE_TIME;
-const int MAIN_TIMER_REPEAT_TIME = 0.1;
+const int MAIN_TIMER_REPEAT_TIME = 0.3;
 // The cushion above the max to monitor where the max should be
-const int VOLUME_CUSHION = 15;
+const int VOLUME_CUSHION = 20;
 // if the max average is greater than -5 set it too take images on a timer
-const int TOO_LOUD_TIMED_SHOT = 25;
-const double TIMED_SHOT_LEVEL = -4.8;
-const int MAX_PICTURES_PER_MINUTE = 8;
+const int TOO_LOUD_TIMED_SHOT_INTERVAL = 45;
+// if the average peak is above or equal to this the timed shot begins
+const double TIMED_SHOT_LEVEL = -5;
+const int MAX_PICTURES_PER_MINUTE = 5;
 const int VOLUME_MIN = -60; // the minimum the volume limit can get
 const int MAX_IMAGES_IN_TABLE = 25;
-const int NUMBER_OF_IMAGES_TO_REVIEW = 25;
+// the amount of images to save before asking them to review the app
+const int NUMBER_OF_IMAGES_TO_REVIEW = 20;
 // TODO -- move static variables to kandid utils
 static NSString* CLEAR_ALERT_TITLE = @"Are You Sure?";
 static NSString* REVIEW_ALERT_TITLE = @"Enjoying Kandid?";
@@ -42,7 +44,6 @@ static NSString* HAS_SHOWN_REVIEW_KEY = @"hasShownReviewAlert";
 // TODO -- change this when the app name is final and has been submitted to apple
 static NSString* KANDID_ITUNES_URL = @"http://itunes.com/apps/ijumbo";
 
-const int TOP_BAR_HEIGHT = 64;
 
 //*********************************************************
 //*********************************************************
@@ -89,6 +90,8 @@ typedef enum ReviewAppAlertIndex {
 @property (nonatomic) BOOL shouldResumeAfterInterruption;
 @property (nonatomic) BOOL cameraIsReady;
 
+@property (nonatomic) unsigned int imagesTakenThisMinute;
+
 
 @end
 
@@ -133,6 +136,8 @@ typedef enum ReviewAppAlertIndex {
 
 @synthesize actionControl = _actionControl;
 
+@synthesize imagesTakenThisMinute = _imagesTakenThisMinute;
+
 
 //*********************************************************
 //*********************************************************
@@ -145,10 +150,10 @@ typedef enum ReviewAppAlertIndex {
     [super viewDidLoad];
     
     [self addNotificationObservers];
-//    if(!self.recorder.recording) {
-//        [self.recorder prepareToRecord];
-//        self.recorder.meteringEnabled = YES;
-//    }
+    if(!self.recorder.recording) {
+        [self.recorder prepareToRecord];
+        self.recorder.meteringEnabled = YES;
+    }
     self.clearButtonLabel.textColor = [KandidUtils kandidPurple];
     self.hideButtonLabel.textColor = [KandidUtils kandidPurple];
     
@@ -163,8 +168,6 @@ typedef enum ReviewAppAlertIndex {
     self.isRunning = NO;
     self.levelLabel.text = @"";
     self.shouldResumeAfterInterruption = NO;
-    [ViewController setViewController:self Title:@"Kandid" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
-    
     [self addActionControl];
     
     [self updateUI];
@@ -264,7 +267,6 @@ typedef enum ReviewAppAlertIndex {
     [self setHideLabel:nil];
     [self setNumPixHiddenLabel:nil];
     [self setVolumeHideLabel:nil];
-    [self setNumPixBarButton:nil];
     [self setClearButtonLabel:nil];
     [self setHideButtonLabel:nil];
     [super viewDidUnload];
@@ -335,6 +337,7 @@ typedef enum ReviewAppAlertIndex {
         //UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
         [self.imageManager addImageData:imageData save:NO];
         self.numPictures++;
+        self.imagesTakenThisMinute++;
         dispatch_async(dispatch_get_main_queue(), ^{
             //[self.table reloadRowsAtIndexPaths:[self.table visibleCells] withRowAnimation:UITableViewRowAnimationAutomatic];
             NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:0];
@@ -378,7 +381,8 @@ typedef enum ReviewAppAlertIndex {
             && [self.lastTakenTime timeIntervalSinceNow] < SECONDS_BETWEEN_IMAGES
             && ![self.timedPicture isValid]
             && self.session.running
-            && self.recorder.recording;
+            && self.recorder.recording
+    && self.imagesTakenThisMinute < MAX_PICTURES_PER_MINUTE;
 }
 
 // Action for self.updateTimer
@@ -393,11 +397,10 @@ typedef enum ReviewAppAlertIndex {
     if(avgPeak > TIMED_SHOT_LEVEL) {
         if(![self.timedPicture isValid]) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:TOO_LOUD_TIMED_SHOT target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
+                self.timedPicture = [NSTimer scheduledTimerWithTimeInterval:TOO_LOUD_TIMED_SHOT_INTERVAL target:self selector:@selector(captureIfTimerIsValid) userInfo:nil repeats:YES];
             });
         }
-    // Else stop the timed shot timer
-    } else {
+    } else {//stop the timed shot timer
         [self.timedPicture invalidate];
     }
     
@@ -414,10 +417,8 @@ typedef enum ReviewAppAlertIndex {
     bool update = YES;
     int diffNum = 0;
     if(peakDiff > PEAK_DIFFERENCE) {
-        //NSLog(@"decreasing threshold");
         diffNum = -1 * ADJUST_NUM;
     } else if(peakDiff < 0) {
-        //NSLog(@"increasing threshold");
         diffNum = ADJUST_NUM;
     } else {
         update = NO;
@@ -433,6 +434,7 @@ typedef enum ReviewAppAlertIndex {
     self.updateTimerActionCount++;
     if(self.updateTimerActionCount >= MINUTE) {
         self.updateTimerActionCount = 0;
+        self.imagesTakenThisMinute = 0;
     }
 
 }
@@ -936,9 +938,9 @@ typedef enum ReviewAppAlertIndex {
 - (void)setNumPictures:(int)numPictures
 {
     _numPictures = numPictures;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.numPixBarButton.title = [NSString stringWithFormat:@"# Pix: %i", _numPictures];
-    });
+    if(numPictures == 0) {
+        [self.actionControl shouldBeHidden:NO];
+    }
 }
 
 - (double)totalPeak

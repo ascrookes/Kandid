@@ -34,7 +34,6 @@
 @property (nonatomic) int updateTimerActionCount;
 @property (weak, nonatomic) IBOutlet UIView *hideView;
 @property (weak, nonatomic) IBOutlet UIButton *flashButton;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *numPixBarButton;
 @property (nonatomic, strong) NSDate* sessionTime;
 @property (nonatomic) NSTimeInterval sessionTimeInterval;
 @property (weak, nonatomic) IBOutlet UILabel *clearButtonLabel;

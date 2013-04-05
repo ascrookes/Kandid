@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
-        <!--View Controller - Kandid-->
+        <!--View Controller-->
         <scene sceneID="5">
             <objects>
                 <viewController id="2" customClass="ViewController" sceneMemberID="viewController">
@@ -72,13 +72,6 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="0.25" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Not Running" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="dRu-ju-R5u">
-                                        <rect key="frame" x="20" y="480" width="250" height="49"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
@@ -90,17 +83,11 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <gestureRecognizers/>
                     </view>
-                    <navigationItem key="navigationItem" title="Kandid" id="pNR-CD-Oxf">
-                        <barButtonItem key="leftBarButtonItem" title="# Pix: 0" id="g8z-bP-ico"/>
-                    </navigationItem>
                     <connections>
                         <outlet property="flashButton" destination="WRa-Tz-X2Z" id="MFg-W5-KpS"/>
                         <outlet property="hideLabel" destination="DOE-vO-UDq" id="a2L-GO-a6R"/>
                         <outlet property="hideView" destination="uvR-e8-GfZ" id="msg-m4-46O"/>
-                        <outlet property="levelLabel" destination="dRu-ju-R5u" id="9Xn-bP-Gvx"/>
-                        <outlet property="numPixBarButton" destination="g8z-bP-ico" id="D7Q-O4-ECd"/>
                         <outlet property="table" destination="4uH-cK-5J5" id="XkF-3Y-jQF"/>
-                        <outlet property="volumeHideLabel" destination="dRu-ju-R5u" id="1Ga-dx-0To"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>

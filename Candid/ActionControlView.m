@@ -9,6 +9,9 @@
 const int CONTROL_VIEW_HEIGHT = 95;
 const int BUTTON_HEIGHT = 60;
 const int START_BUTTON_WIDTH = 130;
+const int HIDDEN_CHANGE_Y = 6; // the difference between the screen size and where this view is hidden
+const int VISIBLE_CHANGE_Y = 63; // same as above but visible
+const int MIDDLE_CHANGE_Y = 28; // the place that decides if the view animates to hidden or visible
 
 #import "ActionControlView.h"
 
@@ -115,7 +118,7 @@ const int START_BUTTON_WIDTH = 130;
 }
 
 - (void)shouldBeHidden:(BOOL)hidden {
-    int newY  = hidden ? 562 : 505;
+    int newY  = hidden ? [self hiddenY] : [self visibleY];
     [UIView animateWithDuration:0.2 animations:^{
         self.center = CGPointMake(self.center.x, newY);
     }];
@@ -133,13 +136,13 @@ const int START_BUTTON_WIDTH = 130;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch* touch = [touches anyObject];
     self.beganPoint = [touch locationInView:self];
+    NSLog(@"Screen height: %f",[[UIScreen mainScreen] bounds].size.height);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    // DELME -- this must change to handle 3.5 inch screen
-    int newY = (self.center.y > 540) ? 562 : 505;
+    int newY = (self.center.y > [self middleY]) ? [self hiddenY] : [self visibleY];
     
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.15 animations:^{
         self.center = CGPointMake(self.origCenter.x, newY);
     }];
 }
@@ -151,15 +154,28 @@ const int START_BUTTON_WIDTH = 130;
     int newY = self.center.y - (self.beganPoint.y - loc.y);
     CGSize screenSize =[[UIScreen mainScreen] bounds].size;
     if(newY < self.origCenter.y) {
-        newY = 505;
+        return;
     } else if(newY > screenSize.height - 10) {
-        newY = 558;
+        return;
     }
     
     self.center = CGPointMake(self.origCenter.x, newY);
-    
 }
 
+- (int)hiddenY {
+    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height;
+    return  screenHeight - HIDDEN_CHANGE_Y;
+}
+
+- (int)visibleY {
+    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height;
+    return  screenHeight - VISIBLE_CHANGE_Y;
+}
+
+- (int)middleY {
+    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height;
+    return  screenHeight - MIDDLE_CHANGE_Y;
+}
 
 
 
