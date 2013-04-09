@@ -941,6 +941,7 @@ typedef enum ReviewAppAlertIndex {
     if(numPictures == 0) {
         [self.actionControl shouldBeHidden:NO];
     }
+    [self.actionControl shouldSetNumPix:numPictures];
 }
 
 - (double)totalPeak

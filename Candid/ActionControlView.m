@@ -12,6 +12,7 @@ const int START_BUTTON_WIDTH = 130;
 const int HIDDEN_CHANGE_Y = 6; // the difference between the screen size and where this view is hidden
 const int VISIBLE_CHANGE_Y = 65; // same as above but visible
 const int MIDDLE_CHANGE_Y = 28; // the place that decides if the view animates to hidden or visible
+const int NUM_PIX_LABEL_TAG = 16;
 
 #import "ActionControlView.h"
 #import "KandidUtils.h"
@@ -99,6 +100,16 @@ const int MIDDLE_CHANGE_Y = 28; // the place that decides if the view animates t
     [acv addSubview:start];
     [start addSubview:acv.camera];
     
+    UILabel* numPix = [[UILabel alloc] initWithFrame:CGRectMake(0, CONTROL_VIEW_HEIGHT - 1, screenWidth, BUTTON_HEIGHT)];
+    numPix.text = @"No Pictures";
+    numPix.font = font;
+    numPix.tag = NUM_PIX_LABEL_TAG;
+    numPix.textColor = [KandidUtils kandidPurple];
+    numPix.textAlignment = NSTextAlignmentCenter;
+    [numPix setBackgroundColor:[UIColor blackColor]];
+    
+    [acv insertSubview:numPix belowSubview:hide]; //hide is the lowest so put under everything else
+    
     return acv;
 }
 
@@ -141,6 +152,13 @@ const int MIDDLE_CHANGE_Y = 28; // the place that decides if the view animates t
     }];
 }
 
+- (void)shouldSetNumPix:(unsigned int)num {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UILabel* label = (UILabel*)[self viewWithTag:NUM_PIX_LABEL_TAG];
+        label.text = (num == 0) ? @"No Images" : (num == 1) ? @"1 Image" : [NSString stringWithFormat:@"%i Images", num];
+    });
+}
+
 
 
 
@@ -157,10 +175,21 @@ const int MIDDLE_CHANGE_Y = 28; // the place that decides if the view animates t
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    int newY = (self.center.y > [self middleY]) ? [self hiddenY] : [self visibleY];
-    
-    [UIView animateWithDuration:0.15 animations:^{
-        self.center = CGPointMake(self.origCenter.x, newY);
+    int newY;
+    int bounceY;
+    if(self.center.y > [self middleY]) {
+        newY = [self hiddenY];
+        bounceY = newY ;
+    } else {
+        newY = [self visibleY];
+        bounceY = (self.center.y < newY) ? newY + 5 : newY - 5;
+    }
+    [UIView animateWithDuration:0.25 animations:^{
+        self.center = CGPointMake(self.origCenter.x, bounceY);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.20 animations:^{
+            self.center = CGPointMake(self.origCenter.x, newY);
+        }];
     }];
 }
 
@@ -170,10 +199,11 @@ const int MIDDLE_CHANGE_Y = 28; // the place that decides if the view animates t
     
     int newY = self.center.y - (self.beganPoint.y - loc.y);
     CGSize screenSize =[[UIScreen mainScreen] bounds].size;
-    if(newY < self.origCenter.y) {
+    if(newY > screenSize.height - 10) {
         return;
-    } else if(newY > screenSize.height - 10) {
-        return;
+    }
+    if(newY <  self.origCenter.y - BUTTON_HEIGHT + 2) {
+        newY = self.origCenter.y - BUTTON_HEIGHT + 2;
     }
     
     self.center = CGPointMake(self.origCenter.x, newY);
