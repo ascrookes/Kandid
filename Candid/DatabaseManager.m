@@ -34,6 +34,7 @@
 
 + (void)addImageSessionToDBWithSessionCount:(unsigned int)sessionCount length:(unsigned int)length
 {
+    NSLog(@"add sesstion");
     FSNConnection* connection =
     [FSNConnection withUrl:[NSURL URLWithString:@"http://ascrookes.webfactional.com/candid/imageSession"]
                     method:FSNRequestMethodPOST
@@ -52,6 +53,7 @@
 
 + (void)addSavedImageToDB
 {
+    NSLog(@"add saved image to db");
     FSNConnection* connection =
     [FSNConnection withUrl:[NSURL URLWithString:@"http://ascrookes.webfactional.com/candid/savedImage"]
                     method:FSNRequestMethodPOST

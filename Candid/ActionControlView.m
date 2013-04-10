@@ -171,7 +171,6 @@ const int NUM_PIX_LABEL_TAG = 16;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch* touch = [touches anyObject];
     self.beganPoint = [touch locationInView:self];
-    NSLog(@"Screen height: %f",[[UIScreen mainScreen] bounds].size.height);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {

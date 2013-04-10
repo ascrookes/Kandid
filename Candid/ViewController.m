@@ -299,10 +299,10 @@ typedef enum ReviewAppAlertIndex {
     NSURL *url = [NSURL fileURLWithPath:@"/dev/null"];
     
     NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
-                              [NSNumber numberWithFloat: 24000.0],                 AVSampleRateKey,
-                              [NSNumber numberWithInt: kAudioFormatAppleLossless], AVFormatIDKey,
-                              [NSNumber numberWithInt: 1],                         AVNumberOfChannelsKey,
-                              [NSNumber numberWithInt: AVAudioQualityHigh],        AVEncoderAudioQualityKey,
+                              [NSNumber numberWithFloat:24000.0],                 AVSampleRateKey,
+                              [NSNumber numberWithInt:kAudioFormatAppleLossless], AVFormatIDKey,
+                              [NSNumber numberWithInt:1],                         AVNumberOfChannelsKey,
+                              [NSNumber numberWithInt:AVAudioQualityHigh],        AVEncoderAudioQualityKey,
                               nil];
     NSError* error;
     self.recorder = [[AVAudioRecorder alloc] initWithURL:url settings:settings error:&error];
@@ -346,7 +346,6 @@ typedef enum ReviewAppAlertIndex {
         });
         NSLog(@"CAPTURING: %i",self.numPictures);
     }];
-    [DatabaseManager addImageToDB];
 }
 
 
@@ -838,8 +837,6 @@ typedef enum ReviewAppAlertIndex {
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if([alertView.title isEqualToString:CLEAR_ALERT_TITLE] && buttonIndex == ClearAlertViewIndexClear) {
-        //add 0.5 and floor to roiund it correctly
-        [DatabaseManager addImageSessionToDBWithSessionCount:self.numPictures length:floor(self.sessionTimeInterval + 0.5)];
         self.sessionTimeInterval = 0;
         [self.imageManager clearImageData];
         [self.table reloadData];
