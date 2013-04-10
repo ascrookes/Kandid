@@ -76,7 +76,7 @@ const int NUM_PIX_LABEL_TAG = 16;
     CGRect labelFrame   = CGRectMake(0, 12, sideButtonWidth, 35);
     UILabel* hideLabel  = [[UILabel alloc] initWithFrame:labelFrame];
     UILabel* clearLabel = [[UILabel alloc] initWithFrame:labelFrame];
-    UIFont* font = [UIFont fontWithName:@"Didot-Italic" size:28];
+    UIFont* font = [UIFont fontWithName:@"Dosis-SemiBold" size:28];
     [hideLabel  setFont:font];
     [clearLabel setFont:font];
     [hideLabel  setTextColor:[KandidUtils kandidPurple]];

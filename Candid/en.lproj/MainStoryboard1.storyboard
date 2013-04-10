@@ -261,7 +261,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="bg.png" width="320" height="514"/>
+        <image name="bg.png" width="320" height="568"/>
         <image name="flashOff.png" width="70" height="30"/>
     </resources>
     <classes>
@@ -271,7 +271,6 @@
         <class className="ImageCollectionCell" superclassName="UICollectionViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageCollectionCell.h"/>
             <relationships>
-                <relationship kind="action" name="saveButtonAction:"/>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="saveButton" candidateClass="UIButton"/>
             </relationships>
@@ -285,8 +284,6 @@
         <class className="TutorialViewController" superclassName="ViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TutorialViewController.h"/>
             <relationships>
-                <relationship kind="action" name="dismissTutorial:"/>
-                <relationship kind="action" name="nextPage:"/>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="pageCounter" candidateClass="UIPageControl"/>
                 <relationship kind="outlet" name="pageDescription" candidateClass="UITextView"/>
