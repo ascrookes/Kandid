@@ -41,6 +41,7 @@
 @property (nonatomic) CGFloat previousBrightness;
 
 @property (nonatomic, strong) ActionControlView* actionControl;
+@property (weak, nonatomic) IBOutlet UILabel *hideViewLabel; //can just make the hide view a label and have one reference to it
 
 
 // The hidden view stuff

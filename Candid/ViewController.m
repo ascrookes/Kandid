@@ -168,6 +168,9 @@ typedef enum ReviewAppAlertIndex {
     self.isRunning = NO;
     self.levelLabel.text = @"";
     self.shouldResumeAfterInterruption = NO;
+    
+    self.hideViewLabel.font = [UIFont fontWithName:@"Dosis-SemiBold" size:100];
+    
     [self addActionControl];
     
     [self updateUI];
@@ -227,7 +230,9 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (void)didEnterBackground {
+    [[UIScreen mainScreen] setBrightness:self.previousBrightness];
     [self stopEverything];
+    [self showHiddenLabels];
     [self.imageManager writeInfoToFileName:@"kandid"];
 }
 
@@ -269,6 +274,7 @@ typedef enum ReviewAppAlertIndex {
     [self setVolumeHideLabel:nil];
     [self setClearButtonLabel:nil];
     [self setHideButtonLabel:nil];
+    [self setHideViewLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -652,7 +658,6 @@ typedef enum ReviewAppAlertIndex {
             [self.hideTimer invalidate];
             [[UIScreen mainScreen] setBrightness:0];
         }
-        [self.actionControl shouldBeHidden:YES];
         self.hideView.userInteractionEnabled = YES;
         //self.numPixHiddenLabel.hidden = YES;
         //self.volumeHideLabel.hidden = YES;
@@ -766,6 +771,7 @@ typedef enum ReviewAppAlertIndex {
 // called when the app is going to terminate to save necessary information
 - (void)appWillTerminate
 {
+    [self showHiddenLabels];
     [self.imageManager writeInfoToFileName:@"kandid"];
 }
 
