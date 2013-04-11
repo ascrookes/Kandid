@@ -63,6 +63,8 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
         for(int i = 0; i < manager.imageData.count; i++) {
             [manager.thumbnails addObject:[NSNull null]];
         }
+        // consider dispatching from this thread and creating the first couple of thumbnails
+        // whenever the use gets to a thumbnail that does not exist create more so the table does not lag when the look through the pictures
     } else {
         manager.imageData = nil;
     }
@@ -72,6 +74,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 
 - (void)writeInfoToFileName:(NSString*)fileName {
     [self.imageData writeToFile:[ImageManager getFilePathForPropertyName:@"imageData" andFileName:fileName] atomically:YES];
+    //imageToSave DELME -- is the needed anymore since images are saved one at a time
     [self.imagesToSave writeToFile:[ImageManager getFilePathForPropertyName:@"imagesToSave" andFileName:fileName] atomically:YES];
 }
 
@@ -172,7 +175,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     watermark.backgroundColor = [UIColor clearColor];
     watermark.textColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.6];
     watermark.text = @"Kandid ";
-    watermark.font = [UIFont fontWithName:@"Didot-Italic" size:imgWidth/WATER_MARK_FONT_REDUCE_FACTOR];
+    watermark.font = [UIFont fontWithName:@"Dosis-SemiBold" size:imgWidth/WATER_MARK_FONT_REDUCE_FACTOR];
     watermark.shadowColor = [UIColor blackColor];
     watermark.shadowOffset = CGSizeMake(0, -1.5);
     [watermark drawTextInRect:watermark.frame];
