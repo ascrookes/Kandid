@@ -12,7 +12,7 @@
 const int saveX   = 350;
 const int deleteX = -30;
 // the distance away from the save or delete point to animate the image to
-const int animateDistance = 220;
+const int animateDistance = 300;
 
 
 @interface ImageCell ()
@@ -56,16 +56,17 @@ const int animateDistance = 220;
     cell.table = table;
     cell.shouldSave = NO;
     
-    int distanceFromEdge = 10;
-    cell.saveImage = [[UIImageView alloc] initWithFrame:CGRectMake(distanceFromEdge, 50, 150, 150)];
-    cell.saveImage.image = [UIImage imageNamed:@"floppy.png"];
+    int ioImageWidth  = 150;
+    int ioImageHeight = 160;
+    int ioYCoord = (cell.filmRoll.frame.size.height - ioImageHeight) / 2;
+    cell.saveImage = [[UIImageView alloc] initWithFrame:CGRectMake(-ioImageWidth, ioYCoord, ioImageWidth, 160)];
+    cell.saveImage.image = [UIImage imageNamed:@"save.png"];
     
-    cell.trashButton = [[UIButton alloc] initWithFrame:CGRectMake(320 - 150 - distanceFromEdge, 50, 150, 150)];
-    cell.trashButton.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"trash.png"]];
-    cell.trashButton.userInteractionEnabled = NO;
+    cell.trashButton = [[UIImageView alloc] initWithFrame:CGRectMake(cell.filmRoll.frame.size.width, ioYCoord, ioImageWidth, 160)];
+    cell.trashButton.image = [UIImage imageNamed:@"delete.png"];
     
-    [cell addSubview:cell.saveImage];
-    [cell addSubview:cell.trashButton];
+    [cell.filmRoll addSubview:cell.saveImage];
+    [cell.filmRoll addSubview:cell.trashButton];
     [cell.filmRoll addSubview:cell.imageView];
     [cell addSubview:cell.filmRoll];
     
@@ -89,14 +90,14 @@ const int animateDistance = 220;
     
     if(filmCenterX > centerX) {
         self.saveImage.alpha   = (filmCenterX - centerX)/ (double)(saveX - centerX);
-        NSString* imageName = (filmCenterX >= saveX) ? @"floppyActive.png" : @"floppy.png";
+        NSString* imageName = (filmCenterX >= saveX) ? @"saveActive.png" : @"save.png";
         self.saveImage.image = [UIImage imageNamed:imageName];
     } else if(self.filmRoll.center.x < centerX) {
         int dist = -deleteX + centerX; // the distance from the center to the delete location
         int loc  = -(filmCenterX - centerX);
         self.trashButton.alpha = loc/(double)dist;
-        NSString* imageName = (filmCenterX <= deleteX) ? @"trashActive.png" : @"trash.png";
-        self.trashButton.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:imageName]];
+        NSString* imageName = (filmCenterX <= deleteX) ? @"deleteActive.png" : @"delete.png";
+        self.trashButton.image = [UIImage imageNamed:imageName];
     } else {
         
     }

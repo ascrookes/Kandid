@@ -15,8 +15,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    [TestFlight takeOff:@"486bc2144e1258a6096557a2792a3082_MTc3ODc2MjAxMy0wMS0yMiAwMDoyNzozMi4yOTYyNDc"];
-//    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+    [TestFlight takeOff:@"4cb97994-439b-4daf-ab92-699533aa256b"];
+    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
     
     [self customizeAppearance];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
