@@ -796,8 +796,8 @@
 		8E5EBA0815964C3E00C4E185 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Amadou Crookes (V23VPS752M)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Amadou Crookes (V23VPS752M)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Amadou Crookes";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Amadou Crookes";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Candid/Candid-Prefix.pch";
 				INFOPLIST_FILE = "Candid/Candid-Info.plist";
@@ -811,8 +811,8 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
+				PROVISIONING_PROFILE = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -821,8 +821,8 @@
 		8E5EBA0915964C3E00C4E185 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Amadou Crookes (V23VPS752M)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Amadou Crookes (V23VPS752M)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Amadou Crookes";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Amadou Crookes";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Candid/Candid-Prefix.pch";
 				INFOPLIST_FILE = "Candid/Candid-Info.plist";
@@ -836,8 +836,8 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91D75062-C6F8-4FE8-B914-BF37E06CB67A";
+				PROVISIONING_PROFILE = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EE9D3E2E-7560-4928-BF8C-3A9A449547E1";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

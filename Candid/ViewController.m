@@ -351,6 +351,7 @@ typedef enum ReviewAppAlertIndex {
             [self changeTorchMode:AVCaptureTorchModeOff];
         });
         NSLog(@"CAPTURING: %i",self.numPictures);
+       [TestFlight passCheckpoint:@"Captured Imaged"];
     }];
 }
 
@@ -516,10 +517,12 @@ typedef enum ReviewAppAlertIndex {
 //*********************************************************
 
 - (void)shouldSaveImageFromCell:(ImageCell*)imgCell {
+    [TestFlight passCheckpoint:@"Saved Imaged"];
     [self removeImageFromCell:imgCell shouldSave:YES];
 }
 
 - (void)shouldDeleteImageFromCell:(ImageCell*)imgCell {
+    [TestFlight passCheckpoint:@"Deleted Imaged"];
     [self removeImageFromCell:imgCell shouldSave:NO];
 }
 
@@ -847,6 +850,7 @@ typedef enum ReviewAppAlertIndex {
         [self.imageManager clearImageData];
         [self.table reloadData];
         self.numPictures = 0;
+        [TestFlight passCheckpoint:@"Cleared Film Roll"];
     } else if([alertView.title isEqualToString:REVIEW_ALERT_TITLE] && buttonIndex == ReviewAlertIndexYes) {
         NSURL *url = [NSURL URLWithString:KANDID_ITUNES_URL];
         [[UIApplication sharedApplication] openURL:url];
