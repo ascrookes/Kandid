@@ -9,7 +9,6 @@
 #import "ImageManager.h"
 #import "KandidUtils.h"
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
-#import "MTStatusBarOverlay.h"
 
 
 // images are square so this is the width and height
@@ -225,8 +224,6 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     } else {
         self.imagesToSave = nil;
         self.saveCount = 0;
-        MTStatusBarOverlay* overlay = [MTStatusBarOverlay sharedInstance];
-        overlay.progress = 1.0;
         if(self.delegate != nil)
             [self.delegate didFinishSavingImages];
         
@@ -236,9 +233,6 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
 - (void)savedImage:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
     if(error != nil) { /*consider doing something here*/ }
     
-    MTStatusBarOverlay* overlay = [MTStatusBarOverlay sharedInstance];
-    overlay.progress = (self.saveCount - [self.imagesToSave count]) /(double) self.saveCount;
-
     if([self.imagesToSave count] > 0) {
         [self.imagesToSave removeObjectAtIndex:0];
     }

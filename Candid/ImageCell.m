@@ -73,6 +73,8 @@ const int animateDistance = 300;
     cell.trashButton.alpha = 0;
     cell.saveImage.alpha = 0;
     
+    cell.backgroundColor = [UIColor clearColor];
+    
     return cell;
 }
 

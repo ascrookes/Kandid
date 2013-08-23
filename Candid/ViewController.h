@@ -15,7 +15,7 @@
 #import "ImageManager.h"
 #import "ActionControlView.h"
 
-@interface ViewController : UIViewController <AVAudioRecorderDelegate, UITableViewDataSource, UITableViewDelegate, ActionControlDelegate>
+@interface ViewController : UIViewController <AVAudioRecorderDelegate, UITableViewDataSource, UITableViewDelegate>
 
 
 // seperate UI and controller stuff
@@ -28,8 +28,10 @@
 @property (nonatomic) double averageUpdatePeak;
 @property (nonatomic,strong) NSTimer* updateTimer;
 @property (nonatomic, strong) NSTimer* timedPicture;
-@property (weak, nonatomic) IBOutlet UIButton *cameraButton;
-@property (weak, nonatomic) IBOutlet UITableView *table;
+@property (strong, nonatomic) UIButton *cameraButton;
+@property (strong, nonatomic) UIButton* clearButton;
+@property (strong, nonatomic) UIButton* hideButton;
+@property (strong, nonatomic)  UITableView *table;
 @property (strong,nonatomic) ImageManager* imageManager;
 @property (nonatomic) int updateTimerActionCount;
 @property (weak, nonatomic) IBOutlet UIView *hideView;

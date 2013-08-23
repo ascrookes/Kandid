@@ -15,5 +15,7 @@
 + (void)increaseSavedImagesCount;
 + (NSInteger)getSavedCount;
 + (NSString*)savedCountKey;
-
++ (CGFloat)screenWidth;
++ (CGFloat)screenHeight;
+    
 @end

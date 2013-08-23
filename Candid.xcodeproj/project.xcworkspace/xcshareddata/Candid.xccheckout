@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B2DB5766-05DA-4C5F-A279-CD93E98EFBCC</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Candid</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>FF66BA90-E6F6-4452-9478-81E638E1B498</key>
+		<string>ssh://github.com/ASCrookes/Candid.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Candid.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>FF66BA90-E6F6-4452-9478-81E638E1B498</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/ASCrookes/Candid.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>FF66BA90-E6F6-4452-9478-81E638E1B498</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>FF66BA90-E6F6-4452-9478-81E638E1B498</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Candid</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -7,17 +7,16 @@
 //
 
 #import "AppDelegate.h"
+#import "KandidUtils.h"
 
 @implementation AppDelegate
+
 
 @synthesize window = _window;
 @synthesize didResign;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [TestFlight takeOff:@"4cb97994-439b-4daf-ab92-699533aa256b"];
-    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
-    
     [self customizeAppearance];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         
@@ -36,6 +35,7 @@
     
     return YES;
 }
+
 
 - (void)customizeAppearance
 {

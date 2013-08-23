@@ -47,4 +47,17 @@
     return @"numberOfSavedImages";
 }
 
++ (CGFloat)screenWidth {
+    return [KandidUtils screenSize].width;
+}
+
++ (CGFloat)screenHeight {
+    return [KandidUtils screenSize].height;
+}
+
++ (CGSize)screenSize {
+    return [[UIScreen mainScreen] bounds].size;
+}
+
+
 @end

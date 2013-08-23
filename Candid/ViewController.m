@@ -8,11 +8,9 @@
 
 #import "ViewController.h"
 #import "ImageSelectionViewController.h"
-#import "MTStatusBarOverlay.h"
 #import "DatabaseManager.h"
 #import "KandidUtils.h"
 #import "ImageCell.h"
-#import "ActionControlView.h"
 
 //*********************************************************
 //*********************************************************
@@ -38,6 +36,11 @@ const int MAX_IMAGES_IN_TABLE = 25;
 // the amount of images to save before asking them to review the app
 const int NUMBER_OF_IMAGES_TO_REVIEW = 20;
 // TODO -- move static variables to kandid utils
+
+const int CAMERA_BUTTON_DIAMETER = 90;
+const int OTHER_BUTTON_DIAMETER = 70;
+
+
 static NSString* CLEAR_ALERT_TITLE = @"Are You Sure?";
 static NSString* REVIEW_ALERT_TITLE = @"Enjoying Kandid?";
 static NSString* HAS_SHOWN_REVIEW_KEY = @"hasShownReviewAlert";
@@ -95,7 +98,6 @@ typedef enum ReviewAppAlertIndex {
 
 @end
 
-
 @implementation ViewController
 
 @synthesize levelLabel = _levelLabel;
@@ -122,6 +124,8 @@ typedef enum ReviewAppAlertIndex {
 @synthesize updateTimer = _updateTimer;
 @synthesize timedPicture = _timedPicture;
 @synthesize cameraButton = _cameraButton;
+@synthesize hideButton = _hideButton;
+@synthesize clearButton = _clearButton;
 @synthesize table = _table;
 @synthesize updateTimerActionCount;
 @synthesize hideView = _hideView;
@@ -134,7 +138,6 @@ typedef enum ReviewAppAlertIndex {
 @synthesize previousBrightness;
 @synthesize cameraIsReady = _cameraIsReady;
 
-@synthesize actionControl = _actionControl;
 
 @synthesize imagesTakenThisMinute = _imagesTakenThisMinute;
 
@@ -171,28 +174,17 @@ typedef enum ReviewAppAlertIndex {
     
     self.hideViewLabel.font = [UIFont fontWithName:@"Dosis-SemiBold" size:100];
     
-    [self addActionControl];
+    [self addGlobalButtons];
     
     [self updateUI];
 }
-
-
-
-- (void)addActionControl {
-    self.actionControl = [ActionControlView actionControl:self];
-    [self.view insertSubview:self.actionControl belowSubview:self.hideView];
-}
-
-
 
 - (void)viewDidAppear:(BOOL)animated {
     self.previousBrightness = [[UIScreen mainScreen] brightness];
     [self shouldPresentTutorial];
 }
 
-
-+ (void)setViewController:(UIViewController*)vc Title:(NSString*)title Font:(UIFont*)font
-{
++ (void)setViewController:(UIViewController*)vc Title:(NSString*)title Font:(UIFont*)font {
     UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [titleButton setFrame:CGRectMake(0, 0, 170, 35)];
     [titleButton setTitle:title forState:UIControlStateNormal];
@@ -239,31 +231,12 @@ typedef enum ReviewAppAlertIndex {
 
 // since the UI does not rotate show something to indicate
 // that the camera can face any direction
-- (void)updateUI
-{
-    [self.actionControl setRecording:(self.isRunning)];
+- (void)updateUI {
     [self.table reloadData];
     self.numPictures = [self.imageManager count];
 }
 
-- (void)overlayStatusBar
-{
-    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-    overlay.hidesActivity = YES;
-    overlay.animation = MTStatusBarOverlayAnimationNone;
-    overlay.detailViewMode = MTDetailViewModeHistory;
-    NSString* msg = [self getStatusBarMessage];
-    if(msg != nil) {
-        [overlay postMessage:msg];
-    } else {
-        [overlay postImmediateFinishMessage:@" " duration:0.20 animated:YES];
-        overlay.progress = 1.0;
-    }
-}
-
-
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [self setCameraButton:nil];
     [self setTable:nil];
     [self setLevelLabel:nil];
@@ -277,6 +250,49 @@ typedef enum ReviewAppAlertIndex {
     [self setHideViewLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+}
+
+- (void)addGlobalButtons {
+    int camera_y = [KandidUtils screenHeight] - CAMERA_BUTTON_DIAMETER - 30;
+    int other_y = camera_y + (CAMERA_BUTTON_DIAMETER - OTHER_BUTTON_DIAMETER)/2;
+    self.cameraButton = [[UIButton alloc] initWithFrame:CGRectMake([KandidUtils screenWidth]/2 - CAMERA_BUTTON_DIAMETER/2, camera_y, CAMERA_BUTTON_DIAMETER, CAMERA_BUTTON_DIAMETER)];
+    self.hideButton = [[UIButton alloc] initWithFrame:CGRectMake(20, other_y, OTHER_BUTTON_DIAMETER, OTHER_BUTTON_DIAMETER)];
+    self.clearButton = [[UIButton alloc] initWithFrame:CGRectMake([KandidUtils screenWidth] - OTHER_BUTTON_DIAMETER - 20, other_y, OTHER_BUTTON_DIAMETER, OTHER_BUTTON_DIAMETER)];
+    
+    [self.hideButton addTarget:self action:@selector(toggleHide:) forControlEvents:UIControlEventTouchUpInside];
+    [self.clearButton addTarget:self action:@selector(clearFilmRoll:) forControlEvents:UIControlEventTouchUpInside];
+    [self.cameraButton addTarget:self action:@selector(toggleRecording:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.cameraButton.backgroundColor = [UIColor clearColor];
+    self.hideButton.backgroundColor = [UIColor clearColor];
+    self.clearButton.backgroundColor = [UIColor clearColor];
+    
+    [self.cameraButton setBackgroundImage:[UIImage imageNamed:@"cameraButton.png"] forState:UIControlStateNormal];
+    [self.hideButton setBackgroundImage:[UIImage imageNamed:@"cameraButton.png"] forState:UIControlStateNormal];
+    [self.clearButton setBackgroundImage:[UIImage imageNamed:@"cameraButton.png"] forState:UIControlStateNormal];
+    
+    [self.view insertSubview:self.cameraButton belowSubview:self.hideView];
+    [self.view insertSubview:self.hideButton belowSubview:self.hideView];
+    [self.view insertSubview:self.clearButton belowSubview:self.hideView];
+}
+
+//*********************************************************
+//*********************************************************
+#pragma mark - Constructors
+//*********************************************************
+//*********************************************************
+
++ (ViewController*)standardViewController {
+    ViewController* vc = [[ViewController alloc] init];
+    CGRect table_frame = CGRectMake(0, 20, vc.view.bounds.size.width, vc.view.bounds.size.height - 20);
+    vc.table = [[UITableView alloc] initWithFrame:table_frame];
+    vc.table.delegate = vc;
+    vc.table.dataSource = vc;
+    [vc.view addSubview:vc.table];
+    // TODO(amadou): Add flash button on top of table - not attached to table though
+    // TODO(amadou): Add hide view
+    
+    return vc;
 }
 
 //*********************************************************
@@ -312,6 +328,8 @@ typedef enum ReviewAppAlertIndex {
                               nil];
     NSError* error;
     self.recorder = [[AVAudioRecorder alloc] initWithURL:url settings:settings error:&error];
+    if (error)
+        NSLog(@"setup recorder error: %@", error);
     self.recorder.delegate = self;
 }
 
@@ -330,6 +348,8 @@ typedef enum ReviewAppAlertIndex {
     self.lastTakenTime = [NSDate date];
     [self.imageCapture captureStillImageAsynchronouslyFromConnection:self.videoConnection
                                                    completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
+        if (error)
+            NSLog(@"capture now error: %@", error);
         self.cameraIsReady = YES;
         if(!CMSampleBufferIsValid(imageSampleBuffer) || !CMSampleBufferDataIsReady(imageSampleBuffer)) {
             // the buffer is not ready to capture the image and would crash
@@ -458,7 +478,6 @@ typedef enum ReviewAppAlertIndex {
     }
 }
 
-
 //*********************************************************
 //*********************************************************
 #pragma mark - Monitoring
@@ -478,7 +497,6 @@ typedef enum ReviewAppAlertIndex {
 //*********************************************************
 //*********************************************************
 
-
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString* cellID = @"imageCellPolaroid";
@@ -495,18 +513,15 @@ typedef enum ReviewAppAlertIndex {
     return cell;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.imageManager count];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // DONT DO SHIT!
 }
 
@@ -546,32 +561,12 @@ typedef enum ReviewAppAlertIndex {
 
 //*********************************************************
 //*********************************************************
-#pragma mark - ActionControlDelegate
-//*********************************************************
-//*********************************************************
-
-- (void)toggleRecording {
-    [self toggleRecording:nil];
-}
-
-- (void)shouldHide {
-    [self toggleHide:nil];
-}
-
-- (void)shouldClear {
-    [self clearFilmRoll:nil];
-}
-
-
-//*********************************************************
-//*********************************************************
 #pragma mark - IBActions
 //*********************************************************
 //*********************************************************
 
 
-- (IBAction)toggleRecording:(id)sender 
-{
+- (IBAction)toggleRecording:(id)sender {
     if(self.session.running && self.recorder.recording) {
         [self stopEverythingWithStatusAnimation:YES];
     } else {
@@ -579,17 +574,12 @@ typedef enum ReviewAppAlertIndex {
     }
 }
 
-- (IBAction)stopEverythingWithStatusAnimation:(BOOL)statusAnimation
-{
+- (IBAction)stopEverythingWithStatusAnimation:(BOOL)statusAnimation {
     [self stopEverything];
-    NSString* finishMsg = (statusAnimation) ? @"Stopping..." : @" ";
-    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-    [overlay postImmediateFinishMessage:finishMsg duration:1.0 animated:YES];
-    overlay.progress = 1.0;
 }
 
-- (IBAction)stopEverything
-{
+- (IBAction)stopEverything {
+    NSLog(@"stop everything!");
     //[[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
     // using time interval since now will return negative since self.sessionTime is earlier than the current time
     self.sessionTimeInterval += ([self.sessionTime timeIntervalSinceNow] * -1);
@@ -597,13 +587,16 @@ typedef enum ReviewAppAlertIndex {
     [self.updateTimer invalidate];
     [self.recorder stop];
     [self.session stopRunning];
+    self.session = nil;
     self.camDevice = nil;
     self.camInput  = nil;
     //self.levelLabel.text = @"Not Running";
     self.isRunning = NO;
-    [self.actionControl setRecording:NO];
     [self updateUI];
-    
+    UIImage* button_image = [UIImage imageNamed:@"cameraButton.png"];
+    [self.cameraButton setBackgroundImage:button_image forState:UIControlStateNormal];
+    [self.hideButton setBackgroundImage:button_image forState:UIControlStateNormal];
+    [self.clearButton setBackgroundImage:button_image forState:UIControlStateNormal];
 }
 
 - (IBAction)startEverything
@@ -616,11 +609,13 @@ typedef enum ReviewAppAlertIndex {
     self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_TIME target:self selector:@selector(monitorVolume) userInfo:nil repeats:YES];
     [self.session startRunning];
     self.isRunning = YES;
-    [self.actionControl setRecording:YES];
     [self updateUI];
-    //[[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
-    [self overlayStatusBar];
     self.sessionTime = [NSDate date];
+    UIImage* button_image = [UIImage imageNamed:@"cameraButtonGreen.png"];
+    [self.cameraButton setBackgroundImage:button_image forState:UIControlStateNormal];
+    [self.hideButton setBackgroundImage:button_image forState:UIControlStateNormal];
+    [self.clearButton setBackgroundImage:button_image forState:UIControlStateNormal];
+    NSLog(@"END!");
 }
 
 - (IBAction)toggleHide:(id)sender
@@ -644,11 +639,6 @@ typedef enum ReviewAppAlertIndex {
 {
     self.hideView.userInteractionEnabled = NO;
     
-    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-    overlay.hidesActivity = YES;
-    overlay.animation = MTStatusBarOverlayAnimationNone;
-    overlay.detailViewMode = MTDetailViewModeHistory;
-    [overlay postMessage:@"   "];
     [UIView animateWithDuration:0.5 animations:^{
         self.hideLabel.alpha = 0;
         // TODO -- change these to ZERO
@@ -673,7 +663,6 @@ typedef enum ReviewAppAlertIndex {
 //        NSLog(@"Turing proximity monitor back on");
         //[[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     }
-    [self overlayStatusBar];
     [self navigationController].navigationBar.alpha = 1;
     [self.hideTimer invalidate];
     self.hideView.hidden = YES;
@@ -718,6 +707,7 @@ typedef enum ReviewAppAlertIndex {
 // show selection of the images for the user to choose from
 - (IBAction)saveImages:(id)sender
 {
+    /*
     if([self.imageManager count] == 0) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Nothing to save" message:@"Please try again once there are images" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
@@ -730,6 +720,7 @@ typedef enum ReviewAppAlertIndex {
         [ViewController setViewController:isvc Title:@"Images" Font:[UIFont fontWithName:@"Didot-Italic" size:28]];
         [self presentModalViewController:isvc animated:YES];
     }
+     */
 }
 
 
@@ -859,13 +850,9 @@ typedef enum ReviewAppAlertIndex {
 
 - (void)didFinishSelection {
     [self dismissModalViewControllerAnimated:YES];
-    [self overlayStatusBar];
     [self updateUI];
 }
 
-- (void)didFinishSavingImages {
-    [self overlayStatusBar];
-}
 
 
 //*********************************************************
@@ -910,7 +897,10 @@ typedef enum ReviewAppAlertIndex {
 - (AVCaptureDeviceInput*)camInput
 {
     if(!_camInput) {
-        _camInput = [AVCaptureDeviceInput deviceInputWithDevice:self.camDevice error:nil];
+        NSError* error;
+        _camInput = [AVCaptureDeviceInput deviceInputWithDevice:self.camDevice error:&error];
+        if (error)
+            NSLog(@"camINput Error: %@", error);
     }
     return _camInput;
 }
@@ -929,6 +919,11 @@ typedef enum ReviewAppAlertIndex {
 - (AVAudioRecorder*)recorder
 {
     if(!_recorder) {
+        // The next three lines allowed this to run on iOS 7
+        // Found at: https://devforums.apple.com/message/858424#858424
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        [audioSession setActive: YES error: nil];
+        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: nil];
         [self setupRecorder];
     }
     return _recorder;
@@ -945,7 +940,6 @@ typedef enum ReviewAppAlertIndex {
 - (void)setNumPictures:(int)numPictures
 {
     _numPictures = numPictures;
-    [self.actionControl shouldSetNumPix:numPictures];
 }
 
 - (double)totalPeak
@@ -1037,10 +1031,23 @@ typedef enum ReviewAppAlertIndex {
         }
     }
     if(_videoConnection)
-        [_videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]];
-    
+        [_videoConnection setVideoOrientation:(AVCaptureVideoOrientation)[[UIDevice currentDevice] orientation]];
     return _videoConnection;
 }
 
++ (AVCaptureVideoOrientation)getCurrentOrientation {
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    AVCaptureVideoOrientation av_orientaion;
+    if (orientation == UIDeviceOrientationPortraitUpsideDown) {
+        av_orientaion = AVCaptureVideoOrientationPortraitUpsideDown;
+    } else if (orientation == UIDeviceOrientationLandscapeLeft) {
+        av_orientaion = AVCaptureVideoOrientationLandscapeLeft;
+    } else if (orientation == UIDeviceOrientationLandscapeRight) {
+        av_orientaion = AVCaptureVideoOrientationLandscapeRight;
+    } else {
+        av_orientaion = AVCaptureVideoOrientationPortrait;
+    }
+    return av_orientaion;
+}
 
 @end
