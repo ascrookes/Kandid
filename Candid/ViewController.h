@@ -31,7 +31,7 @@
 @property (strong, nonatomic) UIButton *cameraButton;
 @property (strong, nonatomic) UIButton* clearButton;
 @property (strong, nonatomic) UIButton* hideButton;
-@property (strong, nonatomic)  UITableView *table;
+@property (strong, nonatomic) UITableView *table;
 @property (strong,nonatomic) ImageManager* imageManager;
 @property (nonatomic) int updateTimerActionCount;
 @property (weak, nonatomic) IBOutlet UIView *hideView;
@@ -44,6 +44,9 @@
 
 @property (nonatomic, strong) ActionControlView* actionControl;
 @property (weak, nonatomic) IBOutlet UILabel *hideViewLabel; //can just make the hide view a label and have one reference to it
+
+@property (nonatomic, strong) UILabel* notifier;  // The bar at the bottom the shows notifications.
+@property (nonatomic, strong) NSTimer* notifierTimer;
 
 
 // The hidden view stuff

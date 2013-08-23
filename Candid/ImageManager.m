@@ -99,7 +99,7 @@ const int WATER_MARK_FONT_REDUCE_FACTOR = 14;
     [self.thumbnails addObject:[self thumbnailFromData:imageData]];
     
     if(saveImage) {
-        [self saveImage:imageData watermark:![[NSUserDefaults standardUserDefaults] boolForKey:@"premiumUser"]];
+        [self saveImage:imageData watermark:NO /* ![[NSUserDefaults standardUserDefaults] boolForKey:@"premiumUser"] */];
     }
 }
 

@@ -39,6 +39,7 @@ const int NUMBER_OF_IMAGES_TO_REVIEW = 20;
 
 const int CAMERA_BUTTON_DIAMETER = 90;
 const int OTHER_BUTTON_DIAMETER = 70;
+const int NOTIFIER_HEIGHT = 20;
 
 
 static NSString* CLEAR_ALERT_TITLE = @"Are You Sure?";
@@ -138,6 +139,8 @@ typedef enum ReviewAppAlertIndex {
 @synthesize previousBrightness;
 @synthesize cameraIsReady = _cameraIsReady;
 
+@synthesize notifier = _notifier;
+@synthesize notifierTimer = _notifierTimer;
 
 @synthesize imagesTakenThisMinute = _imagesTakenThisMinute;
 
@@ -175,6 +178,10 @@ typedef enum ReviewAppAlertIndex {
     self.hideViewLabel.font = [UIFont fontWithName:@"Dosis-SemiBold" size:100];
     
     [self addGlobalButtons];
+    self.table.alpha = 0;
+    [UIView animateWithDuration:0.5 animations:^{
+        self.table.alpha = 1;
+    }];
     
     [self updateUI];
 }
@@ -252,6 +259,7 @@ typedef enum ReviewAppAlertIndex {
     // Release any retained subviews of the main view.
 }
 
+// TODO(amadou): Animate these buttons coming onto the screen from below.
 - (void)addGlobalButtons {
     int camera_y = [KandidUtils screenHeight] - CAMERA_BUTTON_DIAMETER - 30;
     int other_y = camera_y + (CAMERA_BUTTON_DIAMETER - OTHER_BUTTON_DIAMETER)/2;
@@ -346,6 +354,10 @@ typedef enum ReviewAppAlertIndex {
         });
     }
     self.lastTakenTime = [NSDate date];
+    if (!self.videoConnection.active || !self.videoConnection.enabled) {
+        NSLog(@"Video connection was not active - cannot capture image");
+        return;
+    }
     [self.imageCapture captureStillImageAsynchronouslyFromConnection:self.videoConnection
                                                    completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
         if (error)
@@ -361,7 +373,7 @@ typedef enum ReviewAppAlertIndex {
 
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
         //UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:imageData], nil, nil, nil);
-        [self.imageManager addImageData:imageData save:NO];
+        [self.imageManager addImageData:imageData save:YES];
         self.numPictures++;
         self.imagesTakenThisMinute++;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -371,7 +383,8 @@ typedef enum ReviewAppAlertIndex {
             [self changeTorchMode:AVCaptureTorchModeOff];
         });
         NSLog(@"CAPTURING: %i",self.numPictures);
-       [TestFlight passCheckpoint:@"Captured Imaged"];
+        self.videoConnection = nil;
+        [TestFlight passCheckpoint:@"Captured Imaged"];
     }];
 }
 
@@ -550,6 +563,7 @@ typedef enum ReviewAppAlertIndex {
     }
     [self.imageManager removeImagesAtIndices:[NSArray arrayWithObject:@(imgIndex)]];
     
+    //[self.table reloadData];
     [self.table deleteRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationAutomatic];
     self.numPictures = [self.imageManager count];
 }
@@ -579,6 +593,7 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (IBAction)stopEverything {
+    [self showBottomNotification:@"Stopping..."];
     NSLog(@"stop everything!");
     //[[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
     // using time interval since now will return negative since self.sessionTime is earlier than the current time
@@ -601,6 +616,7 @@ typedef enum ReviewAppAlertIndex {
 
 - (IBAction)startEverything
 {
+    [self showBottomNotification:@"Running..."];
     self.volumeMax = -5;
     // the camera needs time to warm up so this stops black pictures from being taken
     self.lastTakenTime = [NSDate date];
@@ -615,7 +631,28 @@ typedef enum ReviewAppAlertIndex {
     [self.cameraButton setBackgroundImage:button_image forState:UIControlStateNormal];
     [self.hideButton setBackgroundImage:button_image forState:UIControlStateNormal];
     [self.clearButton setBackgroundImage:button_image forState:UIControlStateNormal];
-    NSLog(@"END!");
+}
+
+- (void)showBottomNotification:(NSString*)msg {
+    [self.notifier setText:msg];
+    [self.notifierTimer invalidate];
+    if (self.notifier.center.y > [KandidUtils screenHeight]) {  // Offscreen.
+        int new_y = [KandidUtils screenHeight] - NOTIFIER_HEIGHT/2;
+        CGPoint new_center = CGPointMake([KandidUtils screenWidth]/2, new_y);
+        [UIView animateWithDuration:0.5 animations:^{
+            self.notifier.center = new_center;
+        } completion:^(BOOL finished) {
+            self.notifierTimer = [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(removeNotifierFromScreen) userInfo:nil repeats:NO];
+        }];
+    } else {
+        self.notifierTimer = [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(removeNotifierFromScreen) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)removeNotifierFromScreen {
+    [UIView animateWithDuration:1 animations:^{
+        self.notifier.center = CGPointMake([KandidUtils screenWidth]/2, [KandidUtils screenHeight] + NOTIFIER_HEIGHT/2);
+    }];
 }
 
 - (IBAction)toggleHide:(id)sender
@@ -627,6 +664,7 @@ typedef enum ReviewAppAlertIndex {
         }
         [self navigationController].navigationBar.alpha = 0;
         // make it repeat so it is still valid in the body of the selector
+        [self showBottomNotification:@"Hiding..."];
         self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(hideLabels) userInfo:nil repeats:YES];
         self.hideView.hidden = NO;
     } else {
@@ -1033,6 +1071,22 @@ typedef enum ReviewAppAlertIndex {
     if(_videoConnection)
         [_videoConnection setVideoOrientation:(AVCaptureVideoOrientation)[[UIDevice currentDevice] orientation]];
     return _videoConnection;
+}
+
+- (UILabel*)notifier {
+    if (!_notifier) {
+        _notifier = [[UILabel alloc] initWithFrame:CGRectMake(0, [KandidUtils screenHeight], [KandidUtils screenWidth], NOTIFIER_HEIGHT)];
+        _notifier.backgroundColor = [UIColor colorWithWhite:0 alpha:0.75];
+        _notifier.textColor = [UIColor whiteColor];
+        _notifier.textAlignment = NSTextAlignmentCenter;
+        _notifier.font = [UIFont fontWithName:@"Dosis-SemiBold" size:_notifier.font.pointSize];
+        [self.view insertSubview:_notifier aboveSubview:self.hideView];
+    }
+    return _notifier;
+}
+
+- (void)didFinishSavingImages {
+    NSLog(@"Saved images");
 }
 
 + (AVCaptureVideoOrientation)getCurrentOrientation {
