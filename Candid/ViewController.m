@@ -96,7 +96,6 @@ typedef enum ReviewAppAlertIndex {
 
 @property (nonatomic) unsigned int imagesTakenThisMinute;
 
-
 @end
 
 @implementation ViewController
@@ -143,7 +142,6 @@ typedef enum ReviewAppAlertIndex {
 @synthesize notifierTimer = _notifierTimer;
 
 @synthesize imagesTakenThisMinute = _imagesTakenThisMinute;
-
 
 //*********************************************************
 //*********************************************************
@@ -589,11 +587,12 @@ typedef enum ReviewAppAlertIndex {
 }
 
 - (IBAction)stopEverythingWithStatusAnimation:(BOOL)statusAnimation {
+    if (statusAnimation)
+        [self showBottomNotification:@"Stopping..."];
     [self stopEverything];
 }
 
 - (IBAction)stopEverything {
-    [self showBottomNotification:@"Stopping..."];
     NSLog(@"stop everything!");
     //[[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
     // using time interval since now will return negative since self.sessionTime is earlier than the current time
