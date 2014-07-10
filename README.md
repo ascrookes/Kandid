@@ -10,5 +10,8 @@ Kandid is an attempt to capture some of the  picturesque moments in our life wit
 Philosophy?
 The philosophy behind this project is fundamentally wrong. A shift in volume in a room does not signify an important moment. With this philosophy baked into the app, although it does capture some good moments, it takes a lot of random photos. The downside of sorting through and deleting these random photos far outweights the positive of getting a few good pictures.
 
+Other Problems?
+This approach is incredibly battery draining. Having the camera on, audio recording, and audio processing is a lot of work to be done on a mobile device.
+
 Future?
-Hopefully with a new philosophy this app could provide huge amounts of value to many people's day to day lives.
+Hopefully with a new philosophy this app could provide huge amounts of value to many people's day to day lives. Also having a way to do so that does not kill the battery so fast will also help.
