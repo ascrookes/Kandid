@@ -1,4 +1,4 @@
-Kandid (intended name)
+Kandid
 ======
 
 Problem?
